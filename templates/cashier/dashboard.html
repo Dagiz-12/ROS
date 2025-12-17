@@ -1,0 +1,1017 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Payment System - Cashier Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+    <style>
+      .payment-card {
+        transition: all 0.3s ease;
+      }
+      .payment-card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+      }
+      .status-unpaid {
+        border-left: 4px solid #ef4444;
+      }
+      .status-partial {
+        border-left: 4px solid #f59e0b;
+      }
+      .status-paid {
+        border-left: 4px solid #10b981;
+      }
+      .payment-method-cash {
+        background-color: #f0f9ff;
+      }
+      .payment-method-card {
+        background-color: #fef7ff;
+      }
+      .payment-method-mobile {
+        background-color: #f0fdf4;
+      }
+      .receipt {
+        font-family: "Courier New", monospace;
+        background: white;
+        color: black;
+      }
+    </style>
+  </head>
+  <body class="bg-gray-50">
+    <!-- Navigation -->
+    <nav class="bg-white shadow-lg">
+      <div class="container mx-auto px-4 py-3">
+        <div class="flex justify-between items-center">
+          <div class="flex items-center space-x-3">
+            <i class="fas fa-cash-register text-2xl text-green-600"></i>
+            <div>
+              <h1 class="text-xl font-bold">Payment System</h1>
+              <p class="text-sm text-gray-600">
+                {{ user.get_full_name|default:user.username }}
+              </p>
+            </div>
+          </div>
+          <div class="flex items-center space-x-4">
+            <span class="bg-green-100 text-green-800 px-3 py-1 rounded-full"
+              >{{ user_role|title }}</span
+            >
+            <button
+              onclick="openCashDrawer()"
+              class="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700"
+            >
+              <i class="fas fa-cash-register mr-2"></i>Cash Drawer
+            </button>
+          </div>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="container mx-auto px-4 py-6">
+      <!-- Stats Bar -->
+      <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
+        <div class="bg-white rounded-lg shadow p-4">
+          <div class="flex items-center">
+            <div class="bg-red-100 p-3 rounded-lg mr-4">
+              <i class="fas fa-clock text-red-600 text-xl"></i>
+            </div>
+            <div>
+              <p class="text-gray-500 text-sm">Pending Payments</p>
+              <h3 class="text-2xl font-bold" id="pending-payments">0</h3>
+            </div>
+          </div>
+        </div>
+
+        <div class="bg-white rounded-lg shadow p-4">
+          <div class="flex items-center">
+            <div class="bg-green-100 p-3 rounded-lg mr-4">
+              <i class="fas fa-money-bill-wave text-green-600 text-xl"></i>
+            </div>
+            <div>
+              <p class="text-gray-500 text-sm">Today's Revenue</p>
+              <h3 class="text-2xl font-bold" id="today-revenue">$0</h3>
+            </div>
+          </div>
+        </div>
+
+        <div class="bg-white rounded-lg shadow p-4">
+          <div class="flex items-center">
+            <div class="bg-blue-100 p-3 rounded-lg mr-4">
+              <i class="fas fa-credit-card text-blue-600 text-xl"></i>
+            </div>
+            <div>
+              <p class="text-gray-500 text-sm">Card Payments</p>
+              <h3 class="text-2xl font-bold" id="card-payments">0</h3>
+            </div>
+          </div>
+        </div>
+
+        <div class="bg-white rounded-lg shadow p-4">
+          <div class="flex items-center">
+            <div class="bg-purple-100 p-3 rounded-lg mr-4">
+              <i class="fas fa-mobile-alt text-purple-600 text-xl"></i>
+            </div>
+            <div>
+              <p class="text-gray-500 text-sm">Mobile Payments</p>
+              <h3 class="text-2xl font-bold" id="mobile-payments">0</h3>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Two Column Layout -->
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <!-- Left Column: Pending Bills -->
+        <div class="lg:col-span-2">
+          <div class="bg-white rounded-lg shadow p-4 mb-6">
+            <div class="flex justify-between items-center mb-4">
+              <h2 class="text-lg font-bold">Pending Bills</h2>
+              <div class="flex space-x-2">
+                <select id="table-filter" class="border rounded-lg px-3 py-1">
+                  <option value="all">All Tables</option>
+                  <!-- Tables will be loaded here -->
+                </select>
+                <button
+                  onclick="refreshBills()"
+                  class="border border-gray-300 px-3 py-1 rounded hover:bg-gray-50"
+                >
+                  <i class="fas fa-sync-alt"></i>
+                </button>
+              </div>
+            </div>
+
+            <div id="pending-bills" class="space-y-4">
+              <!-- Pending bills will be loaded here -->
+              <div class="text-center py-12 text-gray-500">
+                <div
+                  class="spinner w-12 h-12 border-4 border-green-600 border-t-transparent rounded-full animate-spin mx-auto mb-4"
+                ></div>
+                <p>Loading pending bills...</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Recent Transactions -->
+          <div class="bg-white rounded-lg shadow p-4">
+            <h2 class="text-lg font-bold mb-4">Recent Transactions</h2>
+            <div class="overflow-x-auto">
+              <table class="min-w-full divide-y divide-gray-200">
+                <thead class="bg-gray-50">
+                  <tr>
+                    <th
+                      class="px-4 py-2 text-left text-xs font-medium text-gray-500"
+                    >
+                      Time
+                    </th>
+                    <th
+                      class="px-4 py-2 text-left text-xs font-medium text-gray-500"
+                    >
+                      Table
+                    </th>
+                    <th
+                      class="px-4 py-2 text-left text-xs font-medium text-gray-500"
+                    >
+                      Amount
+                    </th>
+                    <th
+                      class="px-4 py-2 text-left text-xs font-medium text-gray-500"
+                    >
+                      Method
+                    </th>
+                    <th
+                      class="px-4 py-2 text-left text-xs font-medium text-gray-500"
+                    >
+                      Status
+                    </th>
+                  </tr>
+                </thead>
+                <tbody
+                  id="recent-transactions"
+                  class="divide-y divide-gray-200"
+                >
+                  <!-- Transactions will be loaded here -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <!-- Right Column: Payment Interface -->
+        <div class="lg:col-span-1">
+          <div class="bg-white rounded-lg shadow sticky top-4">
+            <div class="p-4 border-b">
+              <h2 class="text-xl font-bold">Process Payment</h2>
+              <p class="text-sm text-gray-600">
+                Select a bill to process payment
+              </p>
+            </div>
+
+            <!-- Selected Bill -->
+            <div class="p-4 border-b" id="selected-bill-container">
+              <div class="text-center py-8 text-gray-500">
+                <i class="fas fa-receipt text-3xl mb-3"></i>
+                <p>No bill selected</p>
+                <p class="text-sm">Select a bill from the left</p>
+              </div>
+            </div>
+
+            <!-- Payment Interface -->
+            <div class="p-4">
+              <div id="payment-interface" class="hidden">
+                <!-- Bill Summary -->
+                <div class="mb-4">
+                  <h4 class="font-bold mb-2">Bill Summary</h4>
+                  <div class="space-y-1 text-sm">
+                    <div class="flex justify-between">
+                      <span>Subtotal:</span>
+                      <span id="bill-subtotal">$0.00</span>
+                    </div>
+                    <div class="flex justify-between">
+                      <span>Tax:</span>
+                      <span id="bill-tax">$0.00</span>
+                    </div>
+                    <div class="flex justify-between">
+                      <span>Service:</span>
+                      <span id="bill-service">$0.00</span>
+                    </div>
+                    <div
+                      class="flex justify-between font-bold border-t pt-1 mt-1"
+                    >
+                      <span>Total:</span>
+                      <span id="bill-total">$0.00</span>
+                    </div>
+                    <div class="flex justify-between font-bold text-green-600">
+                      <span>Paid:</span>
+                      <span id="bill-paid">$0.00</span>
+                    </div>
+                    <div
+                      class="flex justify-between font-bold text-red-600 border-t pt-1 mt-1"
+                    >
+                      <span>Balance:</span>
+                      <span id="bill-balance">$0.00</span>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Payment Method -->
+                <div class="mb-4">
+                  <h4 class="font-bold mb-2">Payment Method</h4>
+                  <div class="grid grid-cols-3 gap-2">
+                    <button
+                      onclick="selectPaymentMethod('cash')"
+                      class="payment-method-btn border rounded p-3 text-center hover:bg-gray-50 payment-method-cash"
+                    >
+                      <i class="fas fa-money-bill-wave text-2xl mb-2"></i>
+                      <div class="text-sm">Cash</div>
+                    </button>
+                    <button
+                      onclick="selectPaymentMethod('card')"
+                      class="payment-method-btn border rounded p-3 text-center hover:bg-gray-50 payment-method-card"
+                    >
+                      <i class="fas fa-credit-card text-2xl mb-2"></i>
+                      <div class="text-sm">Card</div>
+                    </button>
+                    <button
+                      onclick="selectPaymentMethod('mobile')"
+                      class="payment-method-btn border rounded p-3 text-center hover:bg-gray-50 payment-method-mobile"
+                    >
+                      <i class="fas fa-mobile-alt text-2xl mb-2"></i>
+                      <div class="text-sm">Mobile</div>
+                    </button>
+                  </div>
+                </div>
+
+                <!-- Amount Input -->
+                <div class="mb-4">
+                  <label class="block text-sm font-medium text-gray-700 mb-2">
+                    Amount Received
+                  </label>
+                  <div class="relative">
+                    <span class="absolute left-3 top-3">$</span>
+                    <input
+                      type="number"
+                      id="amount-received"
+                      class="w-full border rounded-lg pl-8 pr-4 py-2 focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                      placeholder="0.00"
+                      step="0.01"
+                      min="0"
+                    />
+                  </div>
+                </div>
+
+                <!-- Quick Amount Buttons -->
+                <div class="mb-4">
+                  <div class="grid grid-cols-4 gap-2">
+                    <button
+                      onclick="addAmount(10)"
+                      class="border rounded py-2 text-sm hover:bg-gray-50"
+                    >
+                      $10
+                    </button>
+                    <button
+                      onclick="addAmount(20)"
+                      class="border rounded py-2 text-sm hover:bg-gray-50"
+                    >
+                      $20
+                    </button>
+                    <button
+                      onclick="addAmount(50)"
+                      class="border rounded py-2 text-sm hover:bg-gray-50"
+                    >
+                      $50
+                    </button>
+                    <button
+                      onclick="addAmount(100)"
+                      class="border rounded py-2 text-sm hover:bg-gray-50"
+                    >
+                      $100
+                    </button>
+                  </div>
+                </div>
+
+                <!-- Change Calculation -->
+                <div
+                  class="mb-4 p-3 bg-gray-50 rounded hidden"
+                  id="change-container"
+                >
+                  <div class="flex justify-between font-bold">
+                    <span>Change Due:</span>
+                    <span id="change-amount" class="text-green-600">$0.00</span>
+                  </div>
+                </div>
+
+                <!-- Payment Actions -->
+                <div class="space-y-2">
+                  <button
+                    onclick="processPayment()"
+                    id="process-payment-btn"
+                    class="w-full bg-green-600 text-white py-3 rounded-lg font-bold hover:bg-green-700 disabled:opacity-50 disabled:cursor-not-allowed"
+                    disabled
+                  >
+                    <i class="fas fa-check-circle mr-2"></i>Process Payment
+                  </button>
+                  <button
+                    onclick="printReceipt()"
+                    class="w-full border border-gray-300 text-gray-700 py-3 rounded-lg font-bold hover:bg-gray-50"
+                  >
+                    <i class="fas fa-print mr-2"></i>Print Receipt
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Receipt Modal -->
+    <div
+      id="receipt-modal"
+      class="fixed inset-0 bg-black bg-opacity-50 z-50 hidden items-center justify-center p-4"
+    >
+      <div
+        class="bg-white rounded-lg max-w-md w-full max-h-[90vh] overflow-y-auto"
+      >
+        <div class="p-6">
+          <!-- Receipt will be loaded here -->
+        </div>
+      </div>
+    </div>
+
+    <script>
+      const API_BASE = "/api/tables";
+      let selectedBill = null;
+      let selectedPaymentMethod = null;
+      let pendingBills = [];
+
+      // Initialize
+      document.addEventListener("DOMContentLoaded", function () {
+        loadPendingBills();
+        loadRecentTransactions();
+        updateStats();
+        setInterval(loadPendingBills, 30000); // Update every 30 seconds
+      });
+
+      async function loadPendingBills() {
+        try {
+          const response = await fetch(
+            `${API_BASE}/orders/?status=served,completed&is_paid=false`
+          );
+          if (response.ok) {
+            const data = await response.json();
+            pendingBills = data.results || data;
+            renderPendingBills(pendingBills);
+            updateStats();
+            populateTableFilter(pendingBills);
+          }
+        } catch (error) {
+          console.error("Error loading pending bills:", error);
+        }
+      }
+
+      function renderPendingBills(bills) {
+        const container = document.getElementById("pending-bills");
+
+        if (!bills || bills.length === 0) {
+          container.innerHTML = `
+                    <div class="text-center py-12 text-gray-500">
+                        <i class="fas fa-check-circle text-3xl mb-3"></i>
+                        <p>No pending bills</p>
+                        <p class="text-sm">All bills are paid</p>
+                    </div>
+                `;
+          return;
+        }
+
+        container.innerHTML = bills
+          .map(
+            (bill) => `
+                <div class="payment-card border rounded-lg p-4 status-unpaid cursor-pointer hover:bg-gray-50"
+                     onclick="selectBill(${bill.id})">
+                    <div class="flex justify-between items-start mb-3">
+                        <div>
+                            <div class="font-bold text-lg">Table ${
+                              bill.table?.table_number || "N/A"
+                            }</div>
+                            <div class="text-sm text-gray-600">Order #${
+                              bill.order_number
+                            }</div>
+                            <div class="text-sm text-gray-600">${
+                              bill.customer_name || "Guest"
+                            }</div>
+                        </div>
+                        <div class="text-right">
+                            <div class="font-bold text-lg">$${parseFloat(
+                              bill.total_amount || 0
+                            ).toFixed(2)}</div>
+                            <div class="text-sm text-gray-600">${formatTime(
+                              bill.placed_at
+                            )}</div>
+                        </div>
+                    </div>
+                    
+                    <div class="flex justify-between items-center">
+                        <div class="text-sm">
+                            <span class="bg-red-100 text-red-800 px-2 py-1 rounded-full text-xs">
+                                Unpaid
+                            </span>
+                            <span class="ml-2 text-gray-600">${
+                              bill.items?.length || 0
+                            } items</span>
+                        </div>
+                        <button onclick="event.stopPropagation(); viewBillDetails(${
+                          bill.id
+                        })" 
+                                class="text-green-600 hover:text-green-800 text-sm">
+                            <i class="fas fa-eye mr-1"></i>View
+                        </button>
+                    </div>
+                </div>
+            `
+          )
+          .join("");
+      }
+
+      async function loadRecentTransactions() {
+        try {
+          const response = await fetch(
+            `${API_BASE}/orders/?is_paid=true&ordering=-completed_at`
+          );
+          if (response.ok) {
+            const data = await response.json();
+            const transactions = (data.results || data).slice(0, 10);
+            renderRecentTransactions(transactions);
+          }
+        } catch (error) {
+          console.error("Error loading transactions:", error);
+        }
+      }
+
+      function renderRecentTransactions(transactions) {
+        const container = document.getElementById("recent-transactions");
+
+        if (!transactions || transactions.length === 0) {
+          container.innerHTML = `
+                    <tr>
+                        <td colspan="5" class="px-4 py-8 text-center text-gray-500">
+                            <i class="fas fa-history text-2xl mb-3"></i>
+                            <p>No recent transactions</p>
+                        </td>
+                    </tr>
+                `;
+          return;
+        }
+
+        container.innerHTML = transactions
+          .map(
+            (trans) => `
+                <tr>
+                    <td class="px-4 py-2 text-sm">${formatTime(
+                      trans.completed_at
+                    )}</td>
+                    <td class="px-4 py-2 text-sm">${
+                      trans.table?.table_number || "N/A"
+                    }</td>
+                    <td class="px-4 py-2 text-sm font-bold">$${parseFloat(
+                      trans.total_amount || 0
+                    ).toFixed(2)}</td>
+                    <td class="px-4 py-2 text-sm">
+                        <span class="px-2 py-1 rounded-full text-xs
+                            ${
+                              trans.payment_method === "cash"
+                                ? "bg-blue-100 text-blue-800"
+                                : trans.payment_method === "card"
+                                ? "bg-purple-100 text-purple-800"
+                                : "bg-green-100 text-green-800"
+                            }">
+                            ${trans.payment_method || "cash"}
+                        </span>
+                    </td>
+                    <td class="px-4 py-2 text-sm">
+                        <span class="px-2 py-1 rounded-full text-xs bg-green-100 text-green-800">
+                            Paid
+                        </span>
+                    </td>
+                </tr>
+            `
+          )
+          .join("");
+      }
+
+      function updateStats() {
+        const pendingCount = pendingBills.length;
+        const todayRevenue = pendingBills.reduce(
+          (sum, bill) => sum + parseFloat(bill.total_amount || 0),
+          0
+        );
+
+        // Simulate some stats
+        const cardCount = Math.floor(pendingCount * 0.3);
+        const mobileCount = Math.floor(pendingCount * 0.2);
+
+        document.getElementById("pending-payments").textContent = pendingCount;
+        document.getElementById(
+          "today-revenue"
+        ).textContent = `$${todayRevenue.toFixed(2)}`;
+        document.getElementById("card-payments").textContent = cardCount;
+        document.getElementById("mobile-payments").textContent = mobileCount;
+      }
+
+      function populateTableFilter(bills) {
+        const filter = document.getElementById("table-filter");
+        const tables = [
+          ...new Set(
+            bills.map((bill) => bill.table?.table_number).filter(Boolean)
+          ),
+        ];
+
+        // Clear existing options except "All Tables"
+        while (filter.options.length > 1) {
+          filter.remove(1);
+        }
+
+        // Add table options
+        tables.forEach((tableNumber) => {
+          const option = document.createElement("option");
+          option.value = tableNumber;
+          option.textContent = `Table ${tableNumber}`;
+          filter.appendChild(option);
+        });
+      }
+
+      function selectBill(billId) {
+        const bill = pendingBills.find((b) => b.id === billId);
+        if (!bill) return;
+
+        selectedBill = bill;
+
+        // Update selected bill UI
+        const container = document.getElementById("selected-bill-container");
+        container.innerHTML = `
+                <div>
+                    <div class="flex justify-between items-start mb-3">
+                        <div>
+                            <h4 class="font-bold text-lg">Table ${
+                              bill.table?.table_number
+                            }</h4>
+                            <p class="text-sm text-gray-600">Order #${
+                              bill.order_number
+                            }</p>
+                        </div>
+                        <button onclick="deselectBill()" class="text-gray-500 hover:text-gray-700">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </div>
+                    
+                    <div class="space-y-1 text-sm">
+                        <div class="flex justify-between">
+                            <span>Customer:</span>
+                            <span>${bill.customer_name || "Guest"}</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span>Time:</span>
+                            <span>${formatTime(bill.placed_at)}</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span>Status:</span>
+                            <span class="text-red-600 font-bold">Unpaid</span>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+        // Show payment interface
+        document.getElementById("payment-interface").classList.remove("hidden");
+
+        // Update bill summary
+        updateBillSummary(bill);
+
+        // Reset payment interface
+        resetPaymentInterface();
+      }
+
+      function deselectBill() {
+        selectedBill = null;
+        document.getElementById("selected-bill-container").innerHTML = `
+                <div class="text-center py-8 text-gray-500">
+                    <i class="fas fa-receipt text-3xl mb-3"></i>
+                    <p>No bill selected</p>
+                    <p class="text-sm">Select a bill from the left</p>
+                </div>
+            `;
+        document.getElementById("payment-interface").classList.add("hidden");
+      }
+
+      function updateBillSummary(bill) {
+        const subtotal = parseFloat(bill.subtotal || bill.total_amount || 0);
+        const tax = parseFloat(bill.tax_amount || 0);
+        const service = parseFloat(bill.service_charge || 0);
+        const total = parseFloat(bill.total_amount || 0);
+        const paid = parseFloat(bill.paid_amount || 0);
+        const balance = total - paid;
+
+        document.getElementById(
+          "bill-subtotal"
+        ).textContent = `$${subtotal.toFixed(2)}`;
+        document.getElementById("bill-tax").textContent = `$${tax.toFixed(2)}`;
+        document.getElementById(
+          "bill-service"
+        ).textContent = `$${service.toFixed(2)}`;
+        document.getElementById("bill-total").textContent = `$${total.toFixed(
+          2
+        )}`;
+        document.getElementById("bill-paid").textContent = `$${paid.toFixed(
+          2
+        )}`;
+        document.getElementById(
+          "bill-balance"
+        ).textContent = `$${balance.toFixed(2)}`;
+
+        // Update amount received placeholder
+        document.getElementById("amount-received").placeholder =
+          balance.toFixed(2);
+      }
+
+      function resetPaymentInterface() {
+        selectedPaymentMethod = null;
+        document.getElementById("amount-received").value = "";
+        document.querySelectorAll(".payment-method-btn").forEach((btn) => {
+          btn.classList.remove("border-green-500", "border-2");
+        });
+        document.getElementById("change-container").classList.add("hidden");
+        document.getElementById("process-payment-btn").disabled = true;
+      }
+
+      function selectPaymentMethod(method) {
+        selectedPaymentMethod = method;
+
+        // Update UI
+        document.querySelectorAll(".payment-method-btn").forEach((btn) => {
+          btn.classList.remove("border-green-500", "border-2");
+        });
+        event.target.classList.add("border-green-500", "border-2");
+
+        // Validate payment
+        validatePayment();
+      }
+
+      function addAmount(amount) {
+        const input = document.getElementById("amount-received");
+        const current = parseFloat(input.value) || 0;
+        input.value = (current + amount).toFixed(2);
+
+        // Trigger change calculation
+        calculateChange();
+        validatePayment();
+      }
+
+      function calculateChange() {
+        const amountReceived =
+          parseFloat(document.getElementById("amount-received").value) || 0;
+        const balance =
+          parseFloat(
+            document.getElementById("bill-balance").textContent.replace("$", "")
+          ) || 0;
+
+        if (
+          amountReceived > 0 &&
+          selectedPaymentMethod === "cash" &&
+          amountReceived > balance
+        ) {
+          const change = amountReceived - balance;
+          document.getElementById(
+            "change-amount"
+          ).textContent = `$${change.toFixed(2)}`;
+          document
+            .getElementById("change-container")
+            .classList.remove("hidden");
+        } else {
+          document.getElementById("change-container").classList.add("hidden");
+        }
+      }
+
+      function validatePayment() {
+        const amountReceived =
+          parseFloat(document.getElementById("amount-received").value) || 0;
+        const balance =
+          parseFloat(
+            document.getElementById("bill-balance").textContent.replace("$", "")
+          ) || 0;
+        const btn = document.getElementById("process-payment-btn");
+
+        btn.disabled = !(selectedPaymentMethod && amountReceived >= balance);
+      }
+
+      async function processPayment() {
+        if (!selectedBill || !selectedPaymentMethod) return;
+
+        const amountReceived =
+          parseFloat(document.getElementById("amount-received").value) || 0;
+        const balance =
+          parseFloat(
+            document.getElementById("bill-balance").textContent.replace("$", "")
+          ) || 0;
+
+        if (amountReceived < balance && selectedPaymentMethod !== "cash") {
+          alert(
+            "Amount received must be equal to or greater than balance for non-cash payments"
+          );
+          return;
+        }
+
+        if (
+          !confirm(
+            `Process $${amountReceived.toFixed(
+              2
+            )} as ${selectedPaymentMethod} payment?`
+          )
+        ) {
+          return;
+        }
+
+        try {
+          // Update order payment status
+          const response = await fetch(
+            `${API_BASE}/orders/${selectedBill.id}/`,
+            {
+              method: "PATCH",
+              headers: {
+                "Content-Type": "application/json",
+                "X-CSRFToken": getCookie("csrftoken"),
+              },
+              body: JSON.stringify({
+                is_paid: true,
+                payment_method: selectedPaymentMethod,
+                paid_amount: amountReceived,
+              }),
+            }
+          );
+
+          if (response.ok) {
+            alert("Payment processed successfully!");
+
+            // Print receipt
+            printReceipt();
+
+            // Refresh data
+            loadPendingBills();
+            loadRecentTransactions();
+            updateStats();
+
+            // Reset interface
+            deselectBill();
+          }
+        } catch (error) {
+          console.error("Error processing payment:", error);
+          alert("Failed to process payment");
+        }
+      }
+
+      function printReceipt() {
+        if (!selectedBill) return;
+
+        const modal = document.getElementById("receipt-modal");
+        const modalContent = modal.querySelector(".p-6");
+
+        const amountReceived =
+          parseFloat(document.getElementById("amount-received").value) || 0;
+        const balance =
+          parseFloat(
+            document.getElementById("bill-balance").textContent.replace("$", "")
+          ) || 0;
+        const change = amountReceived - balance;
+
+        modalContent.innerHTML = `
+                <div class="receipt p-4">
+                    <div class="text-center mb-4">
+                        <h2 class="text-xl font-bold">RESTAURANT RECEIPT</h2>
+                        <p class="text-sm">123 Main Street</p>
+                        <p class="text-sm">Phone: (123) 456-7890</p>
+                    </div>
+                    
+                    <div class="border-t border-b py-2 my-2">
+                        <div class="flex justify-between">
+                            <span>Order #:</span>
+                            <span>${selectedBill.order_number}</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span>Table:</span>
+                            <span>${
+                              selectedBill.table?.table_number || "N/A"
+                            }</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span>Date:</span>
+                            <span>${new Date().toLocaleDateString()}</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span>Time:</span>
+                            <span>${new Date().toLocaleTimeString()}</span>
+                        </div>
+                    </div>
+                    
+                    <div class="my-4">
+                        <h3 class="font-bold mb-2">Items:</h3>
+                        ${(selectedBill.items || [])
+                          .map(
+                            (item) => `
+                        <div class="flex justify-between text-sm">
+                            <span>${item.quantity}x ${
+                              item.menu_item?.name || "Item"
+                            }</span>
+                            <span>$${(item.quantity * item.unit_price).toFixed(
+                              2
+                            )}</span>
+                        </div>
+                        `
+                          )
+                          .join("")}
+                    </div>
+                    
+                    <div class="border-t border-b py-2 my-2">
+                        <div class="flex justify-between">
+                            <span>Subtotal:</span>
+                            <span>$${parseFloat(
+                              selectedBill.subtotal || 0
+                            ).toFixed(2)}</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span>Tax:</span>
+                            <span>$${parseFloat(
+                              selectedBill.tax_amount || 0
+                            ).toFixed(2)}</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span>Service:</span>
+                            <span>$${parseFloat(
+                              selectedBill.service_charge || 0
+                            ).toFixed(2)}</span>
+                        </div>
+                        <div class="flex justify-between font-bold">
+                            <span>Total:</span>
+                            <span>$${parseFloat(
+                              selectedBill.total_amount || 0
+                            ).toFixed(2)}</span>
+                        </div>
+                    </div>
+                    
+                    <div class="my-4">
+                        <div class="flex justify-between">
+                            <span>Payment Method:</span>
+                            <span>${selectedPaymentMethod || "Cash"}</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span>Amount Received:</span>
+                            <span>$${amountReceived.toFixed(2)}</span>
+                        </div>
+                        ${
+                          change > 0
+                            ? `
+                        <div class="flex justify-between">
+                            <span>Change:</span>
+                            <span>$${change.toFixed(2)}</span>
+                        </div>
+                        `
+                            : ""
+                        }
+                    </div>
+                    
+                    <div class="text-center mt-6">
+                        <p class="text-sm">Thank you for dining with us!</p>
+                        <p class="text-sm">Please come again</p>
+                    </div>
+                </div>
+                
+                <div class="mt-4 text-center">
+                    <button onclick="printActualReceipt()" class="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700">
+                        <i class="fas fa-print mr-2"></i>Print Receipt
+                    </button>
+                    <button onclick="closeReceipt()" class="ml-2 border border-gray-300 px-4 py-2 rounded hover:bg-gray-50">
+                        Close
+                    </button>
+                </div>
+            `;
+
+        modal.classList.remove("hidden");
+        modal.classList.add("flex");
+      }
+
+      function printActualReceipt() {
+        window.print();
+      }
+
+      function closeReceipt() {
+        document.getElementById("receipt-modal").classList.add("hidden");
+        document.getElementById("receipt-modal").classList.remove("flex");
+      }
+
+      function viewBillDetails(billId) {
+        // Implement bill details view
+        alert("Bill details view would open here");
+      }
+
+      function openCashDrawer() {
+        // Implement cash drawer opening
+        alert("Cash drawer would open here");
+      }
+
+      function refreshBills() {
+        loadPendingBills();
+      }
+
+      function formatTime(dateString) {
+        if (!dateString) return "N/A";
+        const date = new Date(dateString);
+        return date.toLocaleTimeString([], {
+          hour: "2-digit",
+          minute: "2-digit",
+        });
+      }
+
+      // Event listeners
+      document
+        .getElementById("amount-received")
+        .addEventListener("input", function () {
+          calculateChange();
+          validatePayment();
+        });
+
+      document
+        .getElementById("table-filter")
+        .addEventListener("change", function () {
+          const tableNumber = this.value;
+          if (tableNumber === "all") {
+            renderPendingBills(pendingBills);
+          } else {
+            const filtered = pendingBills.filter(
+              (bill) => bill.table?.table_number == tableNumber
+            );
+            renderPendingBills(filtered);
+          }
+        });
+
+      // Helper function to get CSRF token
+      function getCookie(name) {
+        let cookieValue = null;
+        if (document.cookie && document.cookie !== "") {
+          const cookies = document.cookie.split(";");
+          for (let i = 0; i < cookies.length; i++) {
+            const cookie = cookies[i].trim();
+            if (cookie.substring(0, name.length + 1) === name + "=") {
+              cookieValue = decodeURIComponent(
+                cookie.substring(name.length + 1)
+              );
+              break;
+            }
+          }
+        }
+        return cookieValue;
+      }
+    </script>
+  </body>
+</html>

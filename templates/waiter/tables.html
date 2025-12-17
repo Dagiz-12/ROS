@@ -1,0 +1,600 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Table Management - Waiter Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+    <style>
+      .table-card {
+        transition: all 0.3s ease;
+      }
+      .table-card:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+      }
+      .status-available {
+        background-color: #d1fae5;
+        border-color: #10b981;
+      }
+      .status-occupied {
+        background-color: #fee2e2;
+        border-color: #ef4444;
+      }
+      .status-reserved {
+        background-color: #fef3c7;
+        border-color: #f59e0b;
+      }
+      .status-cleaning {
+        background-color: #e0e7ff;
+        border-color: #6366f1;
+      }
+    </style>
+  </head>
+  <body class="bg-gray-50">
+    <!-- Navigation -->
+    <nav class="bg-white shadow-lg">
+      <div class="container mx-auto px-4 py-3">
+        <div class="flex justify-between items-center">
+          <div class="flex items-center space-x-3">
+            <a
+              href="{% url 'waiter-dashboard' %}"
+              class="text-gray-600 hover:text-red-600"
+            >
+              <i class="fas fa-arrow-left"></i>
+            </a>
+            <i class="fas fa-table text-2xl text-red-600"></i>
+            <div>
+              <h1 class="text-xl font-bold">Table Management</h1>
+              <p class="text-sm text-gray-600">
+                {{ user.get_full_name|default:user.username }}
+              </p>
+            </div>
+          </div>
+          <div class="flex items-center space-x-4">
+            <span class="bg-red-100 text-red-800 px-3 py-1 rounded-full"
+              >{{ user_role|title }}</span
+            >
+            <button
+              onclick="refreshTables()"
+              class="bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700"
+            >
+              <i class="fas fa-sync-alt mr-2"></i>Refresh
+            </button>
+          </div>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="container mx-auto px-4 py-6">
+      <!-- Stats Bar -->
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+        <div class="bg-white rounded-lg shadow p-4">
+          <div class="flex items-center">
+            <div class="bg-green-100 p-3 rounded-lg mr-4">
+              <i class="fas fa-check-circle text-green-600 text-xl"></i>
+            </div>
+            <div>
+              <p class="text-gray-500 text-sm">Available</p>
+              <h3 class="text-2xl font-bold" id="available-count">0</h3>
+            </div>
+          </div>
+        </div>
+
+        <div class="bg-white rounded-lg shadow p-4">
+          <div class="flex items-center">
+            <div class="bg-red-100 p-3 rounded-lg mr-4">
+              <i class="fas fa-users text-red-600 text-xl"></i>
+            </div>
+            <div>
+              <p class="text-gray-500 text-sm">Occupied</p>
+              <h3 class="text-2xl font-bold" id="occupied-count">0</h3>
+            </div>
+          </div>
+        </div>
+
+        <div class="bg-white rounded-lg shadow p-4">
+          <div class="flex items-center">
+            <div class="bg-yellow-100 p-3 rounded-lg mr-4">
+              <i class="fas fa-calendar-alt text-yellow-600 text-xl"></i>
+            </div>
+            <div>
+              <p class="text-gray-500 text-sm">Reserved</p>
+              <h3 class="text-2xl font-bold" id="reserved-count">0</h3>
+            </div>
+          </div>
+        </div>
+
+        <div class="bg-white rounded-lg shadow p-4">
+          <div class="flex items-center">
+            <div class="bg-blue-100 p-3 rounded-lg mr-4">
+              <i class="fas fa-broom text-blue-600 text-xl"></i>
+            </div>
+            <div>
+              <p class="text-gray-500 text-sm">Cleaning</p>
+              <h3 class="text-2xl font-bold" id="cleaning-count">0</h3>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Filters and Actions -->
+      <div class="bg-white rounded-lg shadow p-4 mb-6">
+        <div
+          class="flex flex-col md:flex-row md:items-center justify-between space-y-4 md:space-y-0"
+        >
+          <div class="flex space-x-4">
+            <div class="relative">
+              <select
+                id="status-filter"
+                class="border rounded-lg px-4 py-2 pr-8 appearance-none focus:ring-2 focus:ring-red-500 focus:border-transparent"
+              >
+                <option value="all">All Status</option>
+                <option value="available">Available</option>
+                <option value="occupied">Occupied</option>
+                <option value="reserved">Reserved</option>
+                <option value="cleaning">Cleaning</option>
+              </select>
+              <i
+                class="fas fa-chevron-down absolute right-3 top-3 text-gray-400"
+              ></i>
+            </div>
+
+            <div class="relative">
+              <select
+                id="capacity-filter"
+                class="border rounded-lg px-4 py-2 pr-8 appearance-none focus:ring-2 focus:ring-red-500 focus:border-transparent"
+              >
+                <option value="0">All Capacity</option>
+                <option value="2">2 seats</option>
+                <option value="4">4 seats</option>
+                <option value="6">6+ seats</option>
+              </select>
+              <i
+                class="fas fa-chevron-down absolute right-3 top-3 text-gray-400"
+              ></i>
+            </div>
+          </div>
+
+          <div class="flex space-x-2">
+            <a
+              href="{% url 'waiter-new-order' %}"
+              class="bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700"
+            >
+              <i class="fas fa-plus mr-2"></i>New Order
+            </a>
+            <button
+              onclick="printTableList()"
+              class="border border-gray-300 px-4 py-2 rounded-lg hover:bg-gray-50"
+            >
+              <i class="fas fa-print mr-2"></i>Print
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tables Grid -->
+      <div class="mb-6">
+        <h2 class="text-lg font-bold mb-4">All Tables</h2>
+        <div
+          id="tables-container"
+          class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4"
+        >
+          <!-- Tables will be loaded here -->
+          <div class="col-span-full text-center py-12 text-gray-500">
+            <div
+              class="spinner w-12 h-12 border-4 border-red-600 border-t-transparent rounded-full animate-spin mx-auto mb-4"
+            ></div>
+            <p>Loading tables...</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Table Details Modal -->
+      <div
+        id="table-modal"
+        class="fixed inset-0 bg-black bg-opacity-50 z-50 hidden items-center justify-center p-4"
+      >
+        <div
+          class="bg-white rounded-lg max-w-md w-full max-h-[90vh] overflow-y-auto"
+        >
+          <div class="p-6">
+            <!-- Modal content will be loaded here -->
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      const API_BASE = "/api/tables";
+      let allTables = [];
+
+      async function loadTables() {
+        try {
+          showLoading();
+          const response = await fetch(`${API_BASE}/tables/?is_active=true`);
+
+          if (response.ok) {
+            const data = await response.json();
+            allTables = data.results || data;
+            renderTables(allTables);
+            updateStats(allTables);
+          }
+        } catch (error) {
+          console.error("Error loading tables:", error);
+          showError("Failed to load tables");
+        } finally {
+          hideLoading();
+        }
+      }
+
+      function renderTables(tables) {
+        const container = document.getElementById("tables-container");
+
+        if (!tables || tables.length === 0) {
+          container.innerHTML = `
+                    <div class="col-span-full text-center py-12 text-gray-500">
+                        <i class="fas fa-table text-4xl mb-4"></i>
+                        <p>No tables available</p>
+                        <p class="text-sm mt-2">Contact manager to add tables</p>
+                    </div>
+                `;
+          return;
+        }
+
+        container.innerHTML = tables
+          .map(
+            (table) => `
+                <div class="table-card bg-white rounded-lg shadow border-2 p-4 cursor-pointer
+                    ${
+                      table.status === "available"
+                        ? "status-available"
+                        : table.status === "occupied"
+                        ? "status-occupied"
+                        : table.status === "reserved"
+                        ? "status-reserved"
+                        : "status-cleaning"
+                    }"
+                    onclick="showTableDetails(${table.id})">
+                    <div class="flex justify-between items-start mb-3">
+                        <div>
+                            <div class="text-3xl font-bold">${
+                              table.table_number
+                            }</div>
+                            <div class="text-sm text-gray-600">${
+                              table.table_name || "Table"
+                            }</div>
+                        </div>
+                        <span class="status-badge px-2 py-1 rounded-full text-xs font-medium capitalize
+                            ${
+                              table.status === "available"
+                                ? "bg-green-100 text-green-800"
+                                : table.status === "occupied"
+                                ? "bg-red-100 text-red-800"
+                                : table.status === "reserved"
+                                ? "bg-yellow-100 text-yellow-800"
+                                : "bg-blue-100 text-blue-800"
+                            }">
+                            ${table.status || "available"}
+                        </span>
+                    </div>
+                    
+                    <div class="space-y-2">
+                        <div class="flex items-center text-sm">
+                            <i class="fas fa-chair mr-2 text-gray-500"></i>
+                            <span>Capacity: ${table.capacity || 4} seats</span>
+                        </div>
+                        
+                        ${
+                          table.current_order
+                            ? `
+                        <div class="flex items-center text-sm">
+                            <i class="fas fa-clock mr-2 text-gray-500"></i>
+                            <span>Order: #${table.current_order}</span>
+                        </div>
+                        `
+                            : ""
+                        }
+                        
+                        ${
+                          table.location_description
+                            ? `
+                        <div class="flex items-center text-sm">
+                            <i class="fas fa-map-marker-alt mr-2 text-gray-500"></i>
+                            <span class="truncate">${table.location_description}</span>
+                        </div>
+                        `
+                            : ""
+                        }
+                    </div>
+                    
+                    <div class="mt-4 pt-3 border-t">
+                        <div class="flex space-x-2">
+                            ${
+                              table.status === "available"
+                                ? `
+                            <button onclick="event.stopPropagation(); createOrder(${table.id})" 
+                                    class="flex-1 bg-green-600 text-white py-2 rounded text-sm hover:bg-green-700">
+                                <i class="fas fa-plus mr-1"></i>Order
+                            </button>
+                            `
+                                : ""
+                            }
+                            
+                            ${
+                              table.status === "occupied"
+                                ? `
+                            <button onclick="event.stopPropagation(); viewOrders(${table.id})" 
+                                    class="flex-1 bg-blue-600 text-white py-2 rounded text-sm hover:bg-blue-700">
+                                <i class="fas fa-eye mr-1"></i>View
+                            </button>
+                            `
+                                : ""
+                            }
+                            
+                            <button onclick="event.stopPropagation(); updateStatus(${
+                              table.id
+                            })" 
+                                    class="flex-1 border border-gray-300 py-2 rounded text-sm hover:bg-gray-50">
+                                <i class="fas fa-edit mr-1"></i>Status
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `
+          )
+          .join("");
+      }
+
+      function updateStats(tables) {
+        const counts = {
+          available: 0,
+          occupied: 0,
+          reserved: 0,
+          cleaning: 0,
+        };
+
+        tables.forEach((table) => {
+          if (counts.hasOwnProperty(table.status)) {
+            counts[table.status]++;
+          }
+        });
+
+        document.getElementById("available-count").textContent =
+          counts.available;
+        document.getElementById("occupied-count").textContent = counts.occupied;
+        document.getElementById("reserved-count").textContent = counts.reserved;
+        document.getElementById("cleaning-count").textContent = counts.cleaning;
+      }
+
+      function showTableDetails(tableId) {
+        const table = allTables.find((t) => t.id === tableId);
+        if (!table) return;
+
+        const modal = document.getElementById("table-modal");
+        const modalContent = modal.querySelector(".p-6");
+
+        modalContent.innerHTML = `
+                <div class="flex justify-between items-start mb-4">
+                    <h3 class="text-xl font-bold">Table ${
+                      table.table_number
+                    }</h3>
+                    <button onclick="closeModal()" class="text-gray-500 hover:text-gray-700">
+                        <i class="fas fa-times text-xl"></i>
+                    </button>
+                </div>
+                
+                <div class="space-y-4">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Table Name</label>
+                        <p class="text-lg">${table.table_name || "No name"}</p>
+                    </div>
+                    
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Status</label>
+                            <span class="inline-block px-3 py-1 rounded-full text-sm font-medium
+                                ${
+                                  table.status === "available"
+                                    ? "bg-green-100 text-green-800"
+                                    : table.status === "occupied"
+                                    ? "bg-red-100 text-red-800"
+                                    : table.status === "reserved"
+                                    ? "bg-yellow-100 text-yellow-800"
+                                    : "bg-blue-100 text-blue-800"
+                                }">
+                                ${table.status || "available"}
+                            </span>
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Capacity</label>
+                            <p class="text-lg">${table.capacity || 4} seats</p>
+                        </div>
+                    </div>
+                    
+                    ${
+                      table.location_description
+                        ? `
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Location</label>
+                        <p>${table.location_description}</p>
+                    </div>
+                    `
+                        : ""
+                    }
+                    
+                    ${
+                      table.qr_code
+                        ? `
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">QR Code</label>
+                        <div class="border rounded p-4 flex justify-center">
+                            <img src="${table.qr_code}" alt="QR Code" class="w-32 h-32">
+                        </div>
+                    </div>
+                    `
+                        : ""
+                    }
+                    
+                    <div class="pt-4 border-t">
+                        <h4 class="font-medium mb-2">Quick Actions</h4>
+                        <div class="grid grid-cols-2 gap-2">
+                            ${
+                              table.status === "available"
+                                ? `
+                            <button onclick="createOrder(${table.id})" 
+                                    class="bg-green-600 text-white py-2 rounded hover:bg-green-700">
+                                Create Order
+                            </button>
+                            `
+                                : `
+                            <button onclick="viewOrders(${table.id})" 
+                                    class="bg-blue-600 text-white py-2 rounded hover:bg-blue-700">
+                                View Orders
+                            </button>
+                            `
+                            }
+                            
+                            <button onclick="updateTableStatus(${table.id})" 
+                                    class="border border-gray-300 py-2 rounded hover:bg-gray-50">
+                                Change Status
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+        modal.classList.remove("hidden");
+        modal.classList.add("flex");
+      }
+
+      function createOrder(tableId) {
+        window.location.href = `/api/tables/waiter/new-order/${tableId}/`;
+      }
+
+      function viewOrders(tableId) {
+        window.location.href = `/api/tables/orders/?table=${tableId}`;
+      }
+
+      async function updateTableStatus(tableId) {
+        const newStatus = prompt(
+          "Enter new status (available, occupied, reserved, cleaning):"
+        );
+        if (
+          !newStatus ||
+          !["available", "occupied", "reserved", "cleaning"].includes(newStatus)
+        ) {
+          alert("Invalid status");
+          return;
+        }
+
+        try {
+          const response = await fetch(
+            `${API_BASE}/tables/${tableId}/update_status/`,
+            {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+                "X-CSRFToken": getCookie("csrftoken"),
+              },
+              body: JSON.stringify({ status: newStatus }),
+            }
+          );
+
+          if (response.ok) {
+            alert("Table status updated!");
+            loadTables();
+            closeModal();
+          }
+        } catch (error) {
+          console.error("Error updating status:", error);
+          alert("Failed to update status");
+        }
+      }
+
+      function closeModal() {
+        document.getElementById("table-modal").classList.add("hidden");
+        document.getElementById("table-modal").classList.remove("flex");
+      }
+
+      function refreshTables() {
+        loadTables();
+      }
+
+      function printTableList() {
+        window.print();
+      }
+
+      function showLoading() {
+        // Could add loading indicator
+      }
+
+      function hideLoading() {
+        // Could hide loading indicator
+      }
+
+      function showError(message) {
+        alert(message);
+      }
+
+      // Filter tables
+      document
+        .getElementById("status-filter")
+        .addEventListener("change", filterTables);
+      document
+        .getElementById("capacity-filter")
+        .addEventListener("change", filterTables);
+
+      function filterTables() {
+        const statusFilter = document.getElementById("status-filter").value;
+        const capacityFilter = parseInt(
+          document.getElementById("capacity-filter").value
+        );
+
+        let filtered = allTables;
+
+        if (statusFilter !== "all") {
+          filtered = filtered.filter((table) => table.status === statusFilter);
+        }
+
+        if (capacityFilter > 0) {
+          filtered = filtered.filter(
+            (table) => table.capacity >= capacityFilter
+          );
+        }
+
+        renderTables(filtered);
+      }
+
+      // Helper function to get CSRF token
+      function getCookie(name) {
+        let cookieValue = null;
+        if (document.cookie && document.cookie !== "") {
+          const cookies = document.cookie.split(";");
+          for (let i = 0; i < cookies.length; i++) {
+            const cookie = cookies[i].trim();
+            if (cookie.substring(0, name.length + 1) === name + "=") {
+              cookieValue = decodeURIComponent(
+                cookie.substring(name.length + 1)
+              );
+              break;
+            }
+          }
+        }
+        return cookieValue;
+      }
+
+      // Poll for updates every 30 seconds
+      setInterval(loadTables, 30000);
+
+      // Initial load
+      document.addEventListener("DOMContentLoaded", loadTables);
+    </script>
+  </body>
+</html>

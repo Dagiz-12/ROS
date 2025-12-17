@@ -1,0 +1,104 @@
+<!-- templates/auth/logout.html -->
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Logging out...</title>
+    <script>
+      // Clear all storage
+      localStorage.clear();
+      sessionStorage.clear();
+
+      // Call logout API
+      async function performLogout() {
+        try {
+          const csrfToken = getCookie("csrftoken");
+          await fetch("/api/auth/logout/", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              "X-CSRFToken": csrfToken,
+            },
+            credentials: "include",
+          });
+        } catch (error) {
+          console.log("Logout API error:", error);
+        }
+
+        // Redirect to login page
+        window.location.href = "/login/";
+      }
+
+      function getCookie(name) {
+        let cookieValue = null;
+        if (document.cookie && document.cookie !== "") {
+          const cookies = document.cookie.split(";");
+          for (let i = 0; i < cookies.length; i++) {
+            const cookie = cookies[i].trim();
+            if (cookie.substring(0, name.length + 1) === name + "=") {
+              cookieValue = decodeURIComponent(
+                cookie.substring(name.length + 1)
+              );
+              break;
+            }
+          }
+        }
+        return cookieValue;
+      }
+
+      // Perform logout on page load
+      document.addEventListener("DOMContentLoaded", performLogout);
+    </script>
+    <style>
+      body {
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+          sans-serif;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        margin: 0;
+        background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+      }
+      .logout-container {
+        text-align: center;
+        padding: 40px;
+        background: white;
+        border-radius: 10px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+      }
+      .spinner {
+        border: 4px solid #f3f3f3;
+        border-top: 4px solid #dc2626;
+        border-radius: 50%;
+        width: 50px;
+        height: 50px;
+        animation: spin 1s linear infinite;
+        margin: 0 auto 20px;
+      }
+      @keyframes spin {
+        0% {
+          transform: rotate(0deg);
+        }
+        100% {
+          transform: rotate(360deg);
+        }
+      }
+      h1 {
+        color: #333;
+        margin-bottom: 10px;
+      }
+      p {
+        color: #666;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="logout-container">
+      <div class="spinner"></div>
+      <h1>Logging out...</h1>
+      <p>Please wait while we secure your session</p>
+    </div>
+  </body>
+</html>

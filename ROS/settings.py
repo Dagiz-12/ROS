@@ -12,14 +12,10 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 import os
 from pathlib import Path
 
-from django.conf import settings
-
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-
 AUTH_USER_MODEL = 'accounts.CustomUser'
-
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
@@ -32,9 +28,7 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
-
 # Application definition
-
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -48,14 +42,13 @@ INSTALLED_APPS = [
     'rest_framework',
     'django_filters',
 
-
     # local apps
     'accounts',
     'restaurants',
     'menu',
     'core',
-    'tables'
-
+    'tables',
+    'admin_panel',
 ]
 
 MIDDLEWARE = [
@@ -74,7 +67,7 @@ ROOT_URLCONF = 'ROS.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [BASE_DIR / 'templates'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -88,10 +81,7 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'ROS.wsgi.application'
 
-
 # Database
-# https://docs.djangoproject.com/en/5.2/ref/settings/#databases
-
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
@@ -99,23 +89,7 @@ DATABASES = {
     }
 }
 
-
-# Easy PostgreSQL switch for production
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.postgresql',
-#         'NAME': config('DB_NAME'),
-#         'USER': config('DB_USER'),
-#         'PASSWORD': config('DB_PASSWORD'),
-#         'HOST': config('DB_HOST', 'localhost'),
-#         'PORT': config('DB_PORT', '5432'),
-#     }
-# }
-
-
 # Password validation
-# https://docs.djangoproject.com/en/5.2/ref/settings/#auth-password-validators
-
 AUTH_PASSWORD_VALIDATORS = [
     {
         'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
@@ -131,18 +105,35 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-
 # Internationalization
-# https://docs.djangoproject.com/en/5.2/topics/i18n/
-
 LANGUAGE_CODE = 'en-us'
-
 TIME_ZONE = 'UTC'
-
 USE_I18N = True
-
 USE_TZ = True
 
+# Static files
+STATICFILES_DIRS = [
+    BASE_DIR / 'static',
+]
+STATIC_URL = 'static/'
+STATIC_ROOT = BASE_DIR / 'staticfiles'
+
+# Media files
+MEDIA_URL = '/media/'
+MEDIA_ROOT = BASE_DIR / 'media'
+
+# Default primary key field type
+DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+# Security headers (only apply in production)
+SECURE_BROWSER_XSS_FILTER = not DEBUG
+SECURE_CONTENT_TYPE_NOSNIFF = not DEBUG
+
+# Cache static files for 1 year in production
+if not DEBUG:
+    STATICFILES_STORAGE = 'django.contrib.staticfiles.storage.ManifestStaticFilesStorage'
+else:
+    STATICFILES_STORAGE = 'django.contrib.staticfiles.storage.StaticFilesStorage'
 
 # Basic Django caching (no Redis for now)
 CACHES = {
@@ -156,34 +147,8 @@ CACHES = {
     }
 }
 
-# Browser caching for static assets
-STATICFILES_DIRS = [
-    BASE_DIR / 'static',
-]
-STATIC_URL = 'static/'
-STATIC_ROOT = BASE_DIR / 'staticfiles'
-
-# Media files
-MEDIA_URL = '/media/'
-MEDIA_ROOT = BASE_DIR / 'media'
-
-# Default primary key field type
-# https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
-
-DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
-
-
-# Browser caching headers
-if not settings.DEBUG:
-    SECURE_BROWSER_XSS_FILTER = True
-    SECURE_CONTENT_TYPE_NOSNIFF = True
-
-    # Cache static files for 1 year
-    STATICFILES_STORAGE = 'django.contrib.staticfiles.storage.ManifestStaticFilesStorage'
-
 # Development caching - simple and effective
 CACHE_MIDDLEWARE_SECONDS = 60 * 15  # 15 minutes cache for anonymous users
-
 
 # Authentication backends
 AUTHENTICATION_BACKENDS = [
@@ -221,17 +186,16 @@ REST_FRAMEWORK = {
 FILE_UPLOAD_MAX_MEMORY_SIZE = 10 * 1024 * 1024  # 10MB
 DATA_UPLOAD_MAX_MEMORY_SIZE = 10 * 1024 * 1024  # 10MB
 
-# JWT Settings (optional - can be in .env)
-JWT_SECRET_KEY = settings.SECRET_KEY  # Use Django secret key
+# JWT Settings
+JWT_SECRET_KEY = SECRET_KEY  # Use Django secret key directly
 JWT_ALGORITHM = 'HS256'
 JWT_EXPIRATION_DAYS = 7
 
-# CORS settings (if you'll have frontend on different domain)
+# CORS settings
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:3000",
     "http://127.0.0.1:3000",
 ]
-
 
 # Logging configuration
 LOGGING = {
@@ -251,3 +215,29 @@ LOGGING = {
         'level': 'INFO',
     },
 }
+
+
+# settings.py - Add these settings
+LOGIN_URL = '/login/'  # Custom login page
+LOGIN_REDIRECT_URL = '/waiter/dashboard/'  # Default redirect after login
+LOGOUT_REDIRECT_URL = '/login/'  # Redirect after logout
+
+# CSRF and Session settings
+if DEBUG:
+    CSRF_COOKIE_SECURE = False  # Allow HTTP in development
+    SESSION_COOKIE_SECURE = False
+else:
+    CSRF_COOKIE_SECURE = True
+    SESSION_COOKIE_SECURE = True
+
+CSRF_COOKIE_HTTPONLY = False  # Allow JavaScript to read (needed for AJAX)
+SESSION_COOKIE_HTTPONLY = True
+
+# Email settings (example - configure as needed)
+# Console email for development
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = ''
+EMAIL_HOST_PASSWORD = ''

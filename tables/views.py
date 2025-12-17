@@ -1,3 +1,6 @@
+from django.http import JsonResponse
+from django.contrib.auth.decorators import login_required
+from django.shortcuts import render
 from rest_framework import viewsets, status, generics, filters
 from rest_framework.decorators import action, api_view, permission_classes
 from rest_framework.response import Response
@@ -8,6 +11,8 @@ from django.utils import timezone
 from django.db.models import Q
 from django_filters.rest_framework import DjangoFilterBackend
 import uuid
+from django.http import HttpResponseForbidden
+
 
 from .models import Table, Cart, CartItem, Order, OrderItem
 from .serializers import (
@@ -17,6 +22,120 @@ from .serializers import (
 )
 from menu.models import MenuItem
 from accounts.permissions import IsAdminUser, IsManagerOrAdmin, IsWaiterOrHigher
+
+
+# ==================== HTML TEMPLATE VIEWS ====================
+
+from django.contrib.auth.decorators import login_required, user_passes_test
+from django.shortcuts import render
+
+
+def check_role(user, allowed_roles):
+    """Check if user has one of the allowed roles"""
+    return hasattr(user, 'role') and user.role in allowed_roles
+
+
+def role_required(allowed_roles):
+    """Decorator to check user role"""
+    def decorator(view_func):
+        @login_required
+        def wrapper(request, *args, **kwargs):
+            if not check_role(request.user, allowed_roles):
+                from django.http import HttpResponseForbidden
+                return HttpResponseForbidden("Permission denied")
+            return view_func(request, *args, **kwargs)
+        return wrapper
+    return decorator
+
+# QR Menu Template View - ALREADY EXISTS (keep it)
+
+
+def qr_menu_view(request, restaurant_id=None, table_id=None):
+    """Serve the QR menu interface"""
+    context = {
+        'restaurant_id': restaurant_id or 1,
+        'table_id': table_id or 1,
+    }
+    return render(request, 'qr_menu/index.html', context)
+
+# ==================== WAITER INTERFACE ====================
+
+
+@role_required(['waiter', 'manager', 'admin'])
+def waiter_dashboard(request):
+    """Waiter Tablet Interface - Dashboard"""
+    context = {
+        'user': request.user,
+        'user_role': request.user.role,
+    }
+    return render(request, 'waiter/dashboard.html', context)
+
+
+@role_required(['waiter', 'manager', 'admin'])
+def waiter_tables(request):
+    """Waiter - Table management view"""
+    context = {
+        'user': request.user,
+        'user_role': request.user.role,
+    }
+    return render(request, 'waiter/tables.html', context)
+
+
+@role_required(['waiter', 'manager', 'admin'])
+def waiter_orders(request):
+    """Waiter - Order management view"""
+    context = {
+        'user': request.user,
+        'user_role': request.user.role,
+    }
+    return render(request, 'waiter/orders.html', context)
+
+
+@role_required(['waiter', 'manager', 'admin'])
+def waiter_new_order(request, table_id=None):
+    """Waiter - Create new order interface"""
+    context = {
+        'user': request.user,
+        'user_role': request.user.role,
+        'table_id': table_id,
+    }
+    return render(request, 'waiter/new_order.html', context)
+
+# ==================== CHEF INTERFACE ====================
+
+
+@role_required(['chef', 'manager', 'admin'])
+def chef_dashboard(request):
+    """Chef Kitchen Display - Main dashboard"""
+    context = {
+        'user': request.user,
+        'user_role': request.user.role,
+    }
+    return render(request, 'chef/dashboard.html', context)
+
+# ==================== CASHIER INTERFACE ====================
+
+
+@role_required(['cashier', 'manager', 'admin'])
+def cashier_dashboard(request):
+    """Cashier Payment Interface"""
+    context = {
+        'user': request.user,
+        'user_role': request.user.role,
+    }
+    return render(request, 'cashier/dashboard.html', context)
+
+# ==================== ADMIN DASHBOARD ====================
+
+
+@role_required(['admin', 'manager'])
+def admin_dashboard(request):
+    """Admin Dashboard Interface"""
+    context = {
+        'user': request.user,
+        'user_role': request.user.role,
+    }
+    return render(request, 'admin_dashboard/index.html', context)
 
 
 class TableViewSet(viewsets.ModelViewSet):
@@ -273,10 +392,27 @@ class OrderViewSet(viewsets.ModelViewSet):
     queryset = Order.objects.all()
     serializer_class = OrderSerializer
     permission_classes = [IsAuthenticated, IsWaiterOrHigher]
-    filter_backends = [DjangoFilterBackend,
-                       filters.SearchFilter, filters.OrderingFilter]
-    filterset_fields = ['table', 'status',
-                        'order_type', 'is_paid', 'is_priority']
+   # filter_backends = [DjangoFilterBackend,
+    #                  filters.SearchFilter, filters.OrderingFilter]
+    # filterset_fields = ['table', 'status',
+    #                  'order_type', 'is_paid', 'is_priority']
+
+    def get_queryset(self):
+        user = self.request.user
+        queryset = Order.objects.all()
+
+        # Apply manual filters
+        status = self.request.query_params.get('status')
+        if status:
+            status_list = status.split(',')
+            queryset = queryset.filter(status__in=status_list)
+
+        is_paid = self.request.query_params.get('is_paid')
+        if is_paid:
+            queryset = queryset.filter(is_paid=(is_paid.lower() == 'true'))
+
+        return queryset
+
     search_fields = ['order_number', 'customer_name', 'table__table_number']
     ordering_fields = ['placed_at', 'total_amount', 'order_number']
 
@@ -551,3 +687,25 @@ def submit_qr_order(request):
         'message': 'Order submitted successfully. Waiting for waiter confirmation.',
         'order': OrderSerializer(order).data
     }, status=201)
+
+
+# debug views
+
+# Add to core/views.py or tables/views.py
+
+
+@login_required
+def debug_auth(request):
+    """Debug endpoint to check authentication status"""
+    return JsonResponse({
+        'authenticated': request.user.is_authenticated,
+        'username': request.user.username if request.user.is_authenticated else None,
+        'role': request.user.role if hasattr(request.user, 'role') else None,
+        'session_id': request.session.session_key,
+        'has_session': hasattr(request, 'session') and request.session.session_key is not None,
+        'cookies': dict(request.COOKIES),
+        'headers': dict(request.headers),
+    })
+
+# Add to urls.py
+# path('debug-auth/', debug_auth, name='debug-auth'),

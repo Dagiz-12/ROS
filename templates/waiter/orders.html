@@ -1,0 +1,865 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Order Management - Waiter Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+    <style>
+      .order-card {
+        transition: all 0.3s ease;
+      }
+      .order-card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+      }
+      .status-badge {
+        font-size: 0.75rem;
+        padding: 2px 8px;
+        border-radius: 12px;
+      }
+      .status-pending {
+        background-color: #fef3c7;
+        color: #92400e;
+      }
+      .status-confirmed {
+        background-color: #dbeafe;
+        color: #1e40af;
+      }
+      .status-preparing {
+        background-color: #fce7f3;
+        color: #9d174d;
+      }
+      .status-ready {
+        background-color: #dcfce7;
+        color: #166534;
+      }
+      .status-served {
+        background-color: #f0f9ff;
+        color: #0c4a6e;
+      }
+      .status-completed {
+        background-color: #f5f5f4;
+        color: #44403c;
+      }
+      .status-cancelled {
+        background-color: #fee2e2;
+        color: #991b1b;
+      }
+    </style>
+  </head>
+  <body class="bg-gray-50">
+    <!-- Navigation -->
+    <nav class="bg-white shadow-lg">
+      <div class="container mx-auto px-4 py-3">
+        <div class="flex justify-between items-center">
+          <div class="flex items-center space-x-3">
+            <a
+              href="{% url 'waiter-dashboard' %}"
+              class="text-gray-600 hover:text-red-600"
+            >
+              <i class="fas fa-arrow-left"></i>
+            </a>
+            <i class="fas fa-clipboard-list text-2xl text-red-600"></i>
+            <div>
+              <h1 class="text-xl font-bold">Order Management</h1>
+              <p class="text-sm text-gray-600">
+                {{ user.get_full_name|default:user.username }}
+              </p>
+            </div>
+          </div>
+          <div class="flex items-center space-x-4">
+            <span class="bg-red-100 text-red-800 px-3 py-1 rounded-full"
+              >{{ user_role|title }}</span
+            >
+            <a
+              href="{% url 'waiter-new-order' %}"
+              class="bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700"
+            >
+              <i class="fas fa-plus mr-2"></i>New Order
+            </a>
+          </div>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="container mx-auto px-4 py-6">
+      <!-- Stats Bar -->
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+        <div class="bg-white rounded-lg shadow p-4">
+          <div class="flex items-center">
+            <div class="bg-yellow-100 p-3 rounded-lg mr-4">
+              <i class="fas fa-clock text-yellow-600 text-xl"></i>
+            </div>
+            <div>
+              <p class="text-gray-500 text-sm">Pending</p>
+              <h3 class="text-2xl font-bold" id="pending-count">0</h3>
+            </div>
+          </div>
+        </div>
+
+        <div class="bg-white rounded-lg shadow p-4">
+          <div class="flex items-center">
+            <div class="bg-blue-100 p-3 rounded-lg mr-4">
+              <i class="fas fa-utensils text-blue-600 text-xl"></i>
+            </div>
+            <div>
+              <p class="text-gray-500 text-sm">Preparing</p>
+              <h3 class="text-2xl font-bold" id="preparing-count">0</h3>
+            </div>
+          </div>
+        </div>
+
+        <div class="bg-white rounded-lg shadow p-4">
+          <div class="flex items-center">
+            <div class="bg-green-100 p-3 rounded-lg mr-4">
+              <i class="fas fa-check-circle text-green-600 text-xl"></i>
+            </div>
+            <div>
+              <p class="text-gray-500 text-sm">Ready</p>
+              <h3 class="text-2xl font-bold" id="ready-count">0</h3>
+            </div>
+          </div>
+        </div>
+
+        <div class="bg-white rounded-lg shadow p-4">
+          <div class="flex items-center">
+            <div class="bg-purple-100 p-3 rounded-lg mr-4">
+              <i class="fas fa-money-bill-wave text-purple-600 text-xl"></i>
+            </div>
+            <div>
+              <p class="text-gray-500 text-sm">Today's Revenue</p>
+              <h3 class="text-2xl font-bold" id="revenue-count">$0</h3>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Filters and Search -->
+      <div class="bg-white rounded-lg shadow p-4 mb-6">
+        <div
+          class="flex flex-col md:flex-row md:items-center justify-between space-y-4 md:space-y-0"
+        >
+          <div
+            class="flex flex-col md:flex-row md:items-center space-y-4 md:space-y-0 md:space-x-4"
+          >
+            <div class="relative md:w-64">
+              <input
+                type="text"
+                id="search-orders"
+                class="w-full border rounded-lg px-4 py-2 pl-10 focus:ring-2 focus:ring-red-500 focus:border-transparent"
+                placeholder="Search orders..."
+              />
+              <i class="fas fa-search absolute left-3 top-3 text-gray-400"></i>
+            </div>
+
+            <div class="flex space-x-2">
+              <select
+                id="status-filter"
+                class="border rounded-lg px-4 py-2 focus:ring-2 focus:ring-red-500 focus:border-transparent"
+              >
+                <option value="all">All Status</option>
+                <option value="pending">Pending</option>
+                <option value="confirmed">Confirmed</option>
+                <option value="preparing">Preparing</option>
+                <option value="ready">Ready</option>
+                <option value="served">Served</option>
+                <option value="completed">Completed</option>
+              </select>
+
+              <select
+                id="time-filter"
+                class="border rounded-lg px-4 py-2 focus:ring-2 focus:ring-red-500 focus:border-transparent"
+              >
+                <option value="today">Today</option>
+                <option value="yesterday">Yesterday</option>
+                <option value="week">This Week</option>
+                <option value="month">This Month</option>
+                <option value="all">All Time</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="flex space-x-2">
+            <button
+              onclick="printOrders()"
+              class="border border-gray-300 px-4 py-2 rounded-lg hover:bg-gray-50"
+            >
+              <i class="fas fa-print mr-2"></i>Print
+            </button>
+            <button
+              onclick="exportOrders()"
+              class="border border-gray-300 px-4 py-2 rounded-lg hover:bg-gray-50"
+            >
+              <i class="fas fa-download mr-2"></i>Export
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Orders Table -->
+      <div class="bg-white rounded-lg shadow overflow-hidden mb-6">
+        <div class="overflow-x-auto">
+          <table class="min-w-full divide-y divide-gray-200">
+            <thead class="bg-gray-50">
+              <tr>
+                <th
+                  class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                >
+                  Order #
+                </th>
+                <th
+                  class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                >
+                  Table
+                </th>
+                <th
+                  class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                >
+                  Items
+                </th>
+                <th
+                  class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                >
+                  Total
+                </th>
+                <th
+                  class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                >
+                  Status
+                </th>
+                <th
+                  class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                >
+                  Time
+                </th>
+                <th
+                  class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                >
+                  Actions
+                </th>
+              </tr>
+            </thead>
+            <tbody id="orders-body" class="bg-white divide-y divide-gray-200">
+              <!-- Orders will be loaded here -->
+              <tr>
+                <td colspan="7" class="px-6 py-12 text-center text-gray-500">
+                  <div
+                    class="spinner w-12 h-12 border-4 border-red-600 border-t-transparent rounded-full animate-spin mx-auto mb-4"
+                  ></div>
+                  <p>Loading orders...</p>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Pagination -->
+        <div class="px-6 py-3 bg-gray-50 border-t border-gray-200">
+          <div class="flex items-center justify-between">
+            <div class="text-sm text-gray-700">
+              Showing <span id="start-index">1</span> to
+              <span id="end-index">10</span> of
+              <span id="total-orders">0</span> orders
+            </div>
+            <div class="flex space-x-2">
+              <button
+                onclick="previousPage()"
+                id="prev-btn"
+                disabled
+                class="border border-gray-300 px-3 py-1 rounded disabled:opacity-50"
+              >
+                <i class="fas fa-chevron-left"></i>
+              </button>
+              <button
+                onclick="nextPage()"
+                id="next-btn"
+                disabled
+                class="border border-gray-300 px-3 py-1 rounded disabled:opacity-50"
+              >
+                <i class="fas fa-chevron-right"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Order Details Modal -->
+      <div
+        id="order-modal"
+        class="fixed inset-0 bg-black bg-opacity-50 z-50 hidden items-center justify-center p-4"
+      >
+        <div
+          class="bg-white rounded-lg max-w-4xl w-full max-h-[90vh] overflow-y-auto"
+        >
+          <div class="p-6">
+            <!-- Order details will be loaded here -->
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      const API_BASE = "/api/tables";
+      let allOrders = [];
+      let currentPage = 1;
+      const pageSize = 10;
+
+      async function loadOrders() {
+        try {
+          showLoading();
+          const response = await fetch(`${API_BASE}/orders/`);
+
+          if (response.ok) {
+            const data = await response.json();
+            allOrders = data.results || data;
+            updateStats(allOrders);
+            renderOrdersTable();
+          }
+        } catch (error) {
+          console.error("Error loading orders:", error);
+          showError("Failed to load orders");
+        } finally {
+          hideLoading();
+        }
+      }
+
+      function updateStats(orders) {
+        const today = new Date().toISOString().split("T")[0];
+        const todayOrders = orders.filter(
+          (order) => order.placed_at && order.placed_at.startsWith(today)
+        );
+
+        const counts = {
+          pending: 0,
+          preparing: 0,
+          ready: 0,
+        };
+
+        let todayRevenue = 0;
+
+        todayOrders.forEach((order) => {
+          if (counts.hasOwnProperty(order.status)) {
+            counts[order.status]++;
+          }
+          if (order.total_amount) {
+            todayRevenue += parseFloat(order.total_amount);
+          }
+        });
+
+        document.getElementById("pending-count").textContent = counts.pending;
+        document.getElementById("preparing-count").textContent =
+          counts.preparing;
+        document.getElementById("ready-count").textContent = counts.ready;
+        document.getElementById(
+          "revenue-count"
+        ).textContent = `$${todayRevenue.toFixed(2)}`;
+      }
+
+      function renderOrdersTable() {
+        const start = (currentPage - 1) * pageSize;
+        const end = start + pageSize;
+        const pageOrders = allOrders.slice(start, end);
+
+        const tbody = document.getElementById("orders-body");
+
+        if (!pageOrders || pageOrders.length === 0) {
+          tbody.innerHTML = `
+                    <tr>
+                        <td colspan="7" class="px-6 py-12 text-center text-gray-500">
+                            <i class="fas fa-clipboard-list text-4xl mb-4"></i>
+                            <p>No orders found</p>
+                        </td>
+                    </tr>
+                `;
+          return;
+        }
+
+        tbody.innerHTML = pageOrders
+          .map(
+            (order) => `
+                <tr class="order-card hover:bg-gray-50 cursor-pointer" onclick="showOrderDetails(${
+                  order.id
+                })">
+                    <td class="px-6 py-4 whitespace-nowrap">
+                        <div class="font-bold">${
+                          order.order_number || `#${order.id}`
+                        }</div>
+                        <div class="text-sm text-gray-500">${
+                          order.order_type || "waiter"
+                        }</div>
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap">
+                        <div class="font-medium">${
+                          order.table?.table_number || "N/A"
+                        }</div>
+                        <div class="text-sm text-gray-500">${
+                          order.customer_name || "Guest"
+                        }</div>
+                    </td>
+                    <td class="px-6 py-4">
+                        <div class="text-sm">${
+                          order.items?.length || 0
+                        } items</div>
+                        <div class="text-xs text-gray-500 truncate max-w-xs">
+                            ${
+                              order.items
+                                ?.map((item) => item.menu_item?.name)
+                                .join(", ") || ""
+                            }
+                        </div>
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap">
+                        <div class="font-bold">$${
+                          order.total_amount
+                            ? parseFloat(order.total_amount).toFixed(2)
+                            : "0.00"
+                        }</div>
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap">
+                        <span class="status-badge ${getStatusClass(
+                          order.status
+                        )}">
+                            ${order.status || "pending"}
+                        </span>
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap">
+                        <div class="text-sm">${formatTime(
+                          order.placed_at
+                        )}</div>
+                        <div class="text-xs text-gray-500">${formatDate(
+                          order.placed_at
+                        )}</div>
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                        <div class="flex space-x-2">
+                            ${
+                              order.status === "pending"
+                                ? `
+                            <button onclick="event.stopPropagation(); confirmOrder(${order.id})" 
+                                    class="text-green-600 hover:text-green-900">
+                                <i class="fas fa-check"></i>
+                            </button>
+                            `
+                                : ""
+                            }
+                            
+                            ${
+                              order.status === "ready"
+                                ? `
+                            <button onclick="event.stopPropagation(); serveOrder(${order.id})" 
+                                    class="text-blue-600 hover:text-blue-900">
+                                <i class="fas fa-concierge-bell"></i>
+                            </button>
+                            `
+                                : ""
+                            }
+                            
+                            <button onclick="event.stopPropagation(); printOrder(${
+                              order.id
+                            })" 
+                                    class="text-gray-600 hover:text-gray-900">
+                                <i class="fas fa-print"></i>
+                            </button>
+                        </div>
+                    </td>
+                </tr>
+            `
+          )
+          .join("");
+
+        // Update pagination info
+        document.getElementById("start-index").textContent = start + 1;
+        document.getElementById("end-index").textContent = Math.min(
+          end,
+          allOrders.length
+        );
+        document.getElementById("total-orders").textContent = allOrders.length;
+
+        // Update pagination buttons
+        document.getElementById("prev-btn").disabled = currentPage === 1;
+        document.getElementById("next-btn").disabled = end >= allOrders.length;
+      }
+
+      function getStatusClass(status) {
+        const classes = {
+          pending: "status-pending",
+          confirmed: "status-confirmed",
+          preparing: "status-preparing",
+          ready: "status-ready",
+          served: "status-served",
+          completed: "status-completed",
+          cancelled: "status-cancelled",
+        };
+        return classes[status] || "status-pending";
+      }
+
+      function formatDate(dateString) {
+        if (!dateString) return "N/A";
+        const date = new Date(dateString);
+        return date.toLocaleDateString();
+      }
+
+      function formatTime(dateString) {
+        if (!dateString) return "N/A";
+        const date = new Date(dateString);
+        return date.toLocaleTimeString([], {
+          hour: "2-digit",
+          minute: "2-digit",
+        });
+      }
+
+      async function showOrderDetails(orderId) {
+        try {
+          const response = await fetch(`${API_BASE}/orders/${orderId}/`);
+          if (!response.ok) return;
+
+          const order = await response.json();
+          const modal = document.getElementById("order-modal");
+          const modalContent = modal.querySelector(".p-6");
+
+          modalContent.innerHTML = `
+                    <div class="flex justify-between items-start mb-6">
+                        <div>
+                            <h3 class="text-2xl font-bold">Order ${
+                              order.order_number
+                            }</h3>
+                            <p class="text-gray-600">Table ${
+                              order.table?.table_number
+                            } • ${order.customer_name || "Guest"}</p>
+                        </div>
+                        <button onclick="closeOrderModal()" class="text-gray-500 hover:text-gray-700">
+                            <i class="fas fa-times text-2xl"></i>
+                        </button>
+                    </div>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
+                        <!-- Order Info -->
+                        <div class="md:col-span-2">
+                            <div class="bg-gray-50 rounded-lg p-4">
+                                <h4 class="font-bold mb-3">Order Items</h4>
+                                <div class="space-y-3">
+                                    ${
+                                      order.items
+                                        ?.map(
+                                          (item) => `
+                                    <div class="flex justify-between items-center p-2 bg-white rounded">
+                                        <div>
+                                            <div class="font-medium">${
+                                              item.quantity
+                                            }x ${item.menu_item?.name}</div>
+                                            ${
+                                              item.special_instructions
+                                                ? `
+                                            <div class="text-sm text-gray-600 italic">${item.special_instructions}</div>
+                                            `
+                                                : ""
+                                            }
+                                        </div>
+                                        <div class="font-bold">$${(
+                                          item.quantity * item.unit_price
+                                        ).toFixed(2)}</div>
+                                    </div>
+                                    `
+                                        )
+                                        .join("") ||
+                                      '<p class="text-gray-500">No items</p>'
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Order Summary -->
+                        <div>
+                            <div class="bg-gray-50 rounded-lg p-4">
+                                <h4 class="font-bold mb-3">Order Summary</h4>
+                                <div class="space-y-2">
+                                    <div class="flex justify-between">
+                                        <span>Subtotal</span>
+                                        <span>$${
+                                          order.subtotal || "0.00"
+                                        }</span>
+                                    </div>
+                                    <div class="flex justify-between">
+                                        <span>Tax</span>
+                                        <span>$${
+                                          order.tax_amount || "0.00"
+                                        }</span>
+                                    </div>
+                                    <div class="flex justify-between">
+                                        <span>Service</span>
+                                        <span>$${
+                                          order.service_charge || "0.00"
+                                        }</span>
+                                    </div>
+                                    <div class="border-t pt-2 mt-2">
+                                        <div class="flex justify-between font-bold text-lg">
+                                            <span>Total</span>
+                                            <span>$${
+                                              order.total_amount || "0.00"
+                                            }</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="mt-4 pt-4 border-t">
+                                    <div class="space-y-2">
+                                        <div>
+                                            <label class="block text-sm text-gray-600">Status</label>
+                                            <span class="inline-block mt-1 ${getStatusClass(
+                                              order.status
+                                            )} px-3 py-1 rounded-full">
+                                                ${order.status}
+                                            </span>
+                                        </div>
+                                        <div>
+                                            <label class="block text-sm text-gray-600">Order Type</label>
+                                            <span class="font-medium">${
+                                              order.order_type
+                                            }</span>
+                                        </div>
+                                        <div>
+                                            <label class="block text-sm text-gray-600">Placed At</label>
+                                            <span>${formatDate(
+                                              order.placed_at
+                                            )} ${formatTime(
+            order.placed_at
+          )}</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Actions -->
+                    <div class="flex space-x-3">
+                        ${
+                          order.status === "pending"
+                            ? `
+                        <button onclick="confirmOrder(${order.id})" 
+                                class="flex-1 bg-green-600 text-white py-3 rounded-lg hover:bg-green-700">
+                            <i class="fas fa-check mr-2"></i>Confirm Order
+                        </button>
+                        `
+                            : ""
+                        }
+                        
+                        ${
+                          order.status === "ready"
+                            ? `
+                        <button onclick="serveOrder(${order.id})" 
+                                class="flex-1 bg-blue-600 text-white py-3 rounded-lg hover:bg-blue-700">
+                            <i class="fas fa-concierge-bell mr-2"></i>Mark as Served
+                        </button>
+                        `
+                            : ""
+                        }
+                        
+                        <button onclick="printOrder(${order.id})" 
+                                class="flex-1 border border-gray-300 py-3 rounded-lg hover:bg-gray-50">
+                            <i class="fas fa-print mr-2"></i>Print Receipt
+                        </button>
+                    </div>
+                `;
+
+          modal.classList.remove("hidden");
+          modal.classList.add("flex");
+        } catch (error) {
+          console.error("Error loading order details:", error);
+        }
+      }
+
+      async function confirmOrder(orderId) {
+        if (!confirm("Confirm this order and send to kitchen?")) return;
+
+        try {
+          const response = await fetch(
+            `${API_BASE}/orders/${orderId}/update_status/`,
+            {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+                "X-CSRFToken": getCookie("csrftoken"),
+              },
+              body: JSON.stringify({ status: "confirmed" }),
+            }
+          );
+
+          if (response.ok) {
+            alert("Order confirmed!");
+            loadOrders();
+            closeOrderModal();
+          }
+        } catch (error) {
+          console.error("Error confirming order:", error);
+          alert("Failed to confirm order");
+        }
+      }
+
+      async function serveOrder(orderId) {
+        if (!confirm("Mark this order as served?")) return;
+
+        try {
+          const response = await fetch(
+            `${API_BASE}/orders/${orderId}/update_status/`,
+            {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+                "X-CSRFToken": getCookie("csrftoken"),
+              },
+              body: JSON.stringify({ status: "served" }),
+            }
+          );
+
+          if (response.ok) {
+            alert("Order marked as served!");
+            loadOrders();
+            closeOrderModal();
+          }
+        } catch (error) {
+          console.error("Error serving order:", error);
+          alert("Failed to update order");
+        }
+      }
+
+      function printOrder(orderId) {
+        window.open(`${API_BASE}/orders/${orderId}/print/`, "_blank");
+      }
+
+      function closeOrderModal() {
+        document.getElementById("order-modal").classList.add("hidden");
+        document.getElementById("order-modal").classList.remove("flex");
+      }
+
+      function previousPage() {
+        if (currentPage > 1) {
+          currentPage--;
+          renderOrdersTable();
+        }
+      }
+
+      function nextPage() {
+        if (currentPage * pageSize < allOrders.length) {
+          currentPage++;
+          renderOrdersTable();
+        }
+      }
+
+      function printOrders() {
+        window.print();
+      }
+
+      function exportOrders() {
+        alert("Export functionality would be implemented here");
+      }
+
+      // Filter and search
+      document
+        .getElementById("search-orders")
+        .addEventListener("input", filterOrders);
+      document
+        .getElementById("status-filter")
+        .addEventListener("change", filterOrders);
+      document
+        .getElementById("time-filter")
+        .addEventListener("change", filterOrders);
+
+      function filterOrders() {
+        const searchTerm = document
+          .getElementById("search-orders")
+          .value.toLowerCase();
+        const statusFilter = document.getElementById("status-filter").value;
+        const timeFilter = document.getElementById("time-filter").value;
+
+        const today = new Date();
+        let filtered = allOrders;
+
+        // Search filter
+        if (searchTerm) {
+          filtered = filtered.filter(
+            (order) =>
+              (order.order_number &&
+                order.order_number.toLowerCase().includes(searchTerm)) ||
+              (order.customer_name &&
+                order.customer_name.toLowerCase().includes(searchTerm)) ||
+              (order.table?.table_number &&
+                order.table.table_number.toString().includes(searchTerm))
+          );
+        }
+
+        // Status filter
+        if (statusFilter !== "all") {
+          filtered = filtered.filter((order) => order.status === statusFilter);
+        }
+
+        // Time filter
+        if (timeFilter !== "all") {
+          const cutoffDate = new Date();
+          if (timeFilter === "today") {
+            cutoffDate.setHours(0, 0, 0, 0);
+          } else if (timeFilter === "yesterday") {
+            cutoffDate.setDate(cutoffDate.getDate() - 1);
+            cutoffDate.setHours(0, 0, 0, 0);
+          } else if (timeFilter === "week") {
+            cutoffDate.setDate(cutoffDate.getDate() - 7);
+          } else if (timeFilter === "month") {
+            cutoffDate.setMonth(cutoffDate.getMonth() - 1);
+          }
+
+          filtered = filtered.filter((order) => {
+            if (!order.placed_at) return false;
+            const orderDate = new Date(order.placed_at);
+            return orderDate >= cutoffDate;
+          });
+        }
+
+        allOrders = filtered;
+        currentPage = 1;
+        renderOrdersTable();
+      }
+
+      function showLoading() {
+        // Loading indicator
+      }
+
+      function hideLoading() {
+        // Hide loading indicator
+      }
+
+      function showError(message) {
+        alert(message);
+      }
+
+      // Helper function to get CSRF token
+      function getCookie(name) {
+        let cookieValue = null;
+        if (document.cookie && document.cookie !== "") {
+          const cookies = document.cookie.split(";");
+          for (let i = 0; i < cookies.length; i++) {
+            const cookie = cookies[i].trim();
+            if (cookie.substring(0, name.length + 1) === name + "=") {
+              cookieValue = decodeURIComponent(
+                cookie.substring(name.length + 1)
+              );
+              break;
+            }
+          }
+        }
+        return cookieValue;
+      }
+
+      // Poll for updates every 20 seconds
+      setInterval(loadOrders, 20000);
+
+      // Initial load
+      document.addEventListener("DOMContentLoaded", loadOrders);
+    </script>
+  </body>
+</html>

@@ -1,0 +1,883 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>TableSync - Modern Restaurant Management System</title>
+
+    <!-- CSS -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+
+    <style>
+      :root {
+        --primary-red: #dc2626;
+        --primary-red-light: #fef2f2;
+        --primary-gold: #d4af37;
+        --dark-bg: #1a202c;
+      }
+
+      body {
+        font-family: "Poppins", sans-serif;
+      }
+
+      .hero-bg {
+        background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)),
+          url("https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80");
+        background-size: cover;
+        background-position: center;
+      }
+
+      .food-bg-1 {
+        background: linear-gradient(
+            rgba(220, 38, 38, 0.9),
+            rgba(220, 38, 38, 0.8)
+          ),
+          url("https://images.unsplash.com/photo-1555396273-367ea4eb4db5?ixlib=rb-4.0.3&auto=format&fit=crop&w=1974&q=80");
+        background-size: cover;
+        background-position: center;
+      }
+
+      .food-bg-2 {
+        background: linear-gradient(
+            rgba(26, 32, 44, 0.9),
+            rgba(26, 32, 44, 0.8)
+          ),
+          url("https://images.unsplash.com/photo-1414235077428-338989a2e8c0?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80");
+        background-size: cover;
+        background-position: center;
+      }
+
+      .card-hover:hover {
+        transform: translateY(-10px);
+        box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1),
+          0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        transition: all 0.3s ease;
+      }
+
+      .gradient-text {
+        background: linear-gradient(90deg, #dc2626, #d4af37);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+      }
+
+      .playfair {
+        font-family: "Playfair Display", serif;
+      }
+    </style>
+  </head>
+  <body class="bg-gray-50">
+    <!-- Navigation -->
+    <nav class="fixed w-full bg-white/90 backdrop-blur-sm z-50 shadow-sm">
+      <div class="container mx-auto px-6 py-4">
+        <div class="flex justify-between items-center">
+          <div class="flex items-center space-x-2">
+            <div class="bg-red-600 text-white p-2 rounded-lg">
+              <i class="fas fa-utensils text-xl"></i>
+            </div>
+            <span class="text-2xl font-bold text-gray-800 playfair"
+              >Table<span class="text-red-600">Sync</span></span
+            >
+          </div>
+
+          <div class="hidden md:flex items-center space-x-8">
+            <a
+              href="#features"
+              class="text-gray-700 hover:text-red-600 font-medium"
+              >Features</a
+            >
+            <a
+              href="#how-it-works"
+              class="text-gray-700 hover:text-red-600 font-medium"
+              >How It Works</a
+            >
+            <a
+              href="#pricing"
+              class="text-gray-700 hover:text-red-600 font-medium"
+              >Pricing</a
+            >
+            <a
+              href="#contact"
+              class="text-gray-700 hover:text-red-600 font-medium"
+              >Contact</a
+            >
+            <a
+              href="/login/"
+              class="bg-red-600 text-white px-6 py-2 rounded-lg hover:bg-red-700 transition font-medium"
+            >
+              Get Started
+            </a>
+          </div>
+
+          <!-- Mobile menu button -->
+          <button id="mobile-menu-btn" class="md:hidden text-2xl text-gray-700">
+            <i class="fas fa-bars"></i>
+          </button>
+        </div>
+
+        <!-- Mobile menu -->
+        <div
+          id="mobile-menu"
+          class="hidden md:hidden mt-4 pb-4 border-t border-gray-200"
+        >
+          <div class="flex flex-col space-y-4 mt-4">
+            <a href="#features" class="text-gray-700 hover:text-red-600"
+              >Features</a
+            >
+            <a href="#how-it-works" class="text-gray-700 hover:text-red-600"
+              >How It Works</a
+            >
+            <a href="#pricing" class="text-gray-700 hover:text-red-600"
+              >Pricing</a
+            >
+            <a href="#contact" class="text-gray-700 hover:text-red-600"
+              >Contact</a
+            >
+            <a
+              href="/login/"
+              class="bg-red-600 text-white px-6 py-2 rounded-lg hover:bg-red-700 transition text-center"
+            >
+              Get Started
+            </a>
+          </div>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero-bg text-white pt-24 pb-20 md:pt-32 md:pb-28">
+      <div class="container mx-auto px-6 text-center">
+        <h1 class="text-4xl md:text-6xl font-bold mb-6 playfair">
+          Modernize Your Restaurant
+          <span class="block gradient-text">With Digital Ordering</span>
+        </h1>
+        <p class="text-xl md:text-2xl mb-10 text-gray-200 max-w-3xl mx-auto">
+          From QR code self-ordering to real-time kitchen coordination,
+          streamline your restaurant operations and enhance customer experience.
+        </p>
+        <div
+          class="flex flex-col md:flex-row justify-center space-y-4 md:space-y-0 md:space-x-6"
+        >
+          <a
+            href="/login/"
+            class="bg-white text-red-600 px-8 py-4 rounded-lg text-lg font-semibold hover:bg-gray-100 transition shadow-lg"
+          >
+            Start Free Trial <i class="fas fa-arrow-right ml-2"></i>
+          </a>
+          <a
+            href="#features"
+            class="bg-transparent border-2 border-white text-white px-8 py-4 rounded-lg text-lg font-semibold hover:bg-white/10 transition"
+          >
+            Learn More
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- Features Section -->
+    <section id="features" class="py-20 bg-white">
+      <div class="container mx-auto px-6">
+        <div class="text-center mb-16">
+          <h2
+            class="text-3xl md:text-4xl font-bold text-gray-800 mb-4 playfair"
+          >
+            Everything You Need to Run a Modern Restaurant
+          </h2>
+          <p class="text-gray-600 text-lg max-w-2xl mx-auto">
+            Powerful features designed specifically for restaurant operations
+          </p>
+        </div>
+
+        <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+          <!-- Feature 1 -->
+          <div
+            class="bg-gray-50 p-8 rounded-2xl shadow-sm border border-gray-100 card-hover"
+          >
+            <div
+              class="bg-red-100 text-red-600 w-16 h-16 rounded-full flex items-center justify-center mb-6"
+            >
+              <i class="fas fa-qrcode text-2xl"></i>
+            </div>
+            <h3 class="text-xl font-bold text-gray-800 mb-3">
+              QR Code Ordering
+            </h3>
+            <p class="text-gray-600 mb-4">
+              Let customers order directly from their phones. Reduce wait times
+              and increase table turnover.
+            </p>
+            <ul class="space-y-2 text-gray-600">
+              <li class="flex items-center">
+                <i class="fas fa-check text-green-500 mr-2"></i> No app download
+                required
+              </li>
+              <li class="flex items-center">
+                <i class="fas fa-check text-green-500 mr-2"></i> Multi-language
+                support
+              </li>
+              <li class="flex items-center">
+                <i class="fas fa-check text-green-500 mr-2"></i> Dietary
+                information display
+              </li>
+            </ul>
+          </div>
+
+          <!-- Feature 2 -->
+          <div
+            class="bg-gray-50 p-8 rounded-2xl shadow-sm border border-gray-100 card-hover"
+          >
+            <div
+              class="bg-red-100 text-red-600 w-16 h-16 rounded-full flex items-center justify-center mb-6"
+            >
+              <i class="fas fa-tablet-alt text-2xl"></i>
+            </div>
+            <h3 class="text-xl font-bold text-gray-800 mb-3">
+              Waiter Tablet Interface
+            </h3>
+            <p class="text-gray-600 mb-4">
+              Intuitive interface for waiters to manage tables, take orders, and
+              process payments.
+            </p>
+            <ul class="space-y-2 text-gray-600">
+              <li class="flex items-center">
+                <i class="fas fa-check text-green-500 mr-2"></i> Real-time table
+                status
+              </li>
+              <li class="flex items-center">
+                <i class="fas fa-check text-green-500 mr-2"></i> Quick order
+                creation
+              </li>
+              <li class="flex items-center">
+                <i class="fas fa-check text-green-500 mr-2"></i> Payment
+                processing
+              </li>
+            </ul>
+          </div>
+
+          <!-- Feature 3 -->
+          <div
+            class="bg-gray-50 p-8 rounded-2xl shadow-sm border border-gray-100 card-hover"
+          >
+            <div
+              class="bg-red-100 text-red-600 w-16 h-16 rounded-full flex items-center justify-center mb-6"
+            >
+              <i class="fas fa-utensils text-2xl"></i>
+            </div>
+            <h3 class="text-xl font-bold text-gray-800 mb-3">
+              Kitchen Display System
+            </h3>
+            <p class="text-gray-600 mb-4">
+              Real-time order updates for kitchen staff with preparation timers
+              and priority management.
+            </p>
+            <ul class="space-y-2 text-gray-600">
+              <li class="flex items-center">
+                <i class="fas fa-check text-green-500 mr-2"></i> Kanban workflow
+                view
+              </li>
+              <li class="flex items-center">
+                <i class="fas fa-check text-green-500 mr-2"></i> Preparation
+                timers
+              </li>
+              <li class="flex items-center">
+                <i class="fas fa-check text-green-500 mr-2"></i> Sound
+                notifications
+              </li>
+            </ul>
+          </div>
+
+          <!-- Feature 4 -->
+          <div
+            class="bg-gray-50 p-8 rounded-2xl shadow-sm border border-gray-100 card-hover"
+          >
+            <div
+              class="bg-red-100 text-red-600 w-16 h-16 rounded-full flex items-center justify-center mb-6"
+            >
+              <i class="fas fa-chart-bar text-2xl"></i>
+            </div>
+            <h3 class="text-xl font-bold text-gray-800 mb-3">
+              Analytics Dashboard
+            </h3>
+            <p class="text-gray-600 mb-4">
+              Comprehensive insights into sales, popular items, staff
+              performance, and inventory.
+            </p>
+            <ul class="space-y-2 text-gray-600">
+              <li class="flex items-center">
+                <i class="fas fa-check text-green-500 mr-2"></i> Real-time sales
+                tracking
+              </li>
+              <li class="flex items-center">
+                <i class="fas fa-check text-green-500 mr-2"></i> Inventory
+                management
+              </li>
+              <li class="flex items-center">
+                <i class="fas fa-check text-green-500 mr-2"></i> Staff
+                performance reports
+              </li>
+            </ul>
+          </div>
+
+          <!-- Feature 5 -->
+          <div
+            class="bg-gray-50 p-8 rounded-2xl shadow-sm border border-gray-100 card-hover"
+          >
+            <div
+              class="bg-red-100 text-red-600 w-16 h-16 rounded-full flex items-center justify-center mb-6"
+            >
+              <i class="fas fa-mobile-alt text-2xl"></i>
+            </div>
+            <h3 class="text-xl font-bold text-gray-800 mb-3">
+              Mobile Payment Integration
+            </h3>
+            <p class="text-gray-600 mb-4">
+              Support for local mobile payment systems including CBE, Telebirr,
+              and CBE Wallet.
+            </p>
+            <ul class="space-y-2 text-gray-600">
+              <li class="flex items-center">
+                <i class="fas fa-check text-green-500 mr-2"></i> Ethiopian
+                payment support
+              </li>
+              <li class="flex items-center">
+                <i class="fas fa-check text-green-500 mr-2"></i> Secure
+                transaction processing
+              </li>
+              <li class="flex items-center">
+                <i class="fas fa-check text-green-500 mr-2"></i> Offline mode
+                support
+              </li>
+            </ul>
+          </div>
+
+          <!-- Feature 6 -->
+          <div
+            class="bg-gray-50 p-8 rounded-2xl shadow-sm border border-gray-100 card-hover"
+          >
+            <div
+              class="bg-red-100 text-red-600 w-16 h-16 rounded-full flex items-center justify-center mb-6"
+            >
+              <i class="fas fa-sitemap text-2xl"></i>
+            </div>
+            <h3 class="text-xl font-bold text-gray-800 mb-3">
+              Multi-Tenant Architecture
+            </h3>
+            <p class="text-gray-600 mb-4">
+              Manage multiple restaurants and branches from a single platform
+              with role-based access.
+            </p>
+            <ul class="space-y-2 text-gray-600">
+              <li class="flex items-center">
+                <i class="fas fa-check text-green-500 mr-2"></i>
+                Multi-restaurant support
+              </li>
+              <li class="flex items-center">
+                <i class="fas fa-check text-green-500 mr-2"></i> Role-based
+                permissions
+              </li>
+              <li class="flex items-center">
+                <i class="fas fa-check text-green-500 mr-2"></i> Branch-level
+                customization
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- How It Works -->
+    <section id="how-it-works" class="food-bg-1 text-white py-20">
+      <div class="container mx-auto px-6">
+        <div class="text-center mb-16">
+          <h2 class="text-3xl md:text-4xl font-bold mb-4 playfair">
+            How TableSync Works
+          </h2>
+          <p class="text-xl text-gray-200 max-w-2xl mx-auto">
+            A seamless workflow from customer ordering to kitchen preparation
+          </p>
+        </div>
+
+        <div class="grid md:grid-cols-4 gap-8">
+          <div class="text-center">
+            <div
+              class="bg-white/20 w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-6"
+            >
+              <span class="text-3xl font-bold">1</span>
+            </div>
+            <h3 class="text-xl font-bold mb-2">Customer Scans QR</h3>
+            <p class="text-gray-200">
+              Customers scan table QR code to access digital menu
+            </p>
+          </div>
+
+          <div class="text-center">
+            <div
+              class="bg-white/20 w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-6"
+            >
+              <span class="text-3xl font-bold">2</span>
+            </div>
+            <h3 class="text-xl font-bold mb-2">Place Order</h3>
+            <p class="text-gray-200">
+              Select items, add to cart, and submit order
+            </p>
+          </div>
+
+          <div class="text-center">
+            <div
+              class="bg-white/20 w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-6"
+            >
+              <span class="text-3xl font-bold">3</span>
+            </div>
+            <h3 class="text-xl font-bold mb-2">Kitchen Prepares</h3>
+            <p class="text-gray-200">
+              Order appears on kitchen display, chef prepares food
+            </p>
+          </div>
+
+          <div class="text-center">
+            <div
+              class="bg-white/20 w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-6"
+            >
+              <span class="text-3xl font-bold">4</span>
+            </div>
+            <h3 class="text-xl font-bold mb-2">Serve & Pay</h3>
+            <p class="text-gray-200">
+              Waiter serves food, processes payment digitally
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Testimonials -->
+    <section class="py-20 bg-gray-50">
+      <div class="container mx-auto px-6">
+        <div class="text-center mb-16">
+          <h2
+            class="text-3xl md:text-4xl font-bold text-gray-800 mb-4 playfair"
+          >
+            Trusted by Ethiopian Restaurants
+          </h2>
+          <p class="text-gray-600 text-lg">
+            Join restaurants that have transformed their operations
+          </p>
+        </div>
+
+        <div class="grid md:grid-cols-3 gap-8">
+          <div class="bg-white p-8 rounded-2xl shadow-sm">
+            <div class="flex items-center mb-6">
+              <div
+                class="bg-red-100 text-red-600 w-12 h-12 rounded-full flex items-center justify-center"
+              >
+                <i class="fas fa-utensils"></i>
+              </div>
+              <div class="ml-4">
+                <h4 class="font-bold text-gray-800">Habesha Restaurant</h4>
+                <p class="text-gray-600 text-sm">Addis Ababa</p>
+              </div>
+            </div>
+            <p class="text-gray-600 italic mb-4">
+              "TableSync reduced our order errors by 80% and increased table
+              turnover by 30%. The QR ordering system is a game-changer!"
+            </p>
+            <div class="text-yellow-400">
+              <i class="fas fa-star"></i>
+              <i class="fas fa-star"></i>
+              <i class="fas fa-star"></i>
+              <i class="fas fa-star"></i>
+              <i class="fas fa-star"></i>
+            </div>
+          </div>
+
+          <div class="bg-white p-8 rounded-2xl shadow-sm">
+            <div class="flex items-center mb-6">
+              <div
+                class="bg-red-100 text-red-600 w-12 h-12 rounded-full flex items-center justify-center"
+              >
+                <i class="fas fa-coffee"></i>
+              </div>
+              <div class="ml-4">
+                <h4 class="font-bold text-gray-800">Kaldi's Coffee</h4>
+                <p class="text-gray-600 text-sm">Multiple Branches</p>
+              </div>
+            </div>
+            <p class="text-gray-600 italic mb-4">
+              "The kitchen display system has streamlined our operations. Our
+              chefs love the real-time updates and preparation timers."
+            </p>
+            <div class="text-yellow-400">
+              <i class="fas fa-star"></i>
+              <i class="fas fa-star"></i>
+              <i class="fas fa-star"></i>
+              <i class="fas fa-star"></i>
+              <i class="fas fa-star-half-alt"></i>
+            </div>
+          </div>
+
+          <div class="bg-white p-8 rounded-2xl shadow-sm">
+            <div class="flex items-center mb-6">
+              <div
+                class="bg-red-100 text-red-600 w-12 h-12 rounded-full flex items-center justify-center"
+              >
+                <i class="fas fa-pizza-slice"></i>
+              </div>
+              <div class="ml-4">
+                <h4 class="font-bold text-gray-800">Pizza Corner</h4>
+                <p class="text-gray-600 text-sm">Bahir Dar</p>
+              </div>
+            </div>
+            <p class="text-gray-600 italic mb-4">
+              "The analytics dashboard gives us insights we never had before. We
+              can now track popular items and optimize our inventory."
+            </p>
+            <div class="text-yellow-400">
+              <i class="fas fa-star"></i>
+              <i class="fas fa-star"></i>
+              <i class="fas fa-star"></i>
+              <i class="fas fa-star"></i>
+              <i class="fas fa-star"></i>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="food-bg-2 text-white py-20">
+      <div class="container mx-auto px-6 text-center">
+        <h2 class="text-3xl md:text-4xl font-bold mb-6 playfair">
+          Ready to Transform Your Restaurant?
+        </h2>
+        <p class="text-xl text-gray-200 mb-10 max-w-2xl mx-auto">
+          Join hundreds of restaurants using TableSync to streamline operations
+          and increase revenue
+        </p>
+
+        <div
+          class="flex flex-col md:flex-row justify-center space-y-4 md:space-y-0 md:space-x-6"
+        >
+          <a
+            href="/login/"
+            class="bg-red-600 text-white px-10 py-4 rounded-lg text-lg font-semibold hover:bg-red-700 transition shadow-lg"
+          >
+            Start 14-Day Free Trial
+          </a>
+          <a
+            href="#contact"
+            class="bg-transparent border-2 border-white text-white px-10 py-4 rounded-lg text-lg font-semibold hover:bg-white/10 transition"
+          >
+            Schedule a Demo
+          </a>
+        </div>
+
+        <p class="mt-8 text-gray-300">
+          No credit card required • Cancel anytime
+        </p>
+      </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact" class="py-20 bg-white">
+      <div class="container mx-auto px-6">
+        <div class="text-center mb-16">
+          <h2
+            class="text-3xl md:text-4xl font-bold text-gray-800 mb-4 playfair"
+          >
+            Get In Touch
+          </h2>
+          <p class="text-gray-600 text-lg">
+            Have questions? We're here to help you get started
+          </p>
+        </div>
+
+        <div class="grid md:grid-cols-2 gap-12">
+          <div>
+            <h3 class="text-2xl font-bold text-gray-800 mb-6">
+              Contact Information
+            </h3>
+
+            <div class="space-y-6">
+              <div class="flex items-start">
+                <div class="bg-red-100 text-red-600 p-3 rounded-lg mr-4">
+                  <i class="fas fa-map-marker-alt"></i>
+                </div>
+                <div>
+                  <h4 class="font-bold text-gray-800">Our Office</h4>
+                  <p class="text-gray-600">Bole Road, Addis Ababa, Ethiopia</p>
+                </div>
+              </div>
+
+              <div class="flex items-start">
+                <div class="bg-red-100 text-red-600 p-3 rounded-lg mr-4">
+                  <i class="fas fa-phone"></i>
+                </div>
+                <div>
+                  <h4 class="font-bold text-gray-800">Phone</h4>
+                  <p class="text-gray-600">+251 911 234 567</p>
+                </div>
+              </div>
+
+              <div class="flex items-start">
+                <div class="bg-red-100 text-red-600 p-3 rounded-lg mr-4">
+                  <i class="fas fa-envelope"></i>
+                </div>
+                <div>
+                  <h4 class="font-bold text-gray-800">Email</h4>
+                  <p class="text-gray-600">info@tablesync.et</p>
+                  <p class="text-gray-600">support@tablesync.et</p>
+                </div>
+              </div>
+
+              <div class="flex items-start">
+                <div class="bg-red-100 text-red-600 p-3 rounded-lg mr-4">
+                  <i class="fas fa-clock"></i>
+                </div>
+                <div>
+                  <h4 class="font-bold text-gray-800">Business Hours</h4>
+                  <p class="text-gray-600">
+                    Monday - Friday: 8:00 AM - 6:00 PM
+                  </p>
+                  <p class="text-gray-600">Saturday: 9:00 AM - 4:00 PM</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div>
+            <h3 class="text-2xl font-bold text-gray-800 mb-6">
+              Send Us a Message
+            </h3>
+
+            <form class="space-y-4">
+              <div class="grid md:grid-cols-2 gap-4">
+                <div>
+                  <label class="block text-gray-700 mb-2">First Name</label>
+                  <input
+                    type="text"
+                    class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent"
+                  />
+                </div>
+                <div>
+                  <label class="block text-gray-700 mb-2">Last Name</label>
+                  <input
+                    type="text"
+                    class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent"
+                  />
+                </div>
+              </div>
+
+              <div>
+                <label class="block text-gray-700 mb-2">Email</label>
+                <input
+                  type="email"
+                  class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent"
+                />
+              </div>
+
+              <div>
+                <label class="block text-gray-700 mb-2">Restaurant Name</label>
+                <input
+                  type="text"
+                  class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent"
+                />
+              </div>
+
+              <div>
+                <label class="block text-gray-700 mb-2">Message</label>
+                <textarea
+                  rows="4"
+                  class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent"
+                ></textarea>
+              </div>
+
+              <button
+                type="submit"
+                class="bg-red-600 text-white px-8 py-4 rounded-lg font-semibold hover:bg-red-700 transition w-full"
+              >
+                Send Message <i class="fas fa-paper-plane ml-2"></i>
+              </button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-gray-900 text-white py-12">
+      <div class="container mx-auto px-6">
+        <div class="grid md:grid-cols-4 gap-8">
+          <div>
+            <div class="flex items-center space-x-2 mb-6">
+              <div class="bg-red-600 text-white p-2 rounded-lg">
+                <i class="fas fa-utensils"></i>
+              </div>
+              <span class="text-2xl font-bold playfair"
+                >Table<span class="text-red-600">Sync</span></span
+              >
+            </div>
+            <p class="text-gray-400 mb-6">
+              Modern restaurant management system designed for Ethiopian
+              restaurants to streamline operations and enhance customer
+              experience.
+            </p>
+            <div class="flex space-x-4">
+              <a
+                href="#"
+                class="bg-gray-800 text-white p-3 rounded-full hover:bg-red-600 transition"
+              >
+                <i class="fab fa-facebook-f"></i>
+              </a>
+              <a
+                href="#"
+                class="bg-gray-800 text-white p-3 rounded-full hover:bg-red-600 transition"
+              >
+                <i class="fab fa-telegram"></i>
+              </a>
+              <a
+                href="#"
+                class="bg-gray-800 text-white p-3 rounded-full hover:bg-red-600 transition"
+              >
+                <i class="fab fa-linkedin-in"></i>
+              </a>
+              <a
+                href="#"
+                class="bg-gray-800 text-white p-3 rounded-full hover:bg-red-600 transition"
+              >
+                <i class="fab fa-twitter"></i>
+              </a>
+            </div>
+          </div>
+
+          <div>
+            <h4 class="text-lg font-bold mb-6">Quick Links</h4>
+            <ul class="space-y-3">
+              <li>
+                <a
+                  href="#features"
+                  class="text-gray-400 hover:text-white transition"
+                  >Features</a
+                >
+              </li>
+              <li>
+                <a
+                  href="#how-it-works"
+                  class="text-gray-400 hover:text-white transition"
+                  >How It Works</a
+                >
+              </li>
+              <li>
+                <a
+                  href="#pricing"
+                  class="text-gray-400 hover:text-white transition"
+                  >Pricing</a
+                >
+              </li>
+              <li>
+                <a
+                  href="#contact"
+                  class="text-gray-400 hover:text-white transition"
+                  >Contact</a
+                >
+              </li>
+            </ul>
+          </div>
+
+          <div>
+            <h4 class="text-lg font-bold mb-6">Legal</h4>
+            <ul class="space-y-3">
+              <li>
+                <a href="#" class="text-gray-400 hover:text-white transition"
+                  >Privacy Policy</a
+                >
+              </li>
+              <li>
+                <a href="#" class="text-gray-400 hover:text-white transition"
+                  >Terms of Service</a
+                >
+              </li>
+              <li>
+                <a href="#" class="text-gray-400 hover:text-white transition"
+                  >Cookie Policy</a
+                >
+              </li>
+              <li>
+                <a href="#" class="text-gray-400 hover:text-white transition"
+                  >GDPR Compliance</a
+                >
+              </li>
+            </ul>
+          </div>
+
+          <div>
+            <h4 class="text-lg font-bold mb-6">Newsletter</h4>
+            <p class="text-gray-400 mb-4">
+              Subscribe to get updates on new features and restaurant tips.
+            </p>
+            <div class="flex">
+              <input
+                type="email"
+                placeholder="Your email"
+                class="bg-gray-800 text-white px-4 py-3 rounded-l-lg w-full focus:outline-none"
+              />
+              <button
+                class="bg-red-600 text-white px-4 py-3 rounded-r-lg hover:bg-red-700 transition"
+              >
+                <i class="fas fa-paper-plane"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <div
+          class="border-t border-gray-800 mt-12 pt-8 text-center text-gray-400"
+        >
+          <p>
+            &copy; 2025 TableSync. All rights reserved. Designed for Ethiopian
+            Restaurants.
+          </p>
+        </div>
+      </div>
+    </footer>
+
+    <!-- JavaScript -->
+    <script>
+      // Mobile menu toggle
+      document
+        .getElementById("mobile-menu-btn")
+        .addEventListener("click", function () {
+          document.getElementById("mobile-menu").classList.toggle("hidden");
+        });
+
+      // Smooth scrolling for anchor links
+      document.querySelectorAll('a[href^="#"]').forEach((anchor) => {
+        anchor.addEventListener("click", function (e) {
+          e.preventDefault();
+          const targetId = this.getAttribute("href");
+          if (targetId === "#") return;
+
+          const targetElement = document.querySelector(targetId);
+          if (targetElement) {
+            window.scrollTo({
+              top: targetElement.offsetTop - 80,
+              behavior: "smooth",
+            });
+
+            // Close mobile menu if open
+            document.getElementById("mobile-menu").classList.add("hidden");
+          }
+        });
+      });
+    </script>
+  </body>
+</html>

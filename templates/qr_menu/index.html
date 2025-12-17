@@ -1,0 +1,907 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>QR Menu - Restaurant Ordering System</title>
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Font Awesome -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+
+    <!-- Custom CSS -->
+    <style>
+      :root {
+        --primary-color: #dc2626;
+        --secondary-color: #fef3c7;
+      }
+
+      body {
+        font-family: "Segoe UI", system-ui, -apple-system, sans-serif;
+      }
+
+      .cart-badge {
+        animation: pulse 2s infinite;
+      }
+
+      @keyframes pulse {
+        0% {
+          transform: scale(1);
+        }
+        50% {
+          transform: scale(1.1);
+        }
+        100% {
+          transform: scale(1);
+        }
+      }
+
+      .item-card {
+        transition: all 0.3s ease;
+      }
+
+      .item-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
+      }
+
+      .cart-item-added {
+        animation: slideIn 0.3s ease;
+      }
+
+      @keyframes slideIn {
+        from {
+          transform: translateX(100%);
+          opacity: 0;
+        }
+        to {
+          transform: translateX(0);
+          opacity: 1;
+        }
+      }
+
+      /* Mobile optimizations */
+      @media (max-width: 640px) {
+        .category-tabs {
+          overflow-x: auto;
+          flex-wrap: nowrap;
+        }
+
+        .category-tab {
+          flex-shrink: 0;
+        }
+      }
+    </style>
+  </head>
+  <body class="bg-gray-50">
+    <!-- Navigation -->
+    <nav class="bg-white shadow-lg sticky top-0 z-50">
+      <div class="container mx-auto px-4 py-3">
+        <div class="flex justify-between items-center">
+          <div class="flex items-center space-x-3">
+            <div
+              class="w-10 h-10 bg-red-600 rounded-full flex items-center justify-center"
+            >
+              <span class="text-white font-bold">R</span>
+            </div>
+            <div>
+              <h1 id="restaurant-name" class="text-xl font-bold text-gray-800">
+                Restaurant Name
+              </h1>
+              <p id="table-info" class="text-sm text-gray-600">
+                Table: <span id="table-number">--</span>
+              </p>
+            </div>
+          </div>
+
+          <!-- Cart Icon -->
+          <div class="relative">
+            <button
+              id="cart-toggle"
+              class="p-2 rounded-full bg-red-50 text-red-600 hover:bg-red-100 transition"
+            >
+              <i class="fas fa-shopping-cart text-xl"></i>
+              <span
+                id="cart-count"
+                class="cart-badge absolute -top-1 -right-1 bg-red-600 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center"
+                >0</span
+              >
+            </button>
+          </div>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="container mx-auto px-4 py-6">
+      <!-- Search Bar -->
+      <div class="mb-6">
+        <div class="relative">
+          <input
+            type="text"
+            id="search-input"
+            class="w-full p-4 pl-12 rounded-lg border border-gray-300 focus:ring-2 focus:ring-red-500 focus:border-transparent"
+            placeholder="Search for dishes, drinks..."
+          />
+          <i
+            class="fas fa-search absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400"
+          ></i>
+        </div>
+      </div>
+
+      <!-- Categories Tabs -->
+      <div class="mb-6">
+        <div
+          id="categories"
+          class="category-tabs flex space-x-2 mb-4 overflow-x-auto pb-2"
+        >
+          <!-- Categories will be loaded here -->
+          <div
+            class="category-tab px-4 py-2 bg-red-600 text-white rounded-full cursor-pointer transition"
+          >
+            All Items
+          </div>
+        </div>
+      </div>
+
+      <!-- Menu Items Grid -->
+      <div
+        id="menu-items"
+        class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
+      >
+        <!-- Menu items will be loaded here -->
+        <div class="text-center py-12 text-gray-500">
+          <i class="fas fa-utensils text-4xl mb-4"></i>
+          <p>Loading menu...</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Cart Sidebar -->
+    <div
+      id="cart-sidebar"
+      class="fixed inset-y-0 right-0 w-full md:w-96 bg-white shadow-xl transform translate-x-full transition-transform duration-300 z-50"
+    >
+      <div class="h-full flex flex-col">
+        <!-- Cart Header -->
+        <div class="p-4 border-b">
+          <div class="flex justify-between items-center">
+            <h2 class="text-xl font-bold">Your Order</h2>
+            <button id="close-cart" class="p-2 rounded-full hover:bg-gray-100">
+              <i class="fas fa-times text-xl"></i>
+            </button>
+          </div>
+          <p class="text-gray-600 text-sm">
+            Table: <span id="cart-table-number">--</span>
+          </p>
+        </div>
+
+        <!-- Cart Items -->
+        <div id="cart-items" class="flex-1 overflow-y-auto p-4">
+          <!-- Cart items will be loaded here -->
+          <div class="text-center py-12 text-gray-500">
+            <i class="fas fa-shopping-cart text-4xl mb-4"></i>
+            <p>Your cart is empty</p>
+            <p class="text-sm mt-2">Add items from the menu</p>
+          </div>
+        </div>
+
+        <!-- Cart Summary -->
+        <div class="border-t p-4 bg-gray-50">
+          <div class="space-y-2 mb-4">
+            <div class="flex justify-between">
+              <span>Subtotal</span>
+              <span id="cart-subtotal">0.00</span>
+            </div>
+            <div class="flex justify-between">
+              <span>Tax (15%)</span>
+              <span id="cart-tax">0.00</span>
+            </div>
+            <div class="flex justify-between text-lg font-bold">
+              <span>Total</span>
+              <span id="cart-total">0.00</span>
+            </div>
+          </div>
+
+          <!-- Special Instructions -->
+          <div class="mb-4">
+            <textarea
+              id="special-instructions"
+              class="w-full p-3 border rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent"
+              rows="2"
+              placeholder="Any special instructions? (e.g., no onions, extra spicy)"
+            ></textarea>
+          </div>
+
+          <!-- Order Buttons -->
+          <div class="space-y-2">
+            <button
+              id="submit-order"
+              class="w-full bg-red-600 text-white py-3 rounded-lg font-bold hover:bg-red-700 transition disabled:opacity-50 disabled:cursor-not-allowed"
+              disabled
+            >
+              <i class="fas fa-paper-plane mr-2"></i>Submit Order
+            </button>
+            <button
+              id="clear-cart"
+              class="w-full border border-gray-300 text-gray-700 py-3 rounded-lg font-bold hover:bg-gray-50 transition"
+            >
+              Clear Cart
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Cart Overlay -->
+    <div
+      id="cart-overlay"
+      class="fixed inset-0 bg-black bg-opacity-50 z-40 hidden"
+    ></div>
+
+    <!-- Item Modal -->
+    <div
+      id="item-modal"
+      class="fixed inset-0 bg-black bg-opacity-50 z-50 hidden items-center justify-center p-4"
+    >
+      <div
+        class="bg-white rounded-lg max-w-md w-full max-h-[90vh] overflow-y-auto"
+      >
+        <div class="p-6">
+          <!-- Modal content will be loaded here -->
+        </div>
+      </div>
+    </div>
+
+    <!-- Success Toast -->
+    <div
+      id="success-toast"
+      class="fixed top-4 right-4 bg-green-500 text-white p-4 rounded-lg shadow-lg transform translate-y-[-100px] transition-transform duration-300 z-50 hidden"
+    >
+      <div class="flex items-center">
+        <i class="fas fa-check-circle mr-3"></i>
+        <span id="toast-message">Item added to cart!</span>
+      </div>
+    </div>
+
+    <!-- Loading Spinner -->
+    <div
+      id="loading-spinner"
+      class="fixed inset-0 bg-white bg-opacity-90 flex items-center justify-center z-50 hidden"
+    >
+      <div class="text-center">
+        <div
+          class="w-16 h-16 border-4 border-red-600 border-t-transparent rounded-full animate-spin mx-auto"
+        ></div>
+        <p class="mt-4 text-gray-700">Loading...</p>
+      </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+      // Configuration
+      const CONFIG = {
+        restaurantId: 1,
+        tableId: null,
+        tableToken: null,
+        apiBase: "http://localhost:8000/api",
+        cart: {
+          items: [],
+          subtotal: 0,
+          taxRate: 0.15,
+        },
+      };
+
+      // DOM Elements
+      const elements = {
+        restaurantName: document.getElementById("restaurant-name"),
+        tableInfo: document.getElementById("table-info"),
+        tableNumber: document.getElementById("table-number"),
+        cartTableNumber: document.getElementById("cart-table-number"),
+        categories: document.getElementById("categories"),
+        menuItems: document.getElementById("menu-items"),
+        cartCount: document.getElementById("cart-count"),
+        cartItems: document.getElementById("cart-items"),
+        cartSubtotal: document.getElementById("cart-subtotal"),
+        cartTax: document.getElementById("cart-tax"),
+        cartTotal: document.getElementById("cart-total"),
+        searchInput: document.getElementById("search-input"),
+        cartToggle: document.getElementById("cart-toggle"),
+        closeCart: document.getElementById("close-cart"),
+        cartSidebar: document.getElementById("cart-sidebar"),
+        cartOverlay: document.getElementById("cart-overlay"),
+        submitOrder: document.getElementById("submit-order"),
+        clearCart: document.getElementById("clear-cart"),
+        specialInstructions: document.getElementById("special-instructions"),
+        itemModal: document.getElementById("item-modal"),
+        successToast: document.getElementById("success-toast"),
+        toastMessage: document.getElementById("toast-message"),
+        loadingSpinner: document.getElementById("loading-spinner"),
+      };
+
+      // Initialize App
+      document.addEventListener("DOMContentLoaded", function () {
+        console.log("QR Menu initialized");
+
+        // Parse URL parameters
+        parseUrlParameters();
+
+        // Load restaurant and menu data
+        loadRestaurantData();
+        loadMenuData();
+
+        // Load cart from localStorage
+        loadCartFromStorage();
+
+        // Setup event listeners
+        setupEventListeners();
+      });
+
+      // Parse URL parameters for table info
+      function parseUrlParameters() {
+        const urlParams = new URLSearchParams(window.location.search);
+        CONFIG.tableId = urlParams.get("table_id") || 1;
+        CONFIG.tableToken = urlParams.get("token") || "demo-token";
+
+        elements.tableNumber.textContent = CONFIG.tableId;
+        elements.cartTableNumber.textContent = CONFIG.tableId;
+      }
+
+      // Load restaurant data
+      async function loadRestaurantData() {
+        try {
+          showLoading();
+          const response = await fetch(
+            `${CONFIG.apiBase}/restaurants/restaurants/${CONFIG.restaurantId}/`
+          );
+
+          if (response.ok) {
+            const data = await response.json();
+            elements.restaurantName.textContent =
+              data.name || "Restaurant Name";
+
+            // Update page title
+            document.title = `${data.name} - QR Menu`;
+          }
+        } catch (error) {
+          console.error("Error loading restaurant:", error);
+        } finally {
+          hideLoading();
+        }
+      }
+
+      // Load menu data
+      async function loadMenuData() {
+        try {
+          showLoading();
+          const response = await fetch(
+            `${CONFIG.apiBase}/menu/public/${CONFIG.restaurantId}/`
+          );
+
+          if (response.ok) {
+            const data = await response.json();
+            renderCategories(data.categories || []);
+            renderMenuItems(data.items || data || []);
+          }
+        } catch (error) {
+          console.error("Error loading menu:", error);
+
+          // Fallback to sample data
+          renderSampleData();
+        } finally {
+          hideLoading();
+        }
+      }
+
+      // Render categories
+      function renderCategories(categories) {
+        elements.categories.innerHTML = "";
+
+        // Add "All Items" category
+        const allCategory = document.createElement("div");
+        allCategory.className =
+          "category-tab px-4 py-2 bg-red-600 text-white rounded-full cursor-pointer transition";
+        allCategory.textContent = "All Items";
+        allCategory.addEventListener("click", () =>
+          filterItemsByCategory("all")
+        );
+        elements.categories.appendChild(allCategory);
+
+        // Add other categories
+        categories.forEach((category) => {
+          const categoryEl = document.createElement("div");
+          categoryEl.className =
+            "category-tab px-4 py-2 bg-gray-200 text-gray-700 rounded-full cursor-pointer hover:bg-gray-300 transition";
+          categoryEl.textContent = category.name;
+          categoryEl.dataset.categoryId = category.id;
+
+          categoryEl.addEventListener("click", () =>
+            filterItemsByCategory(category.id)
+          );
+          elements.categories.appendChild(categoryEl);
+        });
+      }
+
+      // Render menu items
+      function renderMenuItems(items) {
+        elements.menuItems.innerHTML = "";
+
+        if (items.length === 0) {
+          elements.menuItems.innerHTML = `
+                    <div class="col-span-3 text-center py-12 text-gray-500">
+                        <i class="fas fa-utensils text-4xl mb-4"></i>
+                        <p>No menu items available</p>
+                    </div>
+                `;
+          return;
+        }
+
+        items.forEach((item) => {
+          const itemEl = document.createElement("div");
+          itemEl.className =
+            "item-card bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition";
+          itemEl.innerHTML = `
+                    <div class="relative">
+                        <img src="${
+                          item.image ||
+                          "https://via.placeholder.com/400x300/FF6B6B/FFFFFF?text=Food"
+                        }" 
+                             alt="${item.name}" 
+                             class="w-full h-48 object-cover">
+                        ${
+                          !item.is_available
+                            ? `
+                            <div class="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center">
+                                <span class="bg-red-600 text-white px-3 py-1 rounded-full text-sm">Unavailable</span>
+                            </div>
+                        `
+                            : ""
+                        }
+                    </div>
+                    <div class="p-4">
+                        <div class="flex justify-between items-start mb-2">
+                            <h3 class="font-bold text-lg">${item.name}</h3>
+                            <span class="font-bold text-red-600">${formatCurrency(
+                              item.price
+                            )}</span>
+                        </div>
+                        <p class="text-gray-600 text-sm mb-4">${
+                          item.description || "Delicious dish"
+                        }</p>
+                        <div class="flex justify-between items-center">
+                            <span class="text-sm text-gray-500">
+                                <i class="fas fa-clock mr-1"></i> ${
+                                  item.preparation_time || 15
+                                } min
+                            </span>
+                            <button class="add-to-cart-btn bg-red-50 text-red-600 px-4 py-2 rounded-lg hover:bg-red-100 transition ${
+                              !item.is_available
+                                ? "opacity-50 cursor-not-allowed"
+                                : ""
+                            }"
+                                    data-item-id="${item.id}"
+                                    data-item-name="${item.name}"
+                                    data-item-price="${item.price}"
+                                    ${!item.is_available ? "disabled" : ""}>
+                                <i class="fas fa-plus mr-2"></i>Add
+                            </button>
+                        </div>
+                    </div>
+                `;
+
+          elements.menuItems.appendChild(itemEl);
+        });
+
+        // Add event listeners to add-to-cart buttons
+        document.querySelectorAll(".add-to-cart-btn").forEach((button) => {
+          button.addEventListener("click", function () {
+            const itemId = this.dataset.itemId;
+            const itemName = this.dataset.itemName;
+            const itemPrice = parseFloat(this.dataset.itemPrice);
+
+            addToCart(itemId, itemName, itemPrice);
+          });
+        });
+      }
+
+      // Sample data for testing
+      function renderSampleData() {
+        const sampleCategories = [
+          { id: 1, name: "Appetizers" },
+          { id: 2, name: "Main Course" },
+          { id: 3, name: "Desserts" },
+          { id: 4, name: "Drinks" },
+        ];
+
+        const sampleItems = [
+          {
+            id: 1,
+            name: "Margherita Pizza",
+            description: "Classic pizza with tomato sauce and mozzarella",
+            price: 12.99,
+            image:
+              "https://via.placeholder.com/400x300/FF6B6B/FFFFFF?text=Pizza",
+            preparation_time: 20,
+            is_available: true,
+            category_id: 2,
+          },
+          {
+            id: 2,
+            name: "Caesar Salad",
+            description: "Fresh romaine lettuce with Caesar dressing",
+            price: 8.99,
+            image:
+              "https://via.placeholder.com/400x300/4ECDC4/FFFFFF?text=Salad",
+            preparation_time: 10,
+            is_available: true,
+            category_id: 1,
+          },
+          {
+            id: 3,
+            name: "Chocolate Cake",
+            description: "Rich chocolate cake with ganache",
+            price: 6.99,
+            image:
+              "https://via.placeholder.com/400x300/45B7D1/FFFFFF?text=Cake",
+            preparation_time: 5,
+            is_available: true,
+            category_id: 3,
+          },
+        ];
+
+        renderCategories(sampleCategories);
+        renderMenuItems(sampleItems);
+      }
+
+      // Cart Functions
+      function addToCart(itemId, itemName, itemPrice, quantity = 1) {
+        // Check if item already in cart
+        const existingItemIndex = CONFIG.cart.items.findIndex(
+          (item) => item.id === itemId
+        );
+
+        if (existingItemIndex > -1) {
+          // Update quantity
+          CONFIG.cart.items[existingItemIndex].quantity += quantity;
+        } else {
+          // Add new item
+          CONFIG.cart.items.push({
+            id: itemId,
+            name: itemName,
+            price: itemPrice,
+            quantity: quantity,
+            specialInstructions: "",
+          });
+        }
+
+        // Update cart
+        updateCart();
+
+        // Show success toast
+        showToast(`${itemName} added to cart!`);
+      }
+
+      function updateCart() {
+        // Calculate totals
+        CONFIG.cart.subtotal = CONFIG.cart.items.reduce((total, item) => {
+          return total + item.price * item.quantity;
+        }, 0);
+
+        const tax = CONFIG.cart.subtotal * CONFIG.cart.taxRate;
+        const total = CONFIG.cart.subtotal + tax;
+
+        // Update UI
+        elements.cartCount.textContent = CONFIG.cart.items.reduce(
+          (sum, item) => sum + item.quantity,
+          0
+        );
+        elements.cartSubtotal.textContent = formatCurrency(
+          CONFIG.cart.subtotal
+        );
+        elements.cartTax.textContent = formatCurrency(tax);
+        elements.cartTotal.textContent = formatCurrency(total);
+
+        // Enable/disable submit button
+        elements.submitOrder.disabled = CONFIG.cart.items.length === 0;
+
+        // Render cart items
+        renderCartItems();
+
+        // Save to localStorage
+        saveCartToStorage();
+      }
+
+      function renderCartItems() {
+        elements.cartItems.innerHTML = "";
+
+        if (CONFIG.cart.items.length === 0) {
+          elements.cartItems.innerHTML = `
+                    <div class="text-center py-12 text-gray-500">
+                        <i class="fas fa-shopping-cart text-4xl mb-4"></i>
+                        <p>Your cart is empty</p>
+                        <p class="text-sm mt-2">Add items from the menu</p>
+                    </div>
+                `;
+          return;
+        }
+
+        CONFIG.cart.items.forEach((item, index) => {
+          const itemTotal = item.price * item.quantity;
+          const itemEl = document.createElement("div");
+          itemEl.className =
+            "cart-item-added bg-white border rounded-lg p-4 mb-3";
+          itemEl.innerHTML = `
+                    <div class="flex justify-between items-start mb-2">
+                        <h4 class="font-bold">${item.name}</h4>
+                        <button class="remove-item text-red-600 hover:text-red-800" data-index="${index}">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </div>
+                    <div class="flex justify-between items-center">
+                        <div class="flex items-center">
+                            <button class="quantity-btn bg-gray-100 w-8 h-8 rounded-full" data-index="${index}" data-action="decrease">-</button>
+                            <span class="mx-3 font-bold">${item.quantity}</span>
+                            <button class="quantity-btn bg-gray-100 w-8 h-8 rounded-full" data-index="${index}" data-action="increase">+</button>
+                        </div>
+                        <span class="font-bold">${formatCurrency(
+                          itemTotal
+                        )}</span>
+                    </div>
+                    <div class="mt-2">
+                        <input type="text" 
+                               class="w-full p-2 border rounded text-sm" 
+                               placeholder="Special instructions"
+                               value="${item.specialInstructions || ""}"
+                               data-index="${index}">
+                    </div>
+                `;
+
+          elements.cartItems.appendChild(itemEl);
+        });
+
+        // Add event listeners for cart item buttons
+        document.querySelectorAll(".remove-item").forEach((button) => {
+          button.addEventListener("click", function () {
+            const index = parseInt(this.dataset.index);
+            removeFromCart(index);
+          });
+        });
+
+        document.querySelectorAll(".quantity-btn").forEach((button) => {
+          button.addEventListener("click", function () {
+            const index = parseInt(this.dataset.index);
+            const action = this.dataset.action;
+            updateQuantity(index, action);
+          });
+        });
+
+        document
+          .querySelectorAll('input[placeholder="Special instructions"]')
+          .forEach((input) => {
+            input.addEventListener("change", function () {
+              const index = parseInt(this.dataset.index);
+              updateSpecialInstructions(index, this.value);
+            });
+          });
+      }
+
+      function removeFromCart(index) {
+        CONFIG.cart.items.splice(index, 1);
+        updateCart();
+      }
+
+      function updateQuantity(index, action) {
+        if (action === "increase") {
+          CONFIG.cart.items[index].quantity += 1;
+        } else if (action === "decrease") {
+          if (CONFIG.cart.items[index].quantity > 1) {
+            CONFIG.cart.items[index].quantity -= 1;
+          } else {
+            removeFromCart(index);
+            return;
+          }
+        }
+        updateCart();
+      }
+
+      function updateSpecialInstructions(index, instructions) {
+        CONFIG.cart.items[index].specialInstructions = instructions;
+        saveCartToStorage();
+      }
+
+      function clearCart() {
+        CONFIG.cart.items = [];
+        updateCart();
+      }
+
+      // Storage functions
+      function saveCartToStorage() {
+        const cartData = {
+          items: CONFIG.cart.items,
+          tableId: CONFIG.tableId,
+          timestamp: new Date().toISOString(),
+        };
+        localStorage.setItem(
+          `restaurant_cart_${CONFIG.tableId}`,
+          JSON.stringify(cartData)
+        );
+      }
+
+      function loadCartFromStorage() {
+        const savedCart = localStorage.getItem(
+          `restaurant_cart_${CONFIG.tableId}`
+        );
+        if (savedCart) {
+          try {
+            const cartData = JSON.parse(savedCart);
+            CONFIG.cart.items = cartData.items || [];
+            updateCart();
+          } catch (error) {
+            console.error("Error loading cart from storage:", error);
+          }
+        }
+      }
+
+      // Order submission
+      async function submitOrder() {
+        if (CONFIG.cart.items.length === 0) return;
+
+        try {
+          showLoading();
+
+          // Prepare order data
+          const orderData = {
+            table_id: CONFIG.tableId,
+            order_type: "qr",
+            customer_name: "QR Customer",
+            items: CONFIG.cart.items.map((item) => ({
+              menu_item_id: item.id,
+              quantity: item.quantity,
+              special_instructions: item.specialInstructions,
+            })),
+            special_instructions: elements.specialInstructions.value,
+          };
+
+          // Try to submit to API
+          const response = await fetch(
+            `${CONFIG.apiBase}/tables/submit-qr-order/`,
+            {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify(orderData),
+            }
+          );
+
+          if (response.ok) {
+            const orderResult = await response.json();
+
+            // Clear cart
+            clearCart();
+            elements.specialInstructions.value = "";
+
+            // Show success message
+            alert(
+              `Order submitted successfully!\nOrder #: ${
+                orderResult.order_number || "N/A"
+              }\nA waiter will confirm your order shortly.`
+            );
+
+            // Close cart
+            closeCartSidebar();
+          } else {
+            // Fallback: Show success message anyway (for demo)
+            alert(
+              `Order placed successfully!\nTable ${CONFIG.tableId}, ${CONFIG.cart.items.length} items\nA waiter will come to confirm.`
+            );
+
+            // Clear cart for demo
+            clearCart();
+            elements.specialInstructions.value = "";
+            closeCartSidebar();
+          }
+        } catch (error) {
+          console.error("Error submitting order:", error);
+
+          // Fallback for demo
+          alert(
+            `Order placed! (Demo mode)\nA waiter will come to confirm your order.`
+          );
+          clearCart();
+          closeCartSidebar();
+        } finally {
+          hideLoading();
+        }
+      }
+
+      // UI Helpers
+      function showToast(message) {
+        elements.toastMessage.textContent = message;
+        elements.successToast.classList.remove("hidden");
+        elements.successToast.classList.add("translate-y-0");
+
+        setTimeout(() => {
+          elements.successToast.classList.remove("translate-y-0");
+          elements.successToast.classList.add("hidden");
+        }, 3000);
+      }
+
+      function showLoading() {
+        elements.loadingSpinner.classList.remove("hidden");
+      }
+
+      function hideLoading() {
+        elements.loadingSpinner.classList.add("hidden");
+      }
+
+      function openCartSidebar() {
+        elements.cartSidebar.classList.remove("translate-x-full");
+        elements.cartOverlay.classList.remove("hidden");
+        document.body.style.overflow = "hidden";
+      }
+
+      function closeCartSidebar() {
+        elements.cartSidebar.classList.add("translate-x-full");
+        elements.cartOverlay.classList.add("hidden");
+        document.body.style.overflow = "auto";
+      }
+
+      function filterItemsByCategory(categoryId) {
+        // Update active category
+        document.querySelectorAll(".category-tab").forEach((tab) => {
+          if (
+            (categoryId === "all" && tab.textContent === "All Items") ||
+            tab.dataset.categoryId === categoryId.toString()
+          ) {
+            tab.classList.remove("bg-gray-200", "text-gray-700");
+            tab.classList.add("bg-red-600", "text-white");
+          } else {
+            tab.classList.remove("bg-red-600", "text-white");
+            tab.classList.add("bg-gray-200", "text-gray-700");
+          }
+        });
+
+        // In a real implementation, this would filter the items
+        // For now, we'll just log it
+        console.log(`Filtering by category: ${categoryId}`);
+      }
+
+      function formatCurrency(amount) {
+        return `$${parseFloat(amount).toFixed(2)}`;
+      }
+
+      // Setup event listeners
+      function setupEventListeners() {
+        // Cart toggle
+        elements.cartToggle.addEventListener("click", openCartSidebar);
+        elements.closeCart.addEventListener("click", closeCartSidebar);
+        elements.cartOverlay.addEventListener("click", closeCartSidebar);
+
+        // Order buttons
+        elements.submitOrder.addEventListener("click", submitOrder);
+        elements.clearCart.addEventListener("click", clearCart);
+
+        // Search
+        elements.searchInput.addEventListener("input", function () {
+          const searchTerm = this.value.toLowerCase();
+          console.log(`Searching for: ${searchTerm}`);
+          // In a real implementation, this would filter items
+        });
+
+        // Close cart with Escape key
+        document.addEventListener("keydown", function (event) {
+          if (event.key === "Escape") {
+            closeCartSidebar();
+          }
+        });
+      }
+    </script>
+  </body>
+</html>

@@ -1,0 +1,795 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Kitchen Display - Chef Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+    <style>
+      .order-card {
+        transition: all 0.3s ease;
+      }
+      .order-card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+      }
+      .column {
+        min-height: 500px;
+      }
+      .timer {
+        font-family: "Courier New", monospace;
+        font-weight: bold;
+      }
+      .priority-high {
+        border-left: 4px solid #ef4444;
+      }
+      .priority-normal {
+        border-left: 4px solid #10b981;
+      }
+      @keyframes pulse {
+        0% {
+          opacity: 1;
+        }
+        50% {
+          opacity: 0.5;
+        }
+        100% {
+          opacity: 1;
+        }
+      }
+      .new-order {
+        animation: pulse 1s infinite;
+      }
+    </style>
+  </head>
+  <body class="bg-gray-900 text-white">
+    <!-- Navigation -->
+    <nav class="bg-gray-800 shadow-lg">
+      <div class="container mx-auto px-4 py-3">
+        <div class="flex justify-between items-center">
+          <div class="flex items-center space-x-3">
+            <i class="fas fa-utensils text-2xl text-red-400"></i>
+            <div>
+              <h1 class="text-xl font-bold">Kitchen Display System</h1>
+              <p class="text-sm text-gray-400">
+                {{ user.get_full_name|default:user.username }}
+              </p>
+            </div>
+          </div>
+          <div class="flex items-center space-x-4">
+            <span class="bg-yellow-100 text-yellow-800 px-3 py-1 rounded-full"
+              >{{ user_role|title }}</span
+            >
+            <div class="text-right">
+              <div id="current-time" class="text-lg font-mono">00:00:00</div>
+              <div class="text-xs text-gray-400">
+                Last updated: <span id="last-update">Now</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="container mx-auto px-4 py-6">
+      <!-- Stats Bar -->
+      <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
+        <div class="bg-gray-800 rounded-lg p-4">
+          <div class="flex items-center">
+            <div class="bg-blue-500 bg-opacity-20 p-3 rounded-lg mr-4">
+              <i class="fas fa-clock text-blue-400 text-xl"></i>
+            </div>
+            <div>
+              <p class="text-gray-400 text-sm">Pending</p>
+              <h3 class="text-2xl font-bold" id="pending-count">0</h3>
+            </div>
+          </div>
+        </div>
+
+        <div class="bg-gray-800 rounded-lg p-4">
+          <div class="flex items-center">
+            <div class="bg-yellow-500 bg-opacity-20 p-3 rounded-lg mr-4">
+              <i class="fas fa-fire text-yellow-400 text-xl"></i>
+            </div>
+            <div>
+              <p class="text-gray-400 text-sm">Preparing</p>
+              <h3 class="text-2xl font-bold" id="preparing-count">0</h3>
+            </div>
+          </div>
+        </div>
+
+        <div class="bg-gray-800 rounded-lg p-4">
+          <div class="flex items-center">
+            <div class="bg-green-500 bg-opacity-20 p-3 rounded-lg mr-4">
+              <i class="fas fa-check-circle text-green-400 text-xl"></i>
+            </div>
+            <div>
+              <p class="text-gray-400 text-sm">Ready</p>
+              <h3 class="text-2xl font-bold" id="ready-count">0</h3>
+            </div>
+          </div>
+        </div>
+
+        <div class="bg-gray-800 rounded-lg p-4">
+          <div class="flex items-center">
+            <div class="bg-purple-500 bg-opacity-20 p-3 rounded-lg mr-4">
+              <i
+                class="fas fa-exclamation-triangle text-purple-400 text-xl"
+              ></i>
+            </div>
+            <div>
+              <p class="text-gray-400 text-sm">Priority</p>
+              <h3 class="text-2xl font-bold" id="priority-count">0</h3>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Kitchen Display Board -->
+      <div class="mb-6">
+        <div class="flex justify-between items-center mb-4">
+          <h2 class="text-2xl font-bold">Kitchen Orders</h2>
+          <div class="flex space-x-2">
+            <button
+              onclick="refreshOrders()"
+              class="bg-gray-700 hover:bg-gray-600 px-4 py-2 rounded-lg"
+            >
+              <i class="fas fa-sync-alt mr-2"></i>Refresh
+            </button>
+            <button
+              onclick="toggleSound()"
+              id="sound-btn"
+              class="bg-gray-700 hover:bg-gray-600 px-4 py-2 rounded-lg"
+            >
+              <i class="fas fa-volume-up mr-2"></i>Sound On
+            </button>
+            <button
+              onclick="printKitchenView()"
+              class="bg-gray-700 hover:bg-gray-600 px-4 py-2 rounded-lg"
+            >
+              <i class="fas fa-print mr-2"></i>Print
+            </button>
+          </div>
+        </div>
+
+        <!-- Kanban Board -->
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          <!-- Confirmed Orders Column -->
+          <div class="column bg-gray-800 rounded-lg p-4">
+            <div class="flex items-center justify-between mb-4">
+              <h3 class="text-lg font-bold flex items-center">
+                <div class="w-3 h-3 bg-yellow-500 rounded-full mr-2"></div>
+                Confirmed
+                <span
+                  id="confirmed-count"
+                  class="ml-2 bg-yellow-500 text-yellow-900 text-xs px-2 py-1 rounded-full"
+                  >0</span
+                >
+              </h3>
+              <button
+                onclick="startAllPreparing()"
+                class="text-xs bg-yellow-500 hover:bg-yellow-600 px-2 py-1 rounded"
+              >
+                Start All
+              </button>
+            </div>
+            <div id="confirmed-orders" class="space-y-4">
+              <!-- Confirmed orders will be loaded here -->
+              <div class="text-center py-12 text-gray-500">
+                <i class="fas fa-check-circle text-3xl mb-3"></i>
+                <p>No confirmed orders</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Preparing Orders Column -->
+          <div class="column bg-gray-800 rounded-lg p-4">
+            <div class="flex items-center justify-between mb-4">
+              <h3 class="text-lg font-bold flex items-center">
+                <div class="w-3 h-3 bg-red-500 rounded-full mr-2"></div>
+                Preparing
+                <span
+                  id="preparing-column-count"
+                  class="ml-2 bg-red-500 text-red-900 text-xs px-2 py-1 rounded-full"
+                  >0</span
+                >
+              </h3>
+              <button
+                onclick="markAllReady()"
+                class="text-xs bg-green-500 hover:bg-green-600 px-2 py-1 rounded"
+              >
+                Ready All
+              </button>
+            </div>
+            <div id="preparing-orders" class="space-y-4">
+              <!-- Preparing orders will be loaded here -->
+              <div class="text-center py-12 text-gray-500">
+                <i class="fas fa-fire text-3xl mb-3"></i>
+                <p>No orders preparing</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Ready Orders Column -->
+          <div class="column bg-gray-800 rounded-lg p-4">
+            <div class="flex items-center justify-between mb-4">
+              <h3 class="text-lg font-bold flex items-center">
+                <div class="w-3 h-3 bg-green-500 rounded-full mr-2"></div>
+                Ready for Serve
+                <span
+                  id="ready-column-count"
+                  class="ml-2 bg-green-500 text-green-900 text-xs px-2 py-1 rounded-full"
+                  >0</span
+                >
+              </h3>
+              <button
+                onclick="clearAllReady()"
+                class="text-xs bg-gray-700 hover:bg-gray-600 px-2 py-1 rounded"
+              >
+                Clear All
+              </button>
+            </div>
+            <div id="ready-orders" class="space-y-4">
+              <!-- Ready orders will be loaded here -->
+              <div class="text-center py-12 text-gray-500">
+                <i class="fas fa-concierge-bell text-3xl mb-3"></i>
+                <p>No orders ready</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Preparation Timer -->
+      <div class="bg-gray-800 rounded-lg p-4 mb-6">
+        <h3 class="text-lg font-bold mb-4">Preparation Timer</h3>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div class="text-center">
+            <div class="text-4xl font-mono timer" id="average-time">00:00</div>
+            <p class="text-sm text-gray-400 mt-2">Average Prep Time</p>
+          </div>
+          <div class="text-center">
+            <div class="text-4xl font-mono timer" id="longest-time">00:00</div>
+            <p class="text-sm text-gray-400 mt-2">Longest Active</p>
+          </div>
+          <div class="text-center">
+            <div class="text-4xl font-mono" id="orders-today">0</div>
+            <p class="text-sm text-gray-400 mt-2">Orders Today</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Audio for notifications -->
+    <audio id="new-order-sound" preload="auto">
+      <source
+        src="https://assets.mixkit.co/sfx/preview/mixkit-kitchen-timer-1001.mp3"
+        type="audio/mpeg"
+      />
+    </audio>
+
+    <audio id="order-ready-sound" preload="auto">
+      <source
+        src="https://assets.mixkit.co/sfx/preview/mixkit-correct-answer-tone-2870.mp3"
+        type="audio/mpeg"
+      />
+    </audio>
+
+    <script>
+      const API_BASE = "/api/tables";
+      let soundEnabled = true;
+      let lastOrderCount = 0;
+
+      // Update current time
+      function updateTime() {
+        const now = new Date();
+        document.getElementById("current-time").textContent =
+          now.toLocaleTimeString([], {
+            hour: "2-digit",
+            minute: "2-digit",
+            second: "2-digit",
+          });
+      }
+
+      setInterval(updateTime, 1000);
+      updateTime();
+
+      async function loadKitchenOrders() {
+        try {
+          const response = await fetch(`${API_BASE}/orders/kitchen_orders/`);
+          if (response.ok) {
+            const orders = await response.json();
+            processOrders(orders);
+            updateLastUpdateTime();
+
+            // Play sound if new orders arrived
+            if (soundEnabled && orders.length > lastOrderCount) {
+              document.getElementById("new-order-sound").play();
+            }
+            lastOrderCount = orders.length;
+          }
+        } catch (error) {
+          console.error("Error loading kitchen orders:", error);
+        }
+      }
+
+      function processOrders(orders) {
+        // Separate orders by status
+        const confirmedOrders = orders.filter((o) => o.status === "confirmed");
+        const preparingOrders = orders.filter((o) => o.status === "preparing");
+        const readyOrders = orders.filter((o) => o.status === "ready");
+
+        // Update counts
+        document.getElementById("pending-count").textContent =
+          confirmedOrders.length;
+        document.getElementById("preparing-count").textContent =
+          preparingOrders.length;
+        document.getElementById("ready-count").textContent = readyOrders.length;
+        document.getElementById("priority-count").textContent = orders.filter(
+          (o) => o.is_priority
+        ).length;
+
+        // Update column counts
+        document.getElementById("confirmed-count").textContent =
+          confirmedOrders.length;
+        document.getElementById("preparing-column-count").textContent =
+          preparingOrders.length;
+        document.getElementById("ready-column-count").textContent =
+          readyOrders.length;
+
+        // Render each column
+        renderConfirmedOrders(confirmedOrders);
+        renderPreparingOrders(preparingOrders);
+        renderReadyOrders(readyOrders);
+
+        // Update timers
+        updatePreparationStats(preparingOrders);
+      }
+
+      function renderConfirmedOrders(orders) {
+        const container = document.getElementById("confirmed-orders");
+
+        if (orders.length === 0) {
+          container.innerHTML = `
+                    <div class="text-center py-12 text-gray-500">
+                        <i class="fas fa-check-circle text-3xl mb-3"></i>
+                        <p>No confirmed orders</p>
+                    </div>
+                `;
+          return;
+        }
+
+        container.innerHTML = orders
+          .map(
+            (order) => `
+                <div class="order-card bg-gray-700 rounded-lg p-4 ${
+                  order.is_priority
+                    ? "priority-high new-order"
+                    : "priority-normal"
+                }">
+                    <div class="flex justify-between items-start mb-3">
+                        <div>
+                            <div class="font-bold text-lg">Order #${
+                              order.order_number
+                            }</div>
+                            <div class="text-gray-400">Table ${
+                              order.table_number
+                            }</div>
+                        </div>
+                        <div class="text-right">
+                            <div class="text-sm text-gray-400">${formatTime(
+                              order.placed_at
+                            )}</div>
+                            ${
+                              order.is_priority
+                                ? `
+                            <span class="inline-block mt-1 bg-red-500 text-red-900 text-xs px-2 py-1 rounded">
+                                <i class="fas fa-bolt mr-1"></i>Priority
+                            </span>
+                            `
+                                : ""
+                            }
+                        </div>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <div class="text-sm text-gray-400 mb-1">Items:</div>
+                        <div class="space-y-1">
+                            ${order.items
+                              .map(
+                                (item) => `
+                            <div class="flex justify-between text-sm">
+                                <span>${item.quantity}x ${item.name}</span>
+                                <span class="text-gray-400">${
+                                  item.preparation_time || 15
+                                }min</span>
+                            </div>
+                            ${
+                              item.instructions
+                                ? `
+                            <div class="text-xs text-yellow-400 italic ml-3">${item.instructions}</div>
+                            `
+                                : ""
+                            }
+                            `
+                              )
+                              .join("")}
+                        </div>
+                    </div>
+                    
+                    <div class="flex justify-between items-center">
+                        <div class="text-sm text-gray-400">
+                            Est. time: <span class="timer">${
+                              order.preparation_time || "00:00"
+                            }</span>
+                        </div>
+                        <button onclick="startPreparing(${order.id})" 
+                                class="bg-yellow-500 hover:bg-yellow-600 text-white px-3 py-1 rounded text-sm">
+                            <i class="fas fa-play mr-1"></i>Start
+                        </button>
+                    </div>
+                </div>
+            `
+          )
+          .join("");
+      }
+
+      function renderPreparingOrders(orders) {
+        const container = document.getElementById("preparing-orders");
+
+        if (orders.length === 0) {
+          container.innerHTML = `
+                    <div class="text-center py-12 text-gray-500">
+                        <i class="fas fa-fire text-3xl mb-3"></i>
+                        <p>No orders preparing</p>
+                    </div>
+                `;
+          return;
+        }
+
+        container.innerHTML = orders
+          .map((order) => {
+            const elapsed = calculateElapsedTime(order.placed_at);
+            return `
+                <div class="order-card bg-gray-700 rounded-lg p-4 ${
+                  order.is_priority ? "priority-high" : "priority-normal"
+                }">
+                    <div class="flex justify-between items-start mb-3">
+                        <div>
+                            <div class="font-bold text-lg">Order #${
+                              order.order_number
+                            }</div>
+                            <div class="text-gray-400">Table ${
+                              order.table_number
+                            }</div>
+                        </div>
+                        <div class="text-right">
+                            <div class="text-sm text-gray-400">${formatTime(
+                              order.placed_at
+                            )}</div>
+                            <div class="text-xs text-yellow-400 mt-1 timer">${elapsed}</div>
+                        </div>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <div class="text-sm text-gray-400 mb-1">Items:</div>
+                        <div class="space-y-1">
+                            ${order.items
+                              .map(
+                                (item) => `
+                            <div class="flex justify-between text-sm">
+                                <span>${item.quantity}x ${item.name}</span>
+                                <span class="text-gray-400">${
+                                  item.preparation_time || 15
+                                }min</span>
+                            </div>
+                            ${
+                              item.instructions
+                                ? `
+                            <div class="text-xs text-yellow-400 italic ml-3">${item.instructions}</div>
+                            `
+                                : ""
+                            }
+                            `
+                              )
+                              .join("")}
+                        </div>
+                    </div>
+                    
+                    <div class="flex justify-between items-center">
+                        <div>
+                            <div class="text-xs text-gray-400">Progress:</div>
+                            <div class="w-32 h-2 bg-gray-600 rounded-full overflow-hidden">
+                                <div class="h-full bg-green-500" style="width: ${Math.min(
+                                  100,
+                                  (elapsedToMinutes(elapsed) / 30) * 100
+                                )}%"></div>
+                            </div>
+                        </div>
+                        <button onclick="markAsReady(${order.id})" 
+                                class="bg-green-500 hover:bg-green-600 text-white px-3 py-1 rounded text-sm">
+                            <i class="fas fa-check mr-1"></i>Ready
+                        </button>
+                    </div>
+                </div>
+                `;
+          })
+          .join("");
+      }
+
+      function renderReadyOrders(orders) {
+        const container = document.getElementById("ready-orders");
+
+        if (orders.length === 0) {
+          container.innerHTML = `
+                    <div class="text-center py-12 text-gray-500">
+                        <i class="fas fa-concierge-bell text-3xl mb-3"></i>
+                        <p>No orders ready</p>
+                    </div>
+                `;
+          return;
+        }
+
+        container.innerHTML = orders
+          .map((order) => {
+            const waitingTime = calculateElapsedTime(
+              order.ready_at || order.placed_at
+            );
+            return `
+                <div class="order-card bg-gray-700 rounded-lg p-4 border-l-4 border-green-500">
+                    <div class="flex justify-between items-start mb-3">
+                        <div>
+                            <div class="font-bold text-lg">Order #${
+                              order.order_number
+                            }</div>
+                            <div class="text-gray-400">Table ${
+                              order.table_number
+                            }</div>
+                        </div>
+                        <div class="text-right">
+                            <div class="text-sm text-gray-400">Ready: ${formatTime(
+                              order.ready_at
+                            )}</div>
+                            <div class="text-xs text-red-400 mt-1 timer">Waiting: ${waitingTime}</div>
+                        </div>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <div class="text-sm text-gray-400 mb-1">Items:</div>
+                        <div class="space-y-1">
+                            ${order.items
+                              .map(
+                                (item) => `
+                            <div class="flex justify-between text-sm">
+                                <span>${item.quantity}x ${item.name}</span>
+                            </div>
+                            ${
+                              item.instructions
+                                ? `
+                            <div class="text-xs text-yellow-400 italic ml-3">${item.instructions}</div>
+                            `
+                                : ""
+                            }
+                            `
+                              )
+                              .join("")}
+                        </div>
+                    </div>
+                    
+                    <div class="text-center">
+                        <button onclick="notifyWaiter(${order.id})" 
+                                class="w-full bg-blue-500 hover:bg-blue-600 text-white py-2 rounded text-sm">
+                            <i class="fas fa-bell mr-2"></i>Notify Waiter
+                        </button>
+                    </div>
+                </div>
+                `;
+          })
+          .join("");
+      }
+
+      function updatePreparationStats(preparingOrders) {
+        if (preparingOrders.length === 0) {
+          document.getElementById("average-time").textContent = "00:00";
+          document.getElementById("longest-time").textContent = "00:00";
+          return;
+        }
+
+        // Calculate average and longest preparation times
+        let totalMinutes = 0;
+        let longestMinutes = 0;
+
+        preparingOrders.forEach((order) => {
+          const elapsed = elapsedToMinutes(
+            calculateElapsedTime(order.placed_at)
+          );
+          totalMinutes += elapsed;
+          if (elapsed > longestMinutes) {
+            longestMinutes = elapsed;
+          }
+        });
+
+        const averageMinutes = Math.round(
+          totalMinutes / preparingOrders.length
+        );
+
+        document.getElementById("average-time").textContent = `${String(
+          averageMinutes
+        ).padStart(2, "0")}:00`;
+        document.getElementById("longest-time").textContent = `${String(
+          longestMinutes
+        ).padStart(2, "0")}:00`;
+      }
+
+      async function startPreparing(orderId) {
+        try {
+          const response = await fetch(
+            `${API_BASE}/orders/${orderId}/update_status/`,
+            {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+                "X-CSRFToken": getCookie("csrftoken"),
+              },
+              body: JSON.stringify({ status: "preparing" }),
+            }
+          );
+
+          if (response.ok) {
+            loadKitchenOrders();
+          }
+        } catch (error) {
+          console.error("Error starting preparation:", error);
+        }
+      }
+
+      async function markAsReady(orderId) {
+        try {
+          const response = await fetch(
+            `${API_BASE}/orders/${orderId}/update_status/`,
+            {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+                "X-CSRFToken": getCookie("csrftoken"),
+              },
+              body: JSON.stringify({ status: "ready" }),
+            }
+          );
+
+          if (response.ok) {
+            if (soundEnabled) {
+              document.getElementById("order-ready-sound").play();
+            }
+            loadKitchenOrders();
+          }
+        } catch (error) {
+          console.error("Error marking as ready:", error);
+        }
+      }
+
+      async function startAllPreparing() {
+        const confirmedOrders = document.querySelectorAll(
+          "#confirmed-orders .order-card"
+        );
+        for (const orderCard of confirmedOrders) {
+          const orderId = orderCard
+            .querySelector("button")
+            .onclick.toString()
+            .match(/startPreparing\((\d+)\)/)[1];
+          await startPreparing(parseInt(orderId));
+        }
+      }
+
+      async function markAllReady() {
+        const preparingOrders = document.querySelectorAll(
+          "#preparing-orders .order-card"
+        );
+        for (const orderCard of preparingOrders) {
+          const orderId = orderCard
+            .querySelector("button")
+            .onclick.toString()
+            .match(/markAsReady\((\d+)\)/)[1];
+          await markAsReady(parseInt(orderId));
+        }
+      }
+
+      async function clearAllReady() {
+        // In a real system, this would notify waiters or archive orders
+        alert("This would notify waiters to collect all ready orders");
+      }
+
+      async function notifyWaiter(orderId) {
+        alert(`Waiter notified for order #${orderId}`);
+      }
+
+      function toggleSound() {
+        soundEnabled = !soundEnabled;
+        const btn = document.getElementById("sound-btn");
+        if (soundEnabled) {
+          btn.innerHTML = '<i class="fas fa-volume-up mr-2"></i>Sound On';
+        } else {
+          btn.innerHTML = '<i class="fas fa-volume-mute mr-2"></i>Sound Off';
+        }
+      }
+
+      function refreshOrders() {
+        loadKitchenOrders();
+      }
+
+      function printKitchenView() {
+        window.print();
+      }
+
+      function updateLastUpdateTime() {
+        const now = new Date();
+        document.getElementById("last-update").textContent =
+          now.toLocaleTimeString([], {
+            hour: "2-digit",
+            minute: "2-digit",
+            second: "2-digit",
+          });
+      }
+
+      function formatTime(dateString) {
+        if (!dateString) return "N/A";
+        const date = new Date(dateString);
+        return date.toLocaleTimeString([], {
+          hour: "2-digit",
+          minute: "2-digit",
+        });
+      }
+
+      function calculateElapsedTime(startTime) {
+        if (!startTime) return "00:00";
+        const start = new Date(startTime);
+        const now = new Date();
+        const diffMs = now - start;
+        const diffMins = Math.floor(diffMs / 60000);
+        const diffSecs = Math.floor((diffMs % 60000) / 1000);
+        return `${String(diffMins).padStart(2, "0")}:${String(
+          diffSecs
+        ).padStart(2, "0")}`;
+      }
+
+      function elapsedToMinutes(elapsedTime) {
+        const [mins, secs] = elapsedTime.split(":").map(Number);
+        return mins;
+      }
+
+      // Helper function to get CSRF token
+      function getCookie(name) {
+        let cookieValue = null;
+        if (document.cookie && document.cookie !== "") {
+          const cookies = document.cookie.split(";");
+          for (let i = 0; i < cookies.length; i++) {
+            const cookie = cookies[i].trim();
+            if (cookie.substring(0, name.length + 1) === name + "=") {
+              cookieValue = decodeURIComponent(
+                cookie.substring(name.length + 1)
+              );
+              break;
+            }
+          }
+        }
+        return cookieValue;
+      }
+
+      // Poll every 15 seconds for kitchen updates
+      setInterval(loadKitchenOrders, 15000);
+
+      // Initial load
+      document.addEventListener("DOMContentLoaded", function () {
+        loadKitchenOrders();
+        // Update orders today count (simulated)
+        document.getElementById("orders-today").textContent =
+          Math.floor(Math.random() * 50) + 20;
+      });
+    </script>
+  </body>
+</html>

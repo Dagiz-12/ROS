@@ -1,3 +1,10 @@
+from django.shortcuts import render, redirect
+import json
+from django.views.decorators.http import require_http_methods
+from django.middleware.csrf import get_token
+from django.http import JsonResponse
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth import login, authenticate, logout
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.decorators import api_view, permission_classes
@@ -9,6 +16,81 @@ from django.core.cache import cache
 
 from .serializers import HealthCheckSerializer
 from accounts.permissions import IsAdminUser
+from django.shortcuts import render
+from django.views.decorators.csrf import ensure_csrf_cookie, csrf_protect
+from django.views.decorators.http import require_http_methods
+
+
+@require_http_methods(["GET"])
+@ensure_csrf_cookie
+def login_page(request):
+    """Render the login page"""
+    return render(request, 'auth/login.html')
+
+
+def landing_page(request):
+    """Render the promotional landing page"""
+    return render(request, 'landing/index.html')
+
+# accounts/views.py - Add these views
+
+
+@require_http_methods(["POST"])
+def process_login(request):
+    """Handle login form submission"""
+    try:
+        data = json.loads(request.body)
+        username = data.get('username')
+        password = data.get('password')
+        role = data.get('role')
+
+        # Authenticate user
+        user = authenticate(request, username=username, password=password)
+
+        if user is not None:
+            # Check if user role matches selected role
+            if hasattr(user, 'role') and user.role != role:
+                return JsonResponse({
+                    'error': f'User is not a {role}. Please select correct role.'
+                }, status=403)
+
+            # Login the user
+            login(request, user)
+
+            # Generate JWT tokens (if using JWT)
+            from accounts.utils import generate_jwt_tokens
+            tokens = generate_jwt_tokens(user)
+
+            return JsonResponse({
+                'success': True,
+                'message': 'Login successful',
+                'username': user.username,
+                'role': user.role,
+                **tokens
+            })
+        else:
+            return JsonResponse({
+                'error': 'Invalid username or password'
+            }, status=401)
+
+    except json.JSONDecodeError:
+        return JsonResponse({
+            'error': 'Invalid request format'
+        }, status=400)
+    except Exception as e:
+        return JsonResponse({
+            'error': str(e)
+        }, status=500)
+
+
+@login_required
+def process_logout(request):
+    """Handle logout"""
+    logout(request)
+    return JsonResponse({
+        'success': True,
+        'message': 'Logged out successfully'
+    })
 
 
 @api_view(['GET'])

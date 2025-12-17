@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Staff Management - Admin Panel</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+  </head>
+  <body class="bg-gray-50">
+    <nav class="bg-white shadow-lg">
+      <div class="container mx-auto px-4 py-3">
+        <div class="flex justify-between items-center">
+          <div class="flex items-center space-x-3">
+            <a
+              href="{% url 'admin-dashboard' %}"
+              class="text-gray-600 hover:text-red-600"
+            >
+              <i class="fas fa-arrow-left"></i>
+            </a>
+            <i class="fas fa-users text-2xl text-red-600"></i>
+            <div>
+              <h1 class="text-xl font-bold">Staff Management</h1>
+              <p class="text-sm text-gray-600">
+                {{ restaurant.name|default:"Restaurant" }}
+              </p>
+            </div>
+          </div>
+          <div class="flex items-center space-x-4">
+            <button
+              onclick="generateReport()"
+              class="border border-gray-300 px-4 py-2 rounded-lg hover:bg-gray-50"
+            >
+              <i class="fas fa-chart-bar mr-2"></i>Reports
+            </button>
+            <button
+              onclick="addStaff()"
+              class="bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700"
+            >
+              <i class="fas fa-user-plus mr-2"></i>Add Staff
+            </button>
+          </div>
+        </div>
+      </div>
+    </nav>
+
+    <div class="container mx-auto px-4 py-6">
+      <!-- Staff Summary -->
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+        <div class="bg-white rounded-lg shadow p-4">
+          <div class="flex items-center">
+            <div class="bg-red-100 p-3 rounded-lg mr-4">
+              <i class="fas fa-user-tie text-red-600"></i>
+            </div>
+            <div>
+              <p class="text-gray-500 text-sm">Managers</p>
+              <h3 class="text-2xl font-bold">{{ managers|length }}</h3>
+            </div>
+          </div>
+        </div>
+        <div class="bg-white rounded-lg shadow p-4">
+          <div class="flex items-center">
+            <div class="bg-blue-100 p-3 rounded-lg mr-4">
+              <i class="fas fa-concierge-bell text-blue-600"></i>
+            </div>
+            <div>
+              <p class="text-gray-500 text-sm">Waiters</p>
+              <h3 class="text-2xl font-bold">{{ waiters|length }}</h3>
+            </div>
+          </div>
+        </div>
+        <div class="bg-white rounded-lg shadow p-4">
+          <div class="flex items-center">
+            <div class="bg-green-100 p-3 rounded-lg mr-4">
+              <i class="fas fa-utensils text-green-600"></i>
+            </div>
+            <div>
+              <p class="text-gray-500 text-sm">Chefs</p>
+              <h3 class="text-2xl font-bold">{{ chefs|length }}</h3>
+            </div>
+          </div>
+        </div>
+        <div class="bg-white rounded-lg shadow p-4">
+          <div class="flex items-center">
+            <div class="bg-purple-100 p-3 rounded-lg mr-4">
+              <i class="fas fa-cash-register text-purple-600"></i>
+            </div>
+            <div>
+              <p class="text-gray-500 text-sm">Cashiers</p>
+              <h3 class="text-2xl font-bold">{{ cashiers|length }}</h3>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Role Tabs -->
+      <div class="bg-white rounded-lg shadow mb-6">
+        <div class="border-b">
+          <nav class="flex -mb-px">
+            <button
+              onclick="switchRole('all')"
+              class="tab-active py-4 px-6 border-b-2 border-red-500 text-red-600"
+            >
+              All Staff ({{ all_staff|length }})
+            </button>
+            <button
+              onclick="switchRole('waiter')"
+              class="py-4 px-6 text-gray-500 hover:text-gray-700"
+            >
+              Waiters ({{ waiters|length }})
+            </button>
+            <button
+              onclick="switchRole('chef')"
+              class="py-4 px-6 text-gray-500 hover:text-gray-700"
+            >
+              Chefs ({{ chefs|length }})
+            </button>
+            <button
+              onclick="switchRole('cashier')"
+              class="py-4 px-6 text-gray-500 hover:text-gray-700"
+            >
+              Cashiers ({{ cashiers|length }})
+            </button>
+            <button
+              onclick="switchRole('manager')"
+              class="py-4 px-6 text-gray-500 hover:text-gray-700"
+            >
+              Managers ({{ managers|length }})
+            </button>
+          </nav>
+        </div>
+      </div>
+
+      <!-- Staff Table -->
+      <div class="bg-white rounded-lg shadow">
+        <div class="p-6">
+          <div class="overflow-x-auto">
+            <table class="min-w-full divide-y divide-gray-200">
+              <thead class="bg-gray-50">
+                <tr>
+                  <th
+                    class="px-6 py-3 text-left text-xs font-medium text-gray-500"
+                  >
+                    Name
+                  </th>
+                  <th
+                    class="px-6 py-3 text-left text-xs font-medium text-gray-500"
+                  >
+                    Role
+                  </th>
+                  <th
+                    class="px-6 py-3 text-left text-xs font-medium text-gray-500"
+                  >
+                    Email
+                  </th>
+                  <th
+                    class="px-6 py-3 text-left text-xs font-medium text-gray-500"
+                  >
+                    Phone
+                  </th>
+                  <th
+                    class="px-6 py-3 text-left text-xs font-medium text-gray-500"
+                  >
+                    Branch
+                  </th>
+                  <th
+                    class="px-6 py-3 text-left text-xs font-medium text-gray-500"
+                  >
+                    Status
+                  </th>
+                  <th
+                    class="px-6 py-3 text-left text-xs font-medium text-gray-500"
+                  >
+                    Actions
+                  </th>
+                </tr>
+              </thead>
+              <tbody id="staff-table" class="divide-y divide-gray-200">
+                {% for staff in all_staff %}
+                <tr>
+                  <td class="px-6 py-4">
+                    <div class="flex items-center">
+                      <div
+                        class="w-10 h-10 bg-gray-200 rounded-full flex items-center justify-center mr-3"
+                      >
+                        {% if staff.profile_image %}
+                        <img
+                          src="{{ staff.profile_image.url }}"
+                          alt="{{ staff.get_full_name }}"
+                          class="w-10 h-10 rounded-full object-cover"
+                        />
+                        {% else %}
+                        <i class="fas fa-user text-gray-500"></i>
+                        {% endif %}
+                      </div>
+                      <div>
+                        <div class="font-medium">
+                          {{ staff.get_full_name|default:staff.username }}
+                        </div>
+                        <div class="text-sm text-gray-500">
+                          @{{ staff.username }}
+                        </div>
+                      </div>
+                    </div>
+                  </td>
+                  <td class="px-6 py-4">
+                    <span
+                      class="px-2 py-1 text-xs rounded-full {% if staff.role == 'admin' %}bg-purple-100 text-purple-800 {% elif staff.role == 'manager' %}bg-red-100 text-red-800 {% elif staff.role == 'chef' %}bg-green-100 text-green-800 {% elif staff.role == 'waiter' %}bg-blue-100 text-blue-800 {% else %}bg-gray-100 text-gray-800{% endif %}"
+                    >
+                      {{ staff.role|title }}
+                    </span>
+                  </td>
+                  <td class="px-6 py-4 text-sm">
+                    {{ staff.email|default:"-" }}
+                  </td>
+                  <td class="px-6 py-4 text-sm">
+                    {{ staff.phone|default:"-" }}
+                  </td>
+                  <td class="px-6 py-4 text-sm">
+                    {{ staff.branch.name|default:"Main" }}
+                  </td>
+                  <td class="px-6 py-4">
+                    <span
+                      class="px-2 py-1 text-xs rounded-full {{ staff.is_active|yesno:'bg-green-100 text-green-800,bg-red-100 text-red-800' }}"
+                    >
+                      {{ staff.is_active|yesno:"Active,Inactive" }}
+                    </span>
+                  </td>
+                  <td class="px-6 py-4">
+                    <div class="flex space-x-2">
+                      <button
+                        onclick="editStaff({{ staff.id }})"
+                        class="text-blue-600 hover:text-blue-800"
+                      >
+                        <i class="fas fa-edit"></i>
+                      </button>
+                      <button
+                        onclick="toggleStaffStatus({{ staff.id }})"
+                        class="text-yellow-600 hover:text-yellow-800"
+                      >
+                        <i class="fas fa-power-off"></i>
+                      </button>
+                      <button
+                        onclick="viewPerformance({{ staff.id }})"
+                        class="text-green-600 hover:text-green-800"
+                      >
+                        <i class="fas fa-chart-line"></i>
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+                {% empty %}
+                <tr>
+                  <td colspan="7" class="px-6 py-8 text-center text-gray-500">
+                    <i class="fas fa-users text-3xl mb-3"></i>
+                    <p>No staff members found</p>
+                    <p class="text-sm mt-2">Add staff to get started</p>
+                  </td>
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      function switchRole(role) {
+        alert(`Switch to ${role} view`);
+      }
+
+      function addStaff() {
+        alert("Add staff modal would open");
+      }
+
+      function editStaff(staffId) {
+        alert(`Edit staff ${staffId}`);
+      }
+
+      function toggleStaffStatus(staffId) {
+        if (confirm("Toggle staff status?")) {
+          alert(`Staff ${staffId} status toggled`);
+        }
+      }
+
+      function viewPerformance(staffId) {
+        alert(`View performance for staff ${staffId}`);
+      }
+
+      function generateReport() {
+        alert("Generate staff report");
+      }
+    </script>
+  </body>
+</html>

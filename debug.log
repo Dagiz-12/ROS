@@ -1,2 +1,571 @@
 Watching for file changes with StatReloader
 Not Found: /
+Watching for file changes with StatReloader
+Not Found: /api/core/health/
+Not Found: /api/core/health/
+Not Found: /
+Method Not Allowed: /api/auth/login/
+Method Not Allowed: /api/auth/register/
+Forbidden: /api/auth/users/
+Not Found: /api/menu/public/
+Not Found: /menu/public/1/
+Bad Request: /api/auth/register/
+Forbidden: /api/auth/profile/
+Forbidden: /api/auth/profile/
+Forbidden: /api/auth/profile/
+Forbidden: /api/auth/profile/
+Forbidden: /api/auth/profile/
+Forbidden: /api/tables/tables/
+Forbidden: /api/tables/
+Not Found: /tables/tables/
+C:\Users\USER\DAGIIIz\eco\res\res3\ROS\tables\views.py changed, reloading.
+Watching for file changes with StatReloader
+C:\Users\USER\DAGIIIz\eco\res\res3\ROS\tables\urls.py changed, reloading.
+Watching for file changes with StatReloader
+Watching for file changes with StatReloader
+Internal Server Error: /api/tables/qr-menu/1/1/
+Traceback (most recent call last):
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "C:\Users\USER\DAGIIIz\eco\res\res3\ROS\tables\views.py", line 55, in qr_menu_view
+    return render(request, 'qr_menu/index.html', context)
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django\shortcuts.py", line 25, in render
+    content = loader.render_to_string(template_name, context, request, using=using)
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django\template\loader.py", line 61, in render_to_string
+    template = get_template(template_name, using=using)
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django\template\loader.py", line 19, in get_template
+    raise TemplateDoesNotExist(template_name, chain=chain)
+django.template.exceptions.TemplateDoesNotExist: qr_menu/index.html
+Not Found: /accounts/login/
+Not Found: /accounts/login/
+Not Found: /accounts/login/
+Not Found: /accounts/login/
+Not Found: /accounts/login/
+Not Found: /accounts/login/
+Forbidden: /api/tables/tables/
+Forbidden: /api/tables/orders/
+Forbidden: /api/menu/restaurant-menu/
+Forbidden: /api/restaurants/my-restaurant/
+C:\Users\USER\DAGIIIz\eco\res\res3\ROS\ROS\settings.py changed, reloading.
+Watching for file changes with StatReloader
+Not Found: /accounts/login/
+Not Found: /accounts/login/
+Not Found: /accounts/login/
+Not Found: /accounts/login/
+Not Found: /accounts/login/
+Not Found: /accounts/login/
+Forbidden: /api/tables/tables/
+Forbidden: /api/tables/orders/
+Forbidden: /api/menu/restaurant-menu/
+Forbidden: /api/restaurants/my-restaurant/
+C:\Users\USER\DAGIIIz\eco\res\res3\ROS\ROS\urls.py changed, reloading.
+Watching for file changes with StatReloader
+C:\Users\USER\DAGIIIz\eco\res\res3\ROS\ROS\urls.py changed, reloading.
+Watching for file changes with StatReloader
+C:\Users\USER\DAGIIIz\eco\res\res3\ROS\ROS\urls.py changed, reloading.
+Watching for file changes with StatReloader
+C:\Users\USER\DAGIIIz\eco\res\res3\ROS\core\views.py changed, reloading.
+Watching for file changes with StatReloader
+C:\Users\USER\DAGIIIz\eco\res\res3\ROS\core\views.py changed, reloading.
+Watching for file changes with StatReloader
+C:\Users\USER\DAGIIIz\eco\res\res3\ROS\ROS\urls.py changed, reloading.
+Watching for file changes with StatReloader
+C:\Users\USER\DAGIIIz\eco\res\res3\ROS\ROS\settings.py changed, reloading.
+Watching for file changes with StatReloader
+Watching for file changes with StatReloader
+Forbidden: /api/restaurants/restaurants/1/
+Not Found: /waiter/dashboard/
+Not Found: /tables/waiter/dashboard/
+Not Found: /tables/waiter-dashboard/
+Not Found: /tables/waiter_dashboard/
+Not Found: /waiter/tables/
+Not Found: /waiter/tables/
+Not Found: /chef/dashboard/
+Not Found: /api/chef/dashboard/
+Not Found: /tables/chef/dashboard/
+Not Found: /api/tables/chef/dashboard/
+Unauthorized: /api/auth/login/
+Unauthorized: /api/auth/login/
+Not Found: /api/tables/waiter/dashboard/
+Forbidden: /api/auth/login/
+Forbidden: /api/auth/login/
+Forbidden: /api/auth/login/
+Unauthorized: /api/auth/login/
+C:\Users\USER\DAGIIIz\eco\res\res3\ROS\ROS\urls.py changed, reloading.
+Watching for file changes with StatReloader
+Watching for file changes with StatReloader
+Not Found: /api/tables/waiter/dashboard/
+Forbidden: /api/auth/login/
+Forbidden: /chef/dashboard/
+Forbidden: /api/tables/tables/
+Internal Server Error: /api/tables/orders/
+Traceback (most recent call last):
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django\views\decorators\csrf.py", line 65, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\rest_framework\viewsets.py", line 125, in view
+    return self.dispatch(request, *args, **kwargs)
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\rest_framework\views.py", line 509, in dispatch
+    response = self.handle_exception(exc)
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\rest_framework\views.py", line 469, in handle_exception
+    self.raise_uncaught_exception(exc)
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\rest_framework\views.py", line 480, in raise_uncaught_exception
+    raise exc
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\rest_framework\views.py", line 506, in dispatch
+    response = handler(request, *args, **kwargs)
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\rest_framework\mixins.py", line 38, in list
+    queryset = self.filter_queryset(self.get_queryset())
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\rest_framework\generics.py", line 150, in filter_queryset
+    queryset = backend().filter_queryset(self.request, queryset, self)
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django_filters\rest_framework\backends.py", line 72, in filter_queryset
+    if not filterset.is_valid() and self.raise_exception:
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django_filters\filterset.py", line 195, in is_valid
+    return self.is_bound and self.form.is_valid()
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django_filters\rest_framework\filterset.py", line 26, in form
+    form = super().form
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django_filters\filterset.py", line 250, in form
+    Form = self.get_form_class()
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django_filters\filterset.py", line 242, in get_form_class
+    [(name, filter_.field) for name, filter_ in self.filters.items()]
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django_filters\filterset.py", line 242, in <listcomp>
+    [(name, filter_.field) for name, filter_ in self.filters.items()]
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django_filters\filters.py", line 149, in field
+    self._field = self.field_class(label=self.label, **field_kwargs)
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django_filters\fields.py", line 278, in __init__
+    super().__init__(*args, **kwargs)
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django_filters\fields.py", line 258, in __init__
+    super().__init__(*args, **kwargs)
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django\forms\fields.py", line 895, in __init__
+    self.choices = choices
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django_filters\fields.py", line 264, in _set_choices
+    super()._set_choices(value)
+AttributeError: 'super' object has no attribute '_set_choices'
+Forbidden: /api/auth/login/
+Forbidden: /api/auth/login/
+Forbidden: /api/auth/login/
+Forbidden: /api/tables/tables/
+Internal Server Error: /api/tables/orders/
+Traceback (most recent call last):
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django\views\decorators\csrf.py", line 65, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\rest_framework\viewsets.py", line 125, in view
+    return self.dispatch(request, *args, **kwargs)
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\rest_framework\views.py", line 509, in dispatch
+    response = self.handle_exception(exc)
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\rest_framework\views.py", line 469, in handle_exception
+    self.raise_uncaught_exception(exc)
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\rest_framework\views.py", line 480, in raise_uncaught_exception
+    raise exc
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\rest_framework\views.py", line 506, in dispatch
+    response = handler(request, *args, **kwargs)
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\rest_framework\mixins.py", line 38, in list
+    queryset = self.filter_queryset(self.get_queryset())
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\rest_framework\generics.py", line 150, in filter_queryset
+    queryset = backend().filter_queryset(self.request, queryset, self)
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django_filters\rest_framework\backends.py", line 72, in filter_queryset
+    if not filterset.is_valid() and self.raise_exception:
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django_filters\filterset.py", line 195, in is_valid
+    return self.is_bound and self.form.is_valid()
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django_filters\rest_framework\filterset.py", line 26, in form
+    form = super().form
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django_filters\filterset.py", line 250, in form
+    Form = self.get_form_class()
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django_filters\filterset.py", line 242, in get_form_class
+    [(name, filter_.field) for name, filter_ in self.filters.items()]
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django_filters\filterset.py", line 242, in <listcomp>
+    [(name, filter_.field) for name, filter_ in self.filters.items()]
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django_filters\filters.py", line 149, in field
+    self._field = self.field_class(label=self.label, **field_kwargs)
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django_filters\fields.py", line 278, in __init__
+    super().__init__(*args, **kwargs)
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django_filters\fields.py", line 258, in __init__
+    super().__init__(*args, **kwargs)
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django\forms\fields.py", line 895, in __init__
+    self.choices = choices
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django_filters\fields.py", line 264, in _set_choices
+    super()._set_choices(value)
+AttributeError: 'super' object has no attribute '_set_choices'
+Not Found: /logout/
+Forbidden: /api/tables/tables/
+Internal Server Error: /api/tables/orders/
+Traceback (most recent call last):
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django\views\decorators\csrf.py", line 65, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\rest_framework\viewsets.py", line 125, in view
+    return self.dispatch(request, *args, **kwargs)
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\rest_framework\views.py", line 509, in dispatch
+    response = self.handle_exception(exc)
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\rest_framework\views.py", line 469, in handle_exception
+    self.raise_uncaught_exception(exc)
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\rest_framework\views.py", line 480, in raise_uncaught_exception
+    raise exc
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\rest_framework\views.py", line 506, in dispatch
+    response = handler(request, *args, **kwargs)
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\rest_framework\mixins.py", line 38, in list
+    queryset = self.filter_queryset(self.get_queryset())
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\rest_framework\generics.py", line 150, in filter_queryset
+    queryset = backend().filter_queryset(self.request, queryset, self)
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django_filters\rest_framework\backends.py", line 72, in filter_queryset
+    if not filterset.is_valid() and self.raise_exception:
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django_filters\filterset.py", line 195, in is_valid
+    return self.is_bound and self.form.is_valid()
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django_filters\rest_framework\filterset.py", line 26, in form
+    form = super().form
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django_filters\filterset.py", line 250, in form
+    Form = self.get_form_class()
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django_filters\filterset.py", line 242, in get_form_class
+    [(name, filter_.field) for name, filter_ in self.filters.items()]
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django_filters\filterset.py", line 242, in <listcomp>
+    [(name, filter_.field) for name, filter_ in self.filters.items()]
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django_filters\filters.py", line 149, in field
+    self._field = self.field_class(label=self.label, **field_kwargs)
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django_filters\fields.py", line 278, in __init__
+    super().__init__(*args, **kwargs)
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django_filters\fields.py", line 258, in __init__
+    super().__init__(*args, **kwargs)
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django\forms\fields.py", line 895, in __init__
+    self.choices = choices
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django_filters\fields.py", line 264, in _set_choices
+    super()._set_choices(value)
+AttributeError: 'super' object has no attribute '_set_choices'
+Forbidden: /api/tables/tables/
+Internal Server Error: /api/tables/orders/
+Traceback (most recent call last):
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django\views\decorators\csrf.py", line 65, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\rest_framework\viewsets.py", line 125, in view
+    return self.dispatch(request, *args, **kwargs)
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\rest_framework\views.py", line 509, in dispatch
+    response = self.handle_exception(exc)
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\rest_framework\views.py", line 469, in handle_exception
+    self.raise_uncaught_exception(exc)
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\rest_framework\views.py", line 480, in raise_uncaught_exception
+    raise exc
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\rest_framework\views.py", line 506, in dispatch
+    response = handler(request, *args, **kwargs)
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\rest_framework\mixins.py", line 38, in list
+    queryset = self.filter_queryset(self.get_queryset())
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\rest_framework\generics.py", line 150, in filter_queryset
+    queryset = backend().filter_queryset(self.request, queryset, self)
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django_filters\rest_framework\backends.py", line 72, in filter_queryset
+    if not filterset.is_valid() and self.raise_exception:
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django_filters\filterset.py", line 195, in is_valid
+    return self.is_bound and self.form.is_valid()
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django_filters\rest_framework\filterset.py", line 26, in form
+    form = super().form
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django_filters\filterset.py", line 250, in form
+    Form = self.get_form_class()
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django_filters\filterset.py", line 242, in get_form_class
+    [(name, filter_.field) for name, filter_ in self.filters.items()]
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django_filters\filterset.py", line 242, in <listcomp>
+    [(name, filter_.field) for name, filter_ in self.filters.items()]
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django_filters\filters.py", line 149, in field
+    self._field = self.field_class(label=self.label, **field_kwargs)
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django_filters\fields.py", line 278, in __init__
+    super().__init__(*args, **kwargs)
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django_filters\fields.py", line 258, in __init__
+    super().__init__(*args, **kwargs)
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django\forms\fields.py", line 895, in __init__
+    self.choices = choices
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django_filters\fields.py", line 264, in _set_choices
+    super()._set_choices(value)
+AttributeError: 'super' object has no attribute '_set_choices'
+Forbidden: /api/tables/tables/
+Internal Server Error: /api/tables/orders/
+Traceback (most recent call last):
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django\views\decorators\csrf.py", line 65, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\rest_framework\viewsets.py", line 125, in view
+    return self.dispatch(request, *args, **kwargs)
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\rest_framework\views.py", line 509, in dispatch
+    response = self.handle_exception(exc)
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\rest_framework\views.py", line 469, in handle_exception
+    self.raise_uncaught_exception(exc)
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\rest_framework\views.py", line 480, in raise_uncaught_exception
+    raise exc
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\rest_framework\views.py", line 506, in dispatch
+    response = handler(request, *args, **kwargs)
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\rest_framework\mixins.py", line 38, in list
+    queryset = self.filter_queryset(self.get_queryset())
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\rest_framework\generics.py", line 150, in filter_queryset
+    queryset = backend().filter_queryset(self.request, queryset, self)
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django_filters\rest_framework\backends.py", line 72, in filter_queryset
+    if not filterset.is_valid() and self.raise_exception:
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django_filters\filterset.py", line 195, in is_valid
+    return self.is_bound and self.form.is_valid()
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django_filters\rest_framework\filterset.py", line 26, in form
+    form = super().form
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django_filters\filterset.py", line 250, in form
+    Form = self.get_form_class()
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django_filters\filterset.py", line 242, in get_form_class
+    [(name, filter_.field) for name, filter_ in self.filters.items()]
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django_filters\filterset.py", line 242, in <listcomp>
+    [(name, filter_.field) for name, filter_ in self.filters.items()]
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django_filters\filters.py", line 149, in field
+    self._field = self.field_class(label=self.label, **field_kwargs)
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django_filters\fields.py", line 278, in __init__
+    super().__init__(*args, **kwargs)
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django_filters\fields.py", line 258, in __init__
+    super().__init__(*args, **kwargs)
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django\forms\fields.py", line 895, in __init__
+    self.choices = choices
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django_filters\fields.py", line 264, in _set_choices
+    super()._set_choices(value)
+AttributeError: 'super' object has no attribute '_set_choices'
+Forbidden: /api/tables/tables/
+Internal Server Error: /api/tables/orders/
+Traceback (most recent call last):
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django\views\decorators\csrf.py", line 65, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\rest_framework\viewsets.py", line 125, in view
+    return self.dispatch(request, *args, **kwargs)
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\rest_framework\views.py", line 509, in dispatch
+    response = self.handle_exception(exc)
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\rest_framework\views.py", line 469, in handle_exception
+    self.raise_uncaught_exception(exc)
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\rest_framework\views.py", line 480, in raise_uncaught_exception
+    raise exc
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\rest_framework\views.py", line 506, in dispatch
+    response = handler(request, *args, **kwargs)
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\rest_framework\mixins.py", line 38, in list
+    queryset = self.filter_queryset(self.get_queryset())
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\rest_framework\generics.py", line 150, in filter_queryset
+    queryset = backend().filter_queryset(self.request, queryset, self)
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django_filters\rest_framework\backends.py", line 72, in filter_queryset
+    if not filterset.is_valid() and self.raise_exception:
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django_filters\filterset.py", line 195, in is_valid
+    return self.is_bound and self.form.is_valid()
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django_filters\rest_framework\filterset.py", line 26, in form
+    form = super().form
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django_filters\filterset.py", line 250, in form
+    Form = self.get_form_class()
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django_filters\filterset.py", line 242, in get_form_class
+    [(name, filter_.field) for name, filter_ in self.filters.items()]
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django_filters\filterset.py", line 242, in <listcomp>
+    [(name, filter_.field) for name, filter_ in self.filters.items()]
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django_filters\filters.py", line 149, in field
+    self._field = self.field_class(label=self.label, **field_kwargs)
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django_filters\fields.py", line 278, in __init__
+    super().__init__(*args, **kwargs)
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django_filters\fields.py", line 258, in __init__
+    super().__init__(*args, **kwargs)
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django\forms\fields.py", line 895, in __init__
+    self.choices = choices
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django_filters\fields.py", line 264, in _set_choices
+    super()._set_choices(value)
+AttributeError: 'super' object has no attribute '_set_choices'
+Forbidden: /api/tables/tables/
+Internal Server Error: /api/tables/orders/
+Traceback (most recent call last):
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django\views\decorators\csrf.py", line 65, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\rest_framework\viewsets.py", line 125, in view
+    return self.dispatch(request, *args, **kwargs)
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\rest_framework\views.py", line 509, in dispatch
+    response = self.handle_exception(exc)
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\rest_framework\views.py", line 469, in handle_exception
+    self.raise_uncaught_exception(exc)
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\rest_framework\views.py", line 480, in raise_uncaught_exception
+    raise exc
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\rest_framework\views.py", line 506, in dispatch
+    response = handler(request, *args, **kwargs)
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\rest_framework\mixins.py", line 38, in list
+    queryset = self.filter_queryset(self.get_queryset())
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\rest_framework\generics.py", line 150, in filter_queryset
+    queryset = backend().filter_queryset(self.request, queryset, self)
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django_filters\rest_framework\backends.py", line 72, in filter_queryset
+    if not filterset.is_valid() and self.raise_exception:
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django_filters\filterset.py", line 195, in is_valid
+    return self.is_bound and self.form.is_valid()
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django_filters\rest_framework\filterset.py", line 26, in form
+    form = super().form
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django_filters\filterset.py", line 250, in form
+    Form = self.get_form_class()
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django_filters\filterset.py", line 242, in get_form_class
+    [(name, filter_.field) for name, filter_ in self.filters.items()]
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django_filters\filterset.py", line 242, in <listcomp>
+    [(name, filter_.field) for name, filter_ in self.filters.items()]
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django_filters\filters.py", line 149, in field
+    self._field = self.field_class(label=self.label, **field_kwargs)
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django_filters\fields.py", line 278, in __init__
+    super().__init__(*args, **kwargs)
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django_filters\fields.py", line 258, in __init__
+    super().__init__(*args, **kwargs)
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django\forms\fields.py", line 895, in __init__
+    self.choices = choices
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django_filters\fields.py", line 264, in _set_choices
+    super()._set_choices(value)
+AttributeError: 'super' object has no attribute '_set_choices'
+Forbidden: /chef/dashboard/
+C:\Users\USER\DAGIIIz\eco\res\res3\ROS\accounts\views.py changed, reloading.
+Watching for file changes with StatReloader
+C:\Users\USER\DAGIIIz\eco\res\res3\ROS\accounts\views.py changed, reloading.
+Watching for file changes with StatReloader
+C:\Users\USER\DAGIIIz\eco\res\res3\ROS\tables\views.py changed, reloading.
+Watching for file changes with StatReloader
+Forbidden: /api/auth/logout/
+Forbidden: /api/auth/logout/
+Not Found: /accounts/login/
+Forbidden: /api/auth/logout/
+Forbidden: /api/auth/logout/
+Not Found: /accounts/login/
+Not Found: /api/tables/waiter/dashboard/
+Not Found: /api/tables/waiter/dashboard/
+Not Found: /api/tables/waiter/dashboard/
+C:\Users\USER\DAGIIIz\eco\res\res3\ROS\accounts\views.py changed, reloading.
+Watching for file changes with StatReloader
+C:\Users\USER\DAGIIIz\eco\res\res3\ROS\accounts\views.py changed, reloading.
+Watching for file changes with StatReloader
+C:\Users\USER\DAGIIIz\eco\res\res3\ROS\accounts\views.py changed, reloading.
+Watching for file changes with StatReloader
+C:\Users\USER\DAGIIIz\eco\res\res3\ROS\ROS\settings.py changed, reloading.
+Watching for file changes with StatReloader
+Forbidden: /api/tables/tables/
+Internal Server Error: /api/tables/orders/
+Traceback (most recent call last):
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django\views\decorators\csrf.py", line 65, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\rest_framework\viewsets.py", line 125, in view
+    return self.dispatch(request, *args, **kwargs)
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\rest_framework\views.py", line 509, in dispatch
+    response = self.handle_exception(exc)
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\rest_framework\views.py", line 469, in handle_exception
+    self.raise_uncaught_exception(exc)
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\rest_framework\views.py", line 480, in raise_uncaught_exception
+    raise exc
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\rest_framework\views.py", line 506, in dispatch
+    response = handler(request, *args, **kwargs)
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\rest_framework\mixins.py", line 38, in list
+    queryset = self.filter_queryset(self.get_queryset())
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\rest_framework\generics.py", line 150, in filter_queryset
+    queryset = backend().filter_queryset(self.request, queryset, self)
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django_filters\rest_framework\backends.py", line 72, in filter_queryset
+    if not filterset.is_valid() and self.raise_exception:
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django_filters\filterset.py", line 195, in is_valid
+    return self.is_bound and self.form.is_valid()
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django_filters\rest_framework\filterset.py", line 26, in form
+    form = super().form
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django_filters\filterset.py", line 250, in form
+    Form = self.get_form_class()
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django_filters\filterset.py", line 242, in get_form_class
+    [(name, filter_.field) for name, filter_ in self.filters.items()]
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django_filters\filterset.py", line 242, in <listcomp>
+    [(name, filter_.field) for name, filter_ in self.filters.items()]
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django_filters\filters.py", line 149, in field
+    self._field = self.field_class(label=self.label, **field_kwargs)
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django_filters\fields.py", line 278, in __init__
+    super().__init__(*args, **kwargs)
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django_filters\fields.py", line 258, in __init__
+    super().__init__(*args, **kwargs)
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django\forms\fields.py", line 895, in __init__
+    self.choices = choices
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django_filters\fields.py", line 264, in _set_choices
+    super()._set_choices(value)
+AttributeError: 'super' object has no attribute '_set_choices'
+Not Found: /logout/
+Not Found: /api/tables/waiter/dashboard/
+Forbidden: /api/tables/orders/
+Forbidden: /api/tables/orders/
+Not Found: /api/tables/waiter/dashboard/
+Not Found: /api/tables/waiter/dashboard/
+C:\Users\USER\DAGIIIz\eco\res\res3\ROS\tables\views.py changed, reloading.
+Watching for file changes with StatReloader
+C:\Users\USER\DAGIIIz\eco\res\res3\ROS\tables\views.py changed, reloading.
+Watching for file changes with StatReloader
+Not Found: /api/tables/waiter/dashboard/
+Not Found: /api/tables/waiter/dashboard/
+Not Found: /api/tables/waiter/dashboard/
+Forbidden: /api/tables/orders/
+Forbidden: /api/tables/orders/
+Forbidden: /api/tables/tables/
+Not Found: /logout/
+Watching for file changes with StatReloader
+Forbidden: /api/tables/tables/
+Not Found: /logout/
+C:\Users\USER\DAGIIIz\eco\res\res3\ROS\accounts\views.py changed, reloading.
+Watching for file changes with StatReloader
+Forbidden: /api/tables/tables/
+Not Found: /logout/
+Forbidden: /api/tables/tables/
+Forbidden: /api/tables/tables/
+Forbidden: /api/tables/tables/
+Forbidden: /api/tables/tables/
+Forbidden: /api/tables/tables/
+Forbidden: /api/tables/tables/
+Not Found: /logout/
+Forbidden: /api/tables/tables/
+Forbidden: /api/tables/tables/
+Forbidden: /api/tables/tables/
+Forbidden: /api/tables/tables/
+Forbidden: /api/tables/tables/
+Forbidden: /api/tables/tables/
+Forbidden: /api/tables/tables/
+Forbidden: /api/tables/tables/
+Forbidden: /api/tables/tables/
+Forbidden: /api/tables/tables/
+Forbidden: /api/tables/tables/
+Forbidden: /api/tables/tables/
+Forbidden: /api/tables/tables/
+Forbidden: /api/tables/tables/
+Forbidden: /api/tables/tables/
+Forbidden: /api/tables/tables/
+Forbidden: /api/tables/tables/
+Forbidden: /api/tables/tables/
+C:\Users\USER\DAGIIIz\eco\res\res3\ROS\ROS\urls.py changed, reloading.
+Watching for file changes with StatReloader
+Forbidden: /api/tables/tables/
+Forbidden: /api/tables/tables/
+Method Not Allowed (GET): /logout/
+Method Not Allowed: /logout/
+Method Not Allowed (GET): /logout/
+Method Not Allowed: /logout/
+Forbidden: /api/tables/tables/
+Forbidden: /api/tables/tables/
+C:\Users\USER\DAGIIIz\eco\res\res3\ROS\ROS\urls.py changed, reloading.
+Watching for file changes with StatReloader
+C:\Users\USER\DAGIIIz\eco\res\res3\ROS\ROS\urls.py changed, reloading.
+Watching for file changes with StatReloader
+Forbidden: /api/tables/tables/
+Method Not Allowed: /api/auth/logout/
+C:\Users\USER\DAGIIIz\eco\res\res3\ROS\ROS\urls.py changed, reloading.
+Watching for file changes with StatReloader
+C:\Users\USER\DAGIIIz\eco\res\res3\ROS\ROS\urls.py changed, reloading.
+Watching for file changes with StatReloader
+C:\Users\USER\DAGIIIz\eco\res\res3\ROS\ROS\urls.py changed, reloading.
+Watching for file changes with StatReloader
+Forbidden: /api/tables/tables/
+Forbidden: /api/tables/tables/
+Forbidden: /api/tables/tables/

@@ -1,10 +1,18 @@
+# accounts/urls.py
 from django.urls import path
 from . import views
 
 urlpatterns = [
-    # Authentication
-    path('login/', views.login_view, name='login'),
-    path('logout/', views.logout_view, name='logout'),
+    # Authentication API endpoints
+    # Changed from login_api to login_view
+    path('login/', views.login_view, name='login-api'),
+    # Changed from logout_api to logout_view
+    path('logout/', views.logout_view, name='logout-api'),
+
+    # Template views
+    path('login-page/', views.login_page, name='login-page'),
+
+    # User registration
     path('register/', views.register_view, name='register'),
 
     # Profile Management

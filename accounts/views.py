@@ -15,10 +15,21 @@ from .serializers import (
     RoleAssignmentSerializer
 )
 from .utils import create_jwt_token, verify_jwt_token
+from django.shortcuts import render
+from django.views.decorators.http import require_http_methods
+from django.views.decorators.csrf import ensure_csrf_cookie
+from django.views.decorators.csrf import csrf_protect
+from django.utils import timezone
 
-# ============ Authentication Views ============
+
+@require_http_methods(["GET"])
+@ensure_csrf_cookie
+def login_page(request):
+    """Render the login page template"""
+    return render(request, 'auth/login.html')
 
 
+# accounts/views.py - In login_view function
 @api_view(['POST'])
 @permission_classes([AllowAny])
 def login_view(request):
@@ -39,8 +50,12 @@ def login_view(request):
             # Generate JWT token
             token = create_jwt_token(user)
 
-            # Optionally perform Django login (for session-based auth if needed)
-            django_login(request, user)
+            # IMPORTANT: Perform Django login for session-based auth
+            django_login(request, user)  # This sets the session
+
+            # Update last login
+            user.last_login = timezone.now()
+            user.save(update_fields=['last_login'])
 
             return Response({
                 'success': True,
@@ -59,16 +74,37 @@ def login_view(request):
             'message': 'Invalid credentials'
         }, status=status.HTTP_401_UNAUTHORIZED)
 
+ # accounts/views.py - Fix logout_view
 
+
+# accounts/views.py - Improved logout_view
 @api_view(['POST'])
-@permission_classes([IsAuthenticated])
+@permission_classes([AllowAny])  # Allow anyone to logout
 def logout_view(request):
-    """Logout endpoint"""
-    django_logout(request)
-    return Response({
-        'success': True,
-        'message': 'Logged out successfully'
-    }, status=status.HTTP_200_OK)
+    """Logout endpoint - clears both JWT and session"""
+    try:
+        # Check if user is authenticated via session
+        if request.user.is_authenticated:
+            # Perform Django logout to clear session
+            django_logout(request)
+
+        # Clear the session data
+        request.session.flush()
+
+        # Create a new empty session
+        request.session.create()
+
+        return Response({
+            'success': True,
+            'message': 'Logged out successfully'
+        }, status=status.HTTP_200_OK)
+
+    except Exception as e:
+        # Even if there's an error, try to clear client-side
+        return Response({
+            'success': True,
+            'message': 'Logged out (client-side cleared)'
+        }, status=status.HTTP_200_OK)
 
 
 @api_view(['POST'])

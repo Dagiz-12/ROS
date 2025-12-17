@@ -1,0 +1,765 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>New Order - Waiter Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+    <style>
+      .menu-item {
+        transition: all 0.2s ease;
+      }
+      .menu-item:hover {
+        transform: translateY(-2px);
+      }
+      .category-tab.active {
+        background-color: #dc2626;
+        color: white;
+      }
+      .cart-item-added {
+        animation: slideIn 0.3s ease;
+      }
+      @keyframes slideIn {
+        from {
+          transform: translateX(100%);
+          opacity: 0;
+        }
+        to {
+          transform: translateX(0);
+          opacity: 1;
+        }
+      }
+      .quantity-btn {
+        transition: background-color 0.2s ease;
+      }
+      .quantity-btn:active {
+        transform: scale(0.95);
+      }
+    </style>
+  </head>
+  <body class="bg-gray-50">
+    <!-- Navigation -->
+    <nav class="bg-white shadow-lg">
+      <div class="container mx-auto px-4 py-3">
+        <div class="flex justify-between items-center">
+          <div class="flex items-center space-x-3">
+            <a
+              href="{% url 'waiter-dashboard' %}"
+              class="text-gray-600 hover:text-red-600"
+            >
+              <i class="fas fa-arrow-left"></i>
+            </a>
+            <i class="fas fa-plus-circle text-2xl text-red-600"></i>
+            <div>
+              <h1 class="text-xl font-bold">Create New Order</h1>
+              <p class="text-sm text-gray-600">
+                {{ user.get_full_name|default:user.username }}
+              </p>
+            </div>
+          </div>
+          <div class="flex items-center space-x-4">
+            <span class="bg-red-100 text-red-800 px-3 py-1 rounded-full"
+              >{{ user_role|title }}</span
+            >
+            <div class="relative">
+              <button
+                id="cart-preview"
+                class="bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700"
+              >
+                <i class="fas fa-shopping-cart mr-2"></i>
+                <span id="cart-count">0</span> items
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="container mx-auto px-4 py-6">
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <!-- Left Column: Table Selection & Menu -->
+        <div class="lg:col-span-2">
+          <!-- Table Selection -->
+          <div class="bg-white rounded-lg shadow p-4 mb-6">
+            <h2 class="text-lg font-bold mb-4">Select Table</h2>
+            <div class="flex flex-wrap gap-3" id="tables-container">
+              <!-- Tables will be loaded here -->
+              <div class="text-gray-500">Loading tables...</div>
+            </div>
+
+            <div class="mt-4">
+              <label class="block text-sm font-medium text-gray-700 mb-2"
+                >Customer Name (Optional)</label
+              >
+              <input
+                type="text"
+                id="customer-name"
+                class="w-full border rounded-lg px-4 py-2 focus:ring-2 focus:ring-red-500 focus:border-transparent"
+                placeholder="Enter customer name"
+              />
+            </div>
+          </div>
+
+          <!-- Menu Categories -->
+          <div class="bg-white rounded-lg shadow p-4 mb-6">
+            <h2 class="text-lg font-bold mb-4">Menu</h2>
+            <div
+              class="flex space-x-2 overflow-x-auto pb-2 mb-4"
+              id="categories-container"
+            >
+              <!-- Categories will be loaded here -->
+            </div>
+
+            <!-- Search -->
+            <div class="mb-4">
+              <div class="relative">
+                <input
+                  type="text"
+                  id="menu-search"
+                  class="w-full border rounded-lg px-4 py-2 pl-10 focus:ring-2 focus:ring-red-500 focus:border-transparent"
+                  placeholder="Search menu items..."
+                />
+                <i
+                  class="fas fa-search absolute left-3 top-3 text-gray-400"
+                ></i>
+              </div>
+            </div>
+
+            <!-- Menu Items -->
+            <div
+              id="menu-items-container"
+              class="grid grid-cols-1 md:grid-cols-2 gap-4"
+            >
+              <!-- Menu items will be loaded here -->
+              <div class="col-span-2 text-center py-12 text-gray-500">
+                <div
+                  class="spinner w-12 h-12 border-4 border-red-600 border-t-transparent rounded-full animate-spin mx-auto mb-4"
+                ></div>
+                <p>Loading menu...</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Right Column: Order Cart -->
+        <div class="lg:col-span-1">
+          <div class="bg-white rounded-lg shadow sticky top-4">
+            <div class="p-4 border-b">
+              <h2 class="text-xl font-bold">Order Summary</h2>
+              <div class="text-sm text-gray-600" id="table-selection">
+                No table selected
+              </div>
+            </div>
+
+            <!-- Cart Items -->
+            <div class="p-4 max-h-96 overflow-y-auto">
+              <div id="cart-items-container">
+                <div class="text-center py-8 text-gray-500">
+                  <i class="fas fa-shopping-cart text-3xl mb-3"></i>
+                  <p>Cart is empty</p>
+                  <p class="text-sm">Add items from the menu</p>
+                </div>
+              </div>
+            </div>
+
+            <!-- Order Summary -->
+            <div class="p-4 border-t bg-gray-50">
+              <div class="space-y-2 mb-4">
+                <div class="flex justify-between">
+                  <span>Subtotal</span>
+                  <span id="cart-subtotal">$0.00</span>
+                </div>
+                <div class="flex justify-between">
+                  <span>Tax (15%)</span>
+                  <span id="cart-tax">$0.00</span>
+                </div>
+                <div class="border-t pt-2 mt-2">
+                  <div class="flex justify-between font-bold text-lg">
+                    <span>Total</span>
+                    <span id="cart-total">$0.00</span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Special Instructions -->
+              <div class="mb-4">
+                <label class="block text-sm font-medium text-gray-700 mb-2">
+                  Special Instructions
+                </label>
+                <textarea
+                  id="special-instructions"
+                  class="w-full border rounded-lg px-3 py-2 focus:ring-2 focus:ring-red-500 focus:border-transparent"
+                  rows="2"
+                  placeholder="Any special requests?"
+                ></textarea>
+              </div>
+
+              <!-- Order Buttons -->
+              <div class="space-y-2">
+                <button
+                  id="submit-order-btn"
+                  class="w-full bg-red-600 text-white py-3 rounded-lg font-bold hover:bg-red-700 disabled:opacity-50 disabled:cursor-not-allowed"
+                  disabled
+                >
+                  <i class="fas fa-paper-plane mr-2"></i>Submit to Kitchen
+                </button>
+                <button
+                  onclick="clearCart()"
+                  class="w-full border border-gray-300 text-gray-700 py-3 rounded-lg font-bold hover:bg-gray-50"
+                >
+                  <i class="fas fa-trash mr-2"></i>Clear Cart
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Item Modal for customization -->
+    <div
+      id="item-modal"
+      class="fixed inset-0 bg-black bg-opacity-50 z-50 hidden items-center justify-center p-4"
+    >
+      <div
+        class="bg-white rounded-lg max-w-md w-full max-h-[90vh] overflow-y-auto"
+      >
+        <div class="p-6">
+          <!-- Item customization will be loaded here -->
+        </div>
+      </div>
+    </div>
+
+    <script>
+      const API_BASE = "/api/tables";
+      const MENU_API = "/api/menu";
+      let selectedTableId = null;
+      let selectedTableNumber = null;
+      let cart = [];
+      let menuItems = [];
+      let categories = [];
+
+      // Initialize
+      document.addEventListener("DOMContentLoaded", function () {
+        loadTables();
+        loadMenu();
+        setupEventListeners();
+      });
+
+      async function loadTables() {
+        try {
+          const response = await fetch(
+            `${API_BASE}/tables/?is_active=true&status=available`
+          );
+          if (response.ok) {
+            const data = await response.json();
+            renderTables(data.results || data);
+          }
+        } catch (error) {
+          console.error("Error loading tables:", error);
+        }
+      }
+
+      function renderTables(tables) {
+        const container = document.getElementById("tables-container");
+
+        if (!tables || tables.length === 0) {
+          container.innerHTML =
+            '<div class="text-red-600">No available tables</div>';
+          return;
+        }
+
+        container.innerHTML = tables
+          .map(
+            (table) => `
+                <button onclick="selectTable(${table.id}, ${
+              table.table_number
+            })" 
+                        class="table-btn border-2 rounded-lg p-3 text-center hover:border-red-500 hover:bg-red-50 transition
+                               ${
+                                 selectedTableId === table.id
+                                   ? "border-red-500 bg-red-50"
+                                   : "border-gray-300"
+                               }">
+                    <div class="text-2xl font-bold">${table.table_number}</div>
+                    <div class="text-sm text-gray-600">${
+                      table.capacity || 4
+                    } seats</div>
+                    <div class="text-xs text-green-600 mt-1">Available</div>
+                </button>
+            `
+          )
+          .join("");
+      }
+
+      async function loadMenu() {
+        try {
+          const response = await fetch(`${MENU_API}/restaurant-menu/`);
+          if (response.ok) {
+            const data = await response.json();
+            menuItems = data.items || data || [];
+            categories = data.categories || [];
+            renderCategories();
+            renderMenuItems();
+          }
+        } catch (error) {
+          console.error("Error loading menu:", error);
+          // Fallback to sample data
+          loadSampleMenu();
+        }
+      }
+
+      function renderCategories() {
+        const container = document.getElementById("categories-container");
+
+        if (!categories || categories.length === 0) {
+          container.innerHTML =
+            '<div class="text-gray-500">No categories</div>';
+          return;
+        }
+
+        container.innerHTML = `
+                <button onclick="filterMenuByCategory('all')" 
+                        class="category-tab active px-4 py-2 bg-red-600 text-white rounded-full whitespace-nowrap">
+                    All Items
+                </button>
+                ${categories
+                  .map(
+                    (cat) => `
+                    <button onclick="filterMenuByCategory(${cat.id})" 
+                            class="category-tab px-4 py-2 bg-gray-200 text-gray-700 rounded-full whitespace-nowrap hover:bg-gray-300">
+                        ${cat.name}
+                    </button>
+                `
+                  )
+                  .join("")}
+            `;
+      }
+
+      function renderMenuItems(filteredItems = null) {
+        const itemsToShow = filteredItems || menuItems;
+        const container = document.getElementById("menu-items-container");
+
+        if (!itemsToShow || itemsToShow.length === 0) {
+          container.innerHTML = `
+                    <div class="col-span-2 text-center py-12 text-gray-500">
+                        <i class="fas fa-utensils text-3xl mb-3"></i>
+                        <p>No menu items found</p>
+                    </div>
+                `;
+          return;
+        }
+
+        container.innerHTML = itemsToShow
+          .map(
+            (item) => `
+                <div class="menu-item bg-white border rounded-lg p-4 hover:shadow-md">
+                    <div class="flex justify-between items-start mb-2">
+                        <h3 class="font-bold">${item.name}</h3>
+                        <span class="font-bold text-red-600">$${item.price.toFixed(
+                          2
+                        )}</span>
+                    </div>
+                    <p class="text-sm text-gray-600 mb-3">${
+                      item.description || ""
+                    }</p>
+                    <div class="flex justify-between items-center">
+                        <span class="text-xs text-gray-500">
+                            <i class="fas fa-clock mr-1"></i> ${
+                              item.preparation_time || 15
+                            } min
+                        </span>
+                        <button onclick="addToCart(${
+                          item.id
+                        }, '${item.name.replace(/'/g, "\\'")}', ${item.price})" 
+                                class="bg-red-50 text-red-600 px-3 py-1 rounded text-sm hover:bg-red-100 ${
+                                  !item.is_available
+                                    ? "opacity-50 cursor-not-allowed"
+                                    : ""
+                                }"
+                                ${!item.is_available ? "disabled" : ""}>
+                            <i class="fas fa-plus mr-1"></i>Add
+                        </button>
+                    </div>
+                </div>
+            `
+          )
+          .join("");
+      }
+
+      function loadSampleMenu() {
+        // Sample data for development
+        categories = [
+          { id: 1, name: "Appetizers" },
+          { id: 2, name: "Main Course" },
+          { id: 3, name: "Desserts" },
+          { id: 4, name: "Drinks" },
+        ];
+
+        menuItems = [
+          {
+            id: 1,
+            name: "Margherita Pizza",
+            description: "Classic pizza with tomato sauce and mozzarella",
+            price: 12.99,
+            category_id: 2,
+            preparation_time: 20,
+            is_available: true,
+          },
+          {
+            id: 2,
+            name: "Caesar Salad",
+            description: "Fresh romaine lettuce with Caesar dressing",
+            price: 8.99,
+            category_id: 1,
+            preparation_time: 10,
+            is_available: true,
+          },
+          {
+            id: 3,
+            name: "Chocolate Cake",
+            description: "Rich chocolate cake with ganache",
+            price: 6.99,
+            category_id: 3,
+            preparation_time: 5,
+            is_available: true,
+          },
+          {
+            id: 4,
+            name: "Iced Tea",
+            description: "Refreshing iced tea with lemon",
+            price: 2.99,
+            category_id: 4,
+            preparation_time: 2,
+            is_available: true,
+          },
+        ];
+
+        renderCategories();
+        renderMenuItems();
+      }
+
+      function selectTable(tableId, tableNumber) {
+        selectedTableId = tableId;
+        selectedTableNumber = tableNumber;
+
+        // Update UI
+        document.querySelectorAll(".table-btn").forEach((btn) => {
+          btn.classList.remove("border-red-500", "bg-red-50");
+        });
+        event.target.classList.add("border-red-500", "bg-red-50");
+
+        // Update table selection display
+        document.getElementById("table-selection").innerHTML = `
+                <i class="fas fa-table mr-1"></i> Table ${tableNumber}
+            `;
+
+        // Enable/disable submit button
+        updateSubmitButton();
+      }
+
+      function addToCart(itemId, itemName, itemPrice, quantity = 1) {
+        // Check if item already in cart
+        const existingIndex = cart.findIndex((item) => item.id === itemId);
+
+        if (existingIndex > -1) {
+          cart[existingIndex].quantity += quantity;
+        } else {
+          cart.push({
+            id: itemId,
+            name: itemName,
+            price: itemPrice,
+            quantity: quantity,
+            specialInstructions: "",
+          });
+        }
+
+        updateCart();
+        showToast(`${itemName} added to cart!`);
+      }
+
+      function updateCart() {
+        // Calculate totals
+        const subtotal = cart.reduce(
+          (sum, item) => sum + item.price * item.quantity,
+          0
+        );
+        const tax = subtotal * 0.15;
+        const total = subtotal + tax;
+
+        // Update counts
+        const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
+        document.getElementById("cart-count").textContent = totalItems;
+        document.getElementById(
+          "cart-subtotal"
+        ).textContent = `$${subtotal.toFixed(2)}`;
+        document.getElementById("cart-tax").textContent = `$${tax.toFixed(2)}`;
+        document.getElementById("cart-total").textContent = `$${total.toFixed(
+          2
+        )}`;
+
+        // Render cart items
+        renderCartItems();
+
+        // Enable/disable submit button
+        updateSubmitButton();
+      }
+
+      function renderCartItems() {
+        const container = document.getElementById("cart-items-container");
+
+        if (cart.length === 0) {
+          container.innerHTML = `
+                    <div class="text-center py-8 text-gray-500">
+                        <i class="fas fa-shopping-cart text-3xl mb-3"></i>
+                        <p>Cart is empty</p>
+                        <p class="text-sm">Add items from the menu</p>
+                    </div>
+                `;
+          return;
+        }
+
+        container.innerHTML = cart
+          .map(
+            (item, index) => `
+                <div class="cart-item-added border-b pb-3 mb-3 last:border-0 last:mb-0">
+                    <div class="flex justify-between items-start mb-1">
+                        <div>
+                            <div class="font-bold">${item.name}</div>
+                            <div class="text-sm text-red-600">$${item.price.toFixed(
+                              2
+                            )} each</div>
+                        </div>
+                        <button onclick="removeFromCart(${index})" class="text-gray-400 hover:text-red-600">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </div>
+                    
+                    <div class="flex items-center justify-between">
+                        <div class="flex items-center">
+                            <button onclick="updateQuantity(${index}, -1)" class="quantity-btn w-6 h-6 bg-gray-100 rounded-full">-</button>
+                            <span class="mx-3 font-bold">${item.quantity}</span>
+                            <button onclick="updateQuantity(${index}, 1)" class="quantity-btn w-6 h-6 bg-gray-100 rounded-full">+</button>
+                        </div>
+                        <span class="font-bold">$${(
+                          item.price * item.quantity
+                        ).toFixed(2)}</span>
+                    </div>
+                    
+                    <div class="mt-2">
+                        <input type="text" 
+                               class="w-full p-1 border rounded text-sm" 
+                               placeholder="Add instructions"
+                               value="${item.specialInstructions}"
+                               onchange="updateInstructions(${index}, this.value)">
+                    </div>
+                </div>
+            `
+          )
+          .join("");
+      }
+
+      function removeFromCart(index) {
+        cart.splice(index, 1);
+        updateCart();
+      }
+
+      function updateQuantity(index, delta) {
+        cart[index].quantity += delta;
+        if (cart[index].quantity <= 0) {
+          removeFromCart(index);
+        } else {
+          updateCart();
+        }
+      }
+
+      function updateInstructions(index, instructions) {
+        cart[index].specialInstructions = instructions;
+      }
+
+      function clearCart() {
+        if (cart.length === 0) return;
+        if (confirm("Clear all items from cart?")) {
+          cart = [];
+          updateCart();
+        }
+      }
+
+      function updateSubmitButton() {
+        const submitBtn = document.getElementById("submit-order-btn");
+        submitBtn.disabled = !selectedTableId || cart.length === 0;
+      }
+
+      async function submitOrder() {
+        if (!selectedTableId || cart.length === 0) return;
+
+        const customerName = document
+          .getElementById("customer-name")
+          .value.trim();
+        const specialInstructions = document
+          .getElementById("special-instructions")
+          .value.trim();
+
+        // Prepare order data
+        const orderData = {
+          table_id: selectedTableId,
+          order_type: "waiter",
+          customer_name: customerName || "Guest",
+          items: cart.map((item) => ({
+            menu_item_id: item.id,
+            quantity: item.quantity,
+            special_instructions: item.specialInstructions,
+          })),
+          special_instructions: specialInstructions,
+        };
+
+        try {
+          const response = await fetch(`${API_BASE}/orders/`, {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              "X-CSRFToken": getCookie("csrftoken"),
+            },
+            body: JSON.stringify(orderData),
+          });
+
+          if (response.ok) {
+            const result = await response.json();
+            alert(`Order #${result.order_number} created successfully!`);
+
+            // Reset form
+            cart = [];
+            selectedTableId = null;
+            selectedTableNumber = null;
+            document.getElementById("customer-name").value = "";
+            document.getElementById("special-instructions").value = "";
+            updateCart();
+            loadTables();
+
+            // Redirect to orders page
+            setTimeout(() => {
+              window.location.href = "{% url 'waiter-orders' %}";
+            }, 1500);
+          } else {
+            const error = await response.json();
+            alert(`Error: ${error.error || "Failed to create order"}`);
+          }
+        } catch (error) {
+          console.error("Error submitting order:", error);
+          alert("Failed to submit order. Please try again.");
+        }
+      }
+
+      function filterMenuByCategory(categoryId) {
+        // Update active category
+        document.querySelectorAll(".category-tab").forEach((tab) => {
+          if (
+            (categoryId === "all" && tab.textContent === "All Items") ||
+            tab.textContent ===
+              categories.find((c) => c.id === categoryId)?.name
+          ) {
+            tab.classList.remove("bg-gray-200", "text-gray-700");
+            tab.classList.add("bg-red-600", "text-white");
+          } else {
+            tab.classList.remove("bg-red-600", "text-white");
+            tab.classList.add("bg-gray-200", "text-gray-700");
+          }
+        });
+
+        // Filter items
+        let filteredItems;
+        if (categoryId === "all") {
+          filteredItems = menuItems;
+        } else {
+          filteredItems = menuItems.filter(
+            (item) => item.category_id === categoryId
+          );
+        }
+
+        renderMenuItems(filteredItems);
+      }
+
+      function showToast(message) {
+        // Create toast element
+        const toast = document.createElement("div");
+        toast.className =
+          "fixed top-4 right-4 bg-green-500 text-white px-4 py-2 rounded-lg shadow-lg animate-slideIn";
+        toast.textContent = message;
+        document.body.appendChild(toast);
+
+        // Remove after 3 seconds
+        setTimeout(() => {
+          toast.remove();
+        }, 3000);
+      }
+
+      function setupEventListeners() {
+        // Submit order button
+        document
+          .getElementById("submit-order-btn")
+          .addEventListener("click", submitOrder);
+
+        // Search functionality
+        document
+          .getElementById("menu-search")
+          .addEventListener("input", function () {
+            const searchTerm = this.value.toLowerCase();
+            const filteredItems = menuItems.filter(
+              (item) =>
+                item.name.toLowerCase().includes(searchTerm) ||
+                item.description?.toLowerCase().includes(searchTerm)
+            );
+            renderMenuItems(filteredItems);
+          });
+
+        // Cart preview
+        document
+          .getElementById("cart-preview")
+          .addEventListener("click", function () {
+            if (cart.length > 0) {
+              // Scroll to cart
+              document
+                .querySelector(".lg\\:col-span-1")
+                .scrollIntoView({ behavior: "smooth" });
+            }
+          });
+      }
+
+      // Helper function to get CSRF token
+      function getCookie(name) {
+        let cookieValue = null;
+        if (document.cookie && document.cookie !== "") {
+          const cookies = document.cookie.split(";");
+          for (let i = 0; i < cookies.length; i++) {
+            const cookie = cookies[i].trim();
+            if (cookie.substring(0, name.length + 1) === name + "=") {
+              cookieValue = decodeURIComponent(
+                cookie.substring(name.length + 1)
+              );
+              break;
+            }
+          }
+        }
+        return cookieValue;
+      }
+
+      // Add CSS for toast animation
+      const style = document.createElement("style");
+      style.textContent = `
+            @keyframes slideIn {
+                from { transform: translateX(100%); opacity: 0; }
+                to { transform: translateX(0); opacity: 1; }
+            }
+            .animate-slideIn {
+                animation: slideIn 0.3s ease;
+            }
+        `;
+      document.head.appendChild(style);
+    </script>
+  </body>
+</html>

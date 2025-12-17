@@ -47,18 +47,79 @@
             {% endif %}
             <div>
               <h1 class="text-lg font-bold text-gray-900">
-                {{ restaurant.name }}
+                {% if restaurant %}{{ restaurant.name }}{% else %}TableSync{%
+                endif %}
               </h1>
               {% if table %}
               <p class="text-sm text-gray-600">
                 Table {{ table.table_number }}
+              </p>
+              {% elif user %}
+              <p class="text-sm text-gray-600 capitalize">
+                {{ user.role }} • {{ user.username }}
               </p>
               {% endif %}
             </div>
           </div>
 
           <div class="flex items-center space-x-4">
-            <!-- Cart Indicator -->
+            <!-- User Menu (for authenticated users) -->
+            {% if user.is_authenticated %}
+            <div class="relative group" id="user-menu">
+              <button
+                class="flex items-center space-x-2 text-gray-700 hover:text-red-600 transition"
+              >
+                <div
+                  class="w-8 h-8 rounded-full bg-red-100 text-red-600 flex items-center justify-center"
+                >
+                  <i class="fas fa-user"></i>
+                </div>
+                <span class="hidden md:inline font-medium"
+                  >{{ user.username }}</span
+                >
+                <i class="fas fa-chevron-down text-xs"></i>
+              </button>
+
+              <!-- Dropdown Menu -->
+              <div
+                class="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg border border-gray-200 hidden group-hover:block z-50"
+              >
+                <div class="p-3 border-b border-gray-100">
+                  <p class="font-medium text-gray-900">{{ user.username }}</p>
+                  <p class="text-xs text-gray-500 capitalize">
+                    {{ user.role }}
+                  </p>
+                </div>
+                <div class="p-2">
+                  <a
+                    href="{% url 'profile' %}"
+                    class="flex items-center space-x-2 px-3 py-2 text-gray-700 hover:bg-gray-100 rounded transition"
+                  >
+                    <i class="fas fa-user-circle text-gray-400"></i>
+                    <span>My Profile</span>
+                  </a>
+                  <a
+                    href="#"
+                    class="flex items-center space-x-2 px-3 py-2 text-gray-700 hover:bg-gray-100 rounded transition"
+                  >
+                    <i class="fas fa-cog text-gray-400"></i>
+                    <span>Settings</span>
+                  </a>
+                  <div class="border-t border-gray-100 my-1"></div>
+                  <button
+                    onclick="logout()"
+                    class="flex items-center space-x-2 px-3 py-2 text-red-600 hover:bg-red-50 w-full text-left rounded transition"
+                  >
+                    <i class="fas fa-sign-out-alt"></i>
+                    <span>Logout</span>
+                  </button>
+                </div>
+              </div>
+            </div>
+            {% endif %}
+
+            <!-- Cart Indicator (only for customer interface) -->
+            {% if table %}
             <div id="cart-indicator" class="relative" onclick="showCart()">
               <i class="fas fa-shopping-cart text-2xl text-red-600"></i>
               <span
@@ -67,25 +128,221 @@
                 >0</span
               >
             </div>
+            {% endif %}
 
             <!-- Mobile Menu Button -->
-            <button id="mobile-menu-btn" class="md:hidden text-2xl">
+            <button
+              id="mobile-menu-btn"
+              class="md:hidden text-2xl text-gray-700"
+            >
               <i class="fas fa-bars"></i>
             </button>
           </div>
         </div>
+
+        <!-- Navigation for authenticated users -->
+        {% if user.is_authenticated and not table %}
+        <div
+          id="role-navigation"
+          class="mt-3 border-t border-gray-100 pt-3 hidden md:block"
+        >
+          <nav class="flex space-x-6">
+            {% if user.role == 'waiter' or user.role == 'manager' or user.role
+            == 'admin' %}
+            <a
+              href="{% url 'waiter-dashboard' %}"
+              class="text-sm font-medium text-gray-700 hover:text-red-600 transition"
+            >
+              <i class="fas fa-tachometer-alt mr-1"></i> Dashboard
+            </a>
+            <a
+              href="{% url 'waiter-tables' %}"
+              class="text-sm font-medium text-gray-700 hover:text-red-600 transition"
+            >
+              <i class="fas fa-table mr-1"></i> Tables
+            </a>
+            <a
+              href="{% url 'waiter-orders' %}"
+              class="text-sm font-medium text-gray-700 hover:text-red-600 transition"
+            >
+              <i class="fas fa-clipboard-list mr-1"></i> Orders
+            </a>
+            <a
+              href="{% url 'waiter-new-order' %}"
+              class="text-sm font-medium text-gray-700 hover:text-red-600 transition"
+            >
+              <i class="fas fa-plus-circle mr-1"></i> New Order
+            </a>
+            {% endif %} {% if user.role == 'chef' or user.role == 'manager' or
+            user.role == 'admin' %}
+            <a
+              href="{% url 'chef-dashboard' %}"
+              class="text-sm font-medium text-gray-700 hover:text-red-600 transition"
+            >
+              <i class="fas fa-utensils mr-1"></i> Kitchen
+            </a>
+            {% endif %} {% if user.role == 'cashier' or user.role == 'manager'
+            or user.role == 'admin' %}
+            <a
+              href="{% url 'cashier-dashboard' %}"
+              class="text-sm font-medium text-gray-700 hover:text-red-600 transition"
+            >
+              <i class="fas fa-cash-register mr-1"></i> Payments
+            </a>
+            {% endif %} {% if user.role == 'manager' or user.role == 'admin' %}
+            <a
+              href="{% url 'admin-dashboard' %}"
+              class="text-sm font-medium text-gray-700 hover:text-red-600 transition"
+            >
+              <i class="fas fa-chart-bar mr-1"></i> Analytics
+            </a>
+            {% endif %}
+          </nav>
+        </div>
+        {% endif %}
       </div>
 
       <!-- Progress Bar (for loading) -->
       <div id="progress-bar" class="h-1 bg-red-600 w-0"></div>
     </header>
 
+    <!-- Mobile Navigation Menu -->
+    <div
+      id="mobile-menu"
+      class="fixed inset-0 bg-white z-40 transform translate-x-full transition-transform duration-300 md:hidden"
+    >
+      <div class="p-6">
+        <div class="flex justify-between items-center mb-8">
+          <h2 class="text-xl font-bold text-gray-900">Menu</h2>
+          <button id="close-mobile-menu" class="text-2xl text-gray-700">
+            <i class="fas fa-times"></i>
+          </button>
+        </div>
+
+        {% if user.is_authenticated %}
+        <!-- User Info -->
+        <div class="mb-6 p-4 bg-gray-50 rounded-lg">
+          <div class="flex items-center space-x-3">
+            <div
+              class="w-12 h-12 rounded-full bg-red-100 text-red-600 flex items-center justify-center"
+            >
+              <i class="fas fa-user text-xl"></i>
+            </div>
+            <div>
+              <h3 class="font-bold text-gray-900">{{ user.username }}</h3>
+              <p class="text-sm text-gray-500 capitalize">{{ user.role }}</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Mobile Navigation Links -->
+        <nav class="space-y-2">
+          {% if user.role == 'waiter' or user.role == 'manager' or user.role ==
+          'admin' %}
+          <a
+            href="{% url 'waiter-dashboard' %}"
+            class="flex items-center space-x-3 p-3 text-gray-700 hover:bg-gray-100 rounded-lg transition"
+          >
+            <i class="fas fa-tachometer-alt text-gray-400 w-6"></i>
+            <span>Dashboard</span>
+          </a>
+          <a
+            href="{% url 'waiter-tables' %}"
+            class="flex items-center space-x-3 p-3 text-gray-700 hover:bg-gray-100 rounded-lg transition"
+          >
+            <i class="fas fa-table text-gray-400 w-6"></i>
+            <span>Tables</span>
+          </a>
+          <a
+            href="{% url 'waiter-orders' %}"
+            class="flex items-center space-x-3 p-3 text-gray-700 hover:bg-gray-100 rounded-lg transition"
+          >
+            <i class="fas fa-clipboard-list text-gray-400 w-6"></i>
+            <span>Orders</span>
+          </a>
+          <a
+            href="{% url 'waiter-new-order' %}"
+            class="flex items-center space-x-3 p-3 text-gray-700 hover:bg-gray-100 rounded-lg transition"
+          >
+            <i class="fas fa-plus-circle text-gray-400 w-6"></i>
+            <span>New Order</span>
+          </a>
+          {% endif %} {% if user.role == 'chef' or user.role == 'manager' or
+          user.role == 'admin' %}
+          <a
+            href="{% url 'chef-dashboard' %}"
+            class="flex items-center space-x-3 p-3 text-gray-700 hover:bg-gray-100 rounded-lg transition"
+          >
+            <i class="fas fa-utensils text-gray-400 w-6"></i>
+            <span>Kitchen</span>
+          </a>
+          {% endif %} {% if user.role == 'cashier' or user.role == 'manager' or
+          user.role == 'admin' %}
+          <a
+            href="{% url 'cashier-dashboard' %}"
+            class="flex items-center space-x-3 p-3 text-gray-700 hover:bg-gray-100 rounded-lg transition"
+          >
+            <i class="fas fa-cash-register text-gray-400 w-6"></i>
+            <span>Payments</span>
+          </a>
+          {% endif %} {% if user.role == 'manager' or user.role == 'admin' %}
+          <a
+            href="{% url 'admin-dashboard' %}"
+            class="flex items-center space-x-3 p-3 text-gray-700 hover:bg-gray-100 rounded-lg transition"
+          >
+            <i class="fas fa-chart-bar text-gray-400 w-6"></i>
+            <span>Analytics</span>
+          </a>
+          {% endif %}
+
+          <div class="border-t border-gray-200 my-2"></div>
+
+          <a
+            href="{% url 'profile' %}"
+            class="flex items-center space-x-3 p-3 text-gray-700 hover:bg-gray-100 rounded-lg transition"
+          >
+            <i class="fas fa-user-circle text-gray-400 w-6"></i>
+            <span>My Profile</span>
+          </a>
+
+          <a
+            href="#"
+            class="flex items-center space-x-3 p-3 text-gray-700 hover:bg-gray-100 rounded-lg transition"
+          >
+            <i class="fas fa-cog text-gray-400 w-6"></i>
+            <span>Settings</span>
+          </a>
+
+          <button
+            onclick="logout()"
+            class="flex items-center space-x-3 p-3 text-red-600 hover:bg-red-50 w-full text-left rounded-lg transition"
+          >
+            <i class="fas fa-sign-out-alt w-6"></i>
+            <span>Logout</span>
+          </button>
+        </nav>
+        {% else %}
+        <!-- Login for non-authenticated users -->
+        <div class="text-center py-8">
+          <p class="text-gray-600 mb-6">Please login to access the system</p>
+          <a
+            href="{% url 'login' %}"
+            class="bg-red-600 text-white px-6 py-3 rounded-lg font-medium hover:bg-red-700 transition inline-block"
+          >
+            <i class="fas fa-sign-in-alt mr-2"></i> Login
+          </a>
+        </div>
+        {% endif %}
+      </div>
+    </div>
+
     <!-- Main Content -->
     <main class="container mx-auto px-4 py-6 pb-24">
       {% block content %}{% endblock %}
     </main>
 
-    <!-- Bottom Navigation (Mobile) -->
+    <!-- Bottom Navigation (Mobile) - Only for customer QR interface -->
+    {% if table %}
     <nav
       class="fixed bottom-0 left-0 right-0 bg-white shadow-lg border-t border-gray-200 md:hidden z-40"
     >
@@ -111,14 +368,17 @@
         </a>
       </div>
     </nav>
+    {% endif %}
 
     <!-- Cart Sidebar (Mobile Drawer) -->
+    {% if table %}
     <div
       id="cart-drawer"
       class="fixed inset-y-0 right-0 w-full md:w-96 bg-white shadow-xl transform translate-x-full transition-transform duration-300 z-50"
     >
       <!-- Cart content will be loaded here via JS -->
     </div>
+    {% endif %}
 
     <!-- Overlay for mobile drawers -->
     <div
@@ -128,52 +388,254 @@
 
     <!-- JavaScript -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    {% if table %}
     <script src="/static/js/cart-manager.js"></script>
     <script src="/static/js/customer.js"></script>
-
-    {% block extra_js %}{% endblock %}
+    {% endif %} {% block extra_js %}{% endblock %}
 
     <script>
-      // Base URL for API
-      const API_BASE_URL = "/api";
+                                    // Base URL for API
+                                    const API_BASE_URL = "/api";
 
-      // Get session and table from localStorage or URL
-      let sessionId = localStorage.getItem("session_id");
-      let tableId = localStorage.getItem("table_id");
+                                    // Authentication token
+                                    const accessToken = localStorage.getItem('access_token');
+                                    const userRole = localStorage.getItem('user_role');
 
-      if (!sessionId) {
-        sessionId = "session_" + Math.random().toString(36).substr(2, 9);
-        localStorage.setItem("session_id", sessionId);
+                                    // Add authorization header to all requests if token exists
+                                    if (accessToken) {
+                                      $.ajaxSetup({
+                                        headers: {
+                                          'Authorization': 'Bearer ' + accessToken
+                                        }
+                                      });
+                                    }
+
+                                    // Mobile menu toggle
+                                    $("#mobile-menu-btn").click(function () {
+                                      $("#mobile-menu").removeClass("translate-x-full");
+                                      $("#overlay").removeClass("hidden");
+                                    });
+
+                                    $("#close-mobile-menu").click(function () {
+                                      $("#mobile-menu").addClass("translate-x-full");
+                                      $("#overlay").addClass("hidden");
+                                    });
+
+                                    $("#overlay").click(function () {
+                                      $("#mobile-menu").addClass("translate-x-full");
+                                      $("#overlay").addClass("hidden");
+                                    });
+
+                                    // Show cart drawer (only for customer interface)
+                                    {% if table %}
+                                    function showCart() {
+                                      $("#cart-drawer").removeClass("translate-x-full");
+                                      $("#overlay").removeClass("hidden");
+                                      if (typeof cartManager !== 'undefined') {
+                                        cartManager.loadCart();
+                                      }
+                                    }
+
+                                    // Hide cart drawer
+                                    function hideCart() {
+                                      $("#cart-drawer").addClass("translate-x-full");
+                                      $("#overlay").addClass("hidden");
+                                    }
+
+                                    // Update cart count on page load
+                                    $(document).ready(function () {
+                                      if (typeof cartManager !== 'undefined') {
+                                        cartManager.updateCartCount();
+                                      }
+                                    });
+                                    {% endif %}
+
+                                    // Logout function
+                                    async function logout() {
+                                      try {
+                                        // Call logout API
+                                        await fetch('/api/auth/logout/', {
+                                          method: 'POST',
+                                          headers: {
+                                            'Authorization': 'Bearer ' + accessToken,
+                                            'X-CSRFToken': getCookie('csrftoken')
+                                          }
+                                        });
+                                      } catch (error) {
+                                        console.log('Logout API error:', error);
+                                      }
+
+                                      // Clear local storage
+                                      localStorage.removeItem('access_token');
+                                      localStorage.removeItem('refresh_token');
+                                      localStorage.removeItem('user_role');
+                                      localStorage.removeItem('username');
+
+                                      // Redirect to login page
+                                      window.location.href = '/login/';
+                                    }
+
+                                    // Get CSRF token from cookie
+                                    function getCookie(name) {
+                                      let cookieValue = null;
+                                      if (document.cookie && document.cookie !== '') {
+                                        const cookies = document.cookie.split(';');
+                                        for (let i = 0; i < cookies.length; i++) {
+                                          const cookie = cookies[i].trim();
+                                          if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                                            cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                                            break;
+                                          }
+                                        }
+                                      }
+                                      return cookieValue;
+                                    }
+
+                                    // Check authentication on page load
+                                    $(document).ready(function() {
+                                      // Show role navigation if user is authenticated
+                                      if (accessToken && userRole) {
+                                        $('#role-navigation').removeClass('hidden');
+                                      }
+
+                                      // Check token expiration
+                                      checkTokenExpiration();
+                                    });
+
+                                    // Function to check token expiration
+                                    function checkTokenExpiration() {
+                                      if (!accessToken) return;
+
+                                      // Decode JWT to check expiration
+                                      try {
+                                        const payload = JSON.parse(atob(accessToken.split('.')[1]));
+                                        const expiration = payload.exp * 1000; // Convert to milliseconds
+                                        const now = Date.now();
+
+                                        // If token expires in less than 5 minutes, show warning
+                                        if (expiration - now < 5 * 60 * 1000) {
+                                          showToast('Your session will expire soon. Please save your work.', 'warning');
+
+                                          // Refresh token if less than 1 minute
+                                          if (expiration - now < 60 * 1000) {
+                                            refreshToken();
+                                          }
+                                        }
+                                      } catch (error) {
+                                        console.log('Token validation error:', error);
+                                      }
+                                    }
+
+                                    // Refresh token function
+                                    async function refreshToken() {
+                                      const refreshToken = localStorage.getItem('refresh_token');
+                                      if (!refreshToken) return;
+
+                                      try {
+                                        const response = await fetch('/api/auth/token/refresh/', {
+                                          method: 'POST',
+                                          headers: {
+                                            'Content-Type': 'application/json'
+                                          },
+                                          body: JSON.stringify({ refresh: refreshToken })
+                                        });
+
+                                        if (response.ok) {
+                                          const data = await response.json();
+                                          localStorage.setItem('access_token', data.access);
+                                          console.log('Token refreshed successfully');
+                                        }
+                                      } catch (error) {
+                                        console.log('Token refresh error:', error);
+                                      }
+                                    }
+
+                                    // Toast notification function
+                                    function showToast(message, type = 'info') {
+                                      const toast = document.createElement('div');
+                                      toast.className = `fixed top-4 right-4 p-4 rounded-lg shadow-lg z-50 transform transition-transform duration-300 ${
+                                        type === 'error' ? 'bg-red-100 text-red-800 border border-red-200' :
+                                        type === 'success' ? 'bg-green-100 text-green-800 border border-green-200' :
+                                        type === 'warning' ? 'bg-yellow-100 text-yellow-800 border border-yellow-200' :
+                                        'bg-blue-100 text-blue-800 border border-blue-200'
+                                      }`;
+
+                                      toast.innerHTML = `
+                                        <div class="flex items-center">
+                                          <i class="fas fa-${
+                                            type === 'error' ? 'exclamation-circle' :
+                                            type === 'success' ? 'check-circle' :
+                                            type === 'warning' ? 'exclamation-triangle' :
+                                            'info-circle'
+                                          } mr-3"></i>
+                                          <span>${message}</span>
+                                        </div>
+                                      `;
+
+                                      document.body.appendChild(toast);
+
+                                      // Remove toast after 5 seconds
+                                      setTimeout(() => {
+                                        toast.style.transform = 'translateX(100%)';
+                                        setTimeout(() => {
+                                          document.body.removeChild(toast);
+                                        }, 300);
+                                      }, 5000);
+                                    }
+
+                                    // Auto-refresh token every 10 minutes
+                                    setInterval(refreshToken, 10 * 60 * 1000);
+
+
+
+                              // logout script
+
+                              // In base.html - Simplified logout
+                      // In base.html - Fix logout function
+            // In base.html - Keep only one logout function
+      async function logout() {
+          // Clear client-side storage immediately
+          localStorage.clear();
+          sessionStorage.clear();
+
+          // Redirect to logout page
+          window.location.href = '/logout/';
       }
 
-      // Initialize cart manager
-      const cartManager = new CartManager(sessionId, tableId);
+            // Make sure getCookie function exists
+            function getCookie(name) {
+                let cookieValue = null;
+                if (document.cookie && document.cookie !== '') {
+                    const cookies = document.cookie.split(';');
+                    for (let i = 0; i < cookies.length; i++) {
+                        const cookie = cookies[i].trim();
+                        if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                            cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                            break;
+                        }
+                    }
+                }
+                return cookieValue;
+            }
 
-      // Mobile menu toggle
-      $("#mobile-menu-btn").click(function () {
-        $("#mobile-menu").toggleClass("hidden");
-      });
+                      function getAuthHeaders() {
+                      const token = localStorage.getItem('access_token');
+                      const headers = {
+                          'Content-Type': 'application/json',
+                          'X-CSRFToken': getCookie('csrftoken')
+                      };
 
-      // Show cart drawer
-      function showCart() {
-        $("#cart-drawer").removeClass("translate-x-full");
-        $("#overlay").removeClass("hidden");
-        cartManager.loadCart();
-      }
+                      if (token) {
+                          headers['Authorization'] = `Bearer ${token}`;
+                      }
 
-      // Hide cart drawer
-      function hideCart() {
-        $("#cart-drawer").addClass("translate-x-full");
-        $("#overlay").addClass("hidden");
-      }
+                      return headers;
+                  }
 
-      // Close cart when clicking overlay
-      $("#overlay").click(hideCart);
-
-      // Update cart count on page load
-      $(document).ready(function () {
-        cartManager.updateCartCount();
-      });
+                  // Then in your JavaScript API calls, use:
+                  fetch('/api/tables/tables/', {
+                      headers: getAuthHeaders()
+                  })
     </script>
   </body>
 </html>

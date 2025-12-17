@@ -1,0 +1,1010 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Restaurant Management - Admin Panel</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+    <style>
+      .tab-active {
+        border-bottom: 3px solid #dc2626;
+        color: #dc2626;
+        font-weight: 600;
+      }
+      .setting-card {
+        transition: all 0.3s ease;
+      }
+      .setting-card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      }
+    </style>
+  </head>
+  <body class="bg-gray-50">
+    <!-- Navigation -->
+    <nav class="bg-white shadow-lg">
+      <div class="container mx-auto px-4 py-3">
+        <div class="flex justify-between items-center">
+          <div class="flex items-center space-x-3">
+            <a
+              href="{% url 'admin-dashboard' %}"
+              class="text-gray-600 hover:text-red-600"
+            >
+              <i class="fas fa-arrow-left"></i>
+            </a>
+            <i class="fas fa-store text-2xl text-red-600"></i>
+            <div>
+              <h1 class="text-xl font-bold">Restaurant Management</h1>
+              <p class="text-sm text-gray-600">
+                {{ restaurant.name|default:"No Restaurant" }}
+              </p>
+            </div>
+          </div>
+          <div class="flex items-center space-x-4">
+            <span class="bg-yellow-100 text-yellow-800 px-3 py-1 rounded-full"
+              >{{ user_role|title }}</span
+            >
+            <button
+              onclick="saveAllChanges()"
+              class="bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700"
+            >
+              <i class="fas fa-save mr-2"></i>Save Changes
+            </button>
+          </div>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="container mx-auto px-4 py-6">
+      <!-- Tabs -->
+      <div class="bg-white rounded-lg shadow mb-6">
+        <div class="border-b">
+          <nav class="flex -mb-px">
+            <button
+              id="tab-info"
+              onclick="switchTab('info')"
+              class="tab-active py-4 px-6 text-center border-transparent"
+            >
+              <i class="fas fa-info-circle mr-2"></i>Restaurant Info
+            </button>
+            <button
+              id="tab-branches"
+              onclick="switchTab('branches')"
+              class="py-4 px-6 text-center border-transparent text-gray-500 hover:text-gray-700"
+            >
+              <i class="fas fa-code-branch mr-2"></i>Branches
+            </button>
+            <button
+              id="tab-settings"
+              onclick="switchTab('settings')"
+              class="py-4 px-6 text-center border-transparent text-gray-500 hover:text-gray-700"
+            >
+              <i class="fas fa-cog mr-2"></i>Settings
+            </button>
+            <button
+              id="tab-integrations"
+              onclick="switchTab('integrations')"
+              class="py-4 px-6 text-center border-transparent text-gray-500 hover:text-gray-700"
+            >
+              <i class="fas fa-plug mr-2"></i>Integrations
+            </button>
+          </nav>
+        </div>
+      </div>
+
+      <!-- Tab Content -->
+      <div id="tab-content">
+        <!-- Restaurant Info Tab -->
+        <div id="content-info" class="tab-content active">
+          <div class="bg-white rounded-lg shadow p-6">
+            <h2 class="text-lg font-bold mb-6">Restaurant Information</h2>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <!-- Basic Info -->
+              <div>
+                <h3 class="font-bold mb-4 text-gray-700">Basic Information</h3>
+                <div class="space-y-4">
+                  <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1"
+                      >Restaurant Name</label
+                    >
+                    <input
+                      type="text"
+                      id="restaurant-name"
+                      class="w-full border rounded-lg px-4 py-2 focus:ring-2 focus:ring-red-500 focus:border-transparent"
+                      value="{{ restaurant.name|default:'' }}"
+                    />
+                  </div>
+
+                  <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1"
+                      >Description</label
+                    >
+                    <textarea
+                      id="restaurant-description"
+                      class="w-full border rounded-lg px-4 py-2 focus:ring-2 focus:ring-red-500 focus:border-transparent"
+                      rows="3"
+                    >
+{{ restaurant.description|default:'' }}</textarea
+                    >
+                  </div>
+
+                  <div class="grid grid-cols-2 gap-4">
+                    <div>
+                      <label
+                        class="block text-sm font-medium text-gray-700 mb-1"
+                        >Phone</label
+                      >
+                      <input
+                        type="tel"
+                        id="restaurant-phone"
+                        class="w-full border rounded-lg px-4 py-2 focus:ring-2 focus:ring-red-500 focus:border-transparent"
+                        value="{{ restaurant.phone|default:'' }}"
+                      />
+                    </div>
+                    <div>
+                      <label
+                        class="block text-sm font-medium text-gray-700 mb-1"
+                        >Email</label
+                      >
+                      <input
+                        type="email"
+                        id="restaurant-email"
+                        class="w-full border rounded-lg px-4 py-2 focus:ring-2 focus:ring-red-500 focus:border-transparent"
+                        value="{{ restaurant.email|default:'' }}"
+                      />
+                    </div>
+                  </div>
+
+                  <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1"
+                      >Address</label
+                    >
+                    <textarea
+                      id="restaurant-address"
+                      class="w-full border rounded-lg px-4 py-2 focus:ring-2 focus:ring-red-500 focus:border-transparent"
+                      rows="2"
+                    >
+{{ restaurant.address|default:'' }}</textarea
+                    >
+                  </div>
+                </div>
+              </div>
+
+              <!-- Logo & Branding -->
+              <div>
+                <h3 class="font-bold mb-4 text-gray-700">Branding</h3>
+                <div class="space-y-4">
+                  <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1"
+                      >Logo</label
+                    >
+                    <div
+                      class="border-2 border-dashed border-gray-300 rounded-lg p-4 text-center"
+                    >
+                      <div id="logo-preview" class="mb-4">
+                        {% if restaurant.logo %}
+                        <img
+                          src="{{ restaurant.logo.url }}"
+                          alt="Logo"
+                          class="w-32 h-32 object-contain mx-auto"
+                        />
+                        {% else %}
+                        <div
+                          class="w-32 h-32 bg-gray-200 rounded-lg flex items-center justify-center mx-auto"
+                        >
+                          <i class="fas fa-camera text-gray-400 text-2xl"></i>
+                        </div>
+                        {% endif %}
+                      </div>
+                      <div>
+                        <input
+                          type="file"
+                          id="logo-upload"
+                          class="hidden"
+                          accept="image/*"
+                        />
+                        <button
+                          onclick="document.getElementById('logo-upload').click()"
+                          class="bg-gray-100 text-gray-700 px-4 py-2 rounded-lg hover:bg-gray-200"
+                        >
+                          <i class="fas fa-upload mr-2"></i>Upload Logo
+                        </button>
+                        <p class="text-xs text-gray-500 mt-2">
+                          Recommended: 300x300px PNG or JPG
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1"
+                      >Primary Color</label
+                    >
+                    <div class="flex items-center space-x-3">
+                      <input
+                        type="color"
+                        id="primary-color"
+                        class="w-12 h-12 border rounded-lg"
+                        value="#dc2626"
+                      />
+                      <input
+                        type="text"
+                        id="primary-color-hex"
+                        class="flex-1 border rounded-lg px-4 py-2 font-mono"
+                        value="#dc2626"
+                        placeholder="#RRGGBB"
+                      />
+                    </div>
+                  </div>
+
+                  <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1"
+                      >Status</label
+                    >
+                    <div class="flex items-center space-x-4">
+                      <label class="flex items-center">
+                        <input
+                          type="radio"
+                          name="restaurant-status"
+                          value="active"
+                          class="mr-2"
+                          {%
+                          if
+                          restaurant.is_active
+                          %}checked{%
+                          endif
+                          %}
+                        />
+                        <span class="text-green-600">
+                          <i class="fas fa-check-circle mr-1"></i>Active
+                        </span>
+                      </label>
+                      <label class="flex items-center">
+                        <input
+                          type="radio"
+                          name="restaurant-status"
+                          value="inactive"
+                          class="mr-2"
+                          {%
+                          if
+                          not
+                          restaurant.is_active
+                          %}checked{%
+                          endif
+                          %}
+                        />
+                        <span class="text-red-600">
+                          <i class="fas fa-times-circle mr-1"></i>Inactive
+                        </span>
+                      </label>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Branches Tab -->
+        <div id="content-branches" class="tab-content hidden">
+          <div class="bg-white rounded-lg shadow p-6">
+            <div class="flex justify-between items-center mb-6">
+              <h2 class="text-lg font-bold">Branches</h2>
+              <button
+                onclick="showAddBranchModal()"
+                class="bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700"
+              >
+                <i class="fas fa-plus mr-2"></i>Add Branch
+              </button>
+            </div>
+
+            <div class="overflow-x-auto">
+              <table class="min-w-full divide-y divide-gray-200">
+                <thead class="bg-gray-50">
+                  <tr>
+                    <th
+                      class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                    >
+                      Branch Name
+                    </th>
+                    <th
+                      class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                    >
+                      Location
+                    </th>
+                    <th
+                      class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                    >
+                      Phone
+                    </th>
+                    <th
+                      class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                    >
+                      Tables
+                    </th>
+                    <th
+                      class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                    >
+                      Status
+                    </th>
+                    <th
+                      class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                    >
+                      Actions
+                    </th>
+                  </tr>
+                </thead>
+                <tbody
+                  id="branches-table"
+                  class="bg-white divide-y divide-gray-200"
+                >
+                  <!-- Branches will be loaded here -->
+                  {% for branch in branches %}
+                  <tr>
+                    <td class="px-6 py-4 whitespace-nowrap">
+                      <div class="font-medium">{{ branch.name }}</div>
+                    </td>
+                    <td class="px-6 py-4">
+                      <div class="text-sm">{{ branch.location }}</div>
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap">
+                      <div class="text-sm">{{ branch.phone|default:"-" }}</div>
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap">
+                      <div class="text-sm">
+                        {{ branch.table_count|default:"0" }}
+                      </div>
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap">
+                      <span
+                        class="px-2 py-1 text-xs rounded-full {{ branch.is_active|yesno:'bg-green-100 text-green-800,bg-red-100 text-red-800' }}"
+                      >
+                        {{ branch.is_active|yesno:"Active,Inactive" }}
+                      </span>
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                      <button
+                        onclick="editBranch({{ branch.id }})"
+                        class="text-blue-600 hover:text-blue-900 mr-3"
+                      >
+                        <i class="fas fa-edit"></i>
+                      </button>
+                      <button
+                        onclick="toggleBranchStatus({{ branch.id }})"
+                        class="text-yellow-600 hover:text-yellow-900 mr-3"
+                      >
+                        <i class="fas fa-power-off"></i>
+                      </button>
+                      <button
+                        onclick="deleteBranch({{ branch.id }})"
+                        class="text-red-600 hover:text-red-900"
+                      >
+                        <i class="fas fa-trash"></i>
+                      </button>
+                    </td>
+                  </tr>
+                  {% empty %}
+                  <tr>
+                    <td colspan="6" class="px-6 py-8 text-center text-gray-500">
+                      <i class="fas fa-store-alt text-3xl mb-3"></i>
+                      <p>No branches found</p>
+                      <p class="text-sm mt-2">
+                        Add your first branch to get started
+                      </p>
+                    </td>
+                  </tr>
+                  {% endfor %}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <!-- Settings Tab -->
+        <div id="content-settings" class="tab-content hidden">
+          <div class="bg-white rounded-lg shadow p-6">
+            <h2 class="text-lg font-bold mb-6">Restaurant Settings</h2>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <!-- Operating Hours -->
+              <div class="setting-card border rounded-lg p-4">
+                <h3 class="font-bold mb-4 flex items-center">
+                  <i class="fas fa-clock text-red-600 mr-2"></i>
+                  Operating Hours
+                </h3>
+                <div class="space-y-3">
+                  {% for day in
+                  'Monday,Tuesday,Wednesday,Thursday,Friday,Saturday,Sunday'|split:','
+                  %}
+                  <div class="flex items-center justify-between">
+                    <span class="text-sm">{{ day }}</span>
+                    <div class="flex items-center space-x-2">
+                      <input
+                        type="time"
+                        class="border rounded px-2 py-1 text-sm"
+                        value="09:00"
+                      />
+                      <span class="text-gray-400">to</span>
+                      <input
+                        type="time"
+                        class="border rounded px-2 py-1 text-sm"
+                        value="22:00"
+                      />
+                    </div>
+                  </div>
+                  {% endfor %}
+                </div>
+              </div>
+
+              <!-- Tax & Charges -->
+              <div class="setting-card border rounded-lg p-4">
+                <h3 class="font-bold mb-4 flex items-center">
+                  <i class="fas fa-percentage text-red-600 mr-2"></i>
+                  Tax & Service Charges
+                </h3>
+                <div class="space-y-4">
+                  <div>
+                    <label class="block text-sm text-gray-600 mb-1"
+                      >Tax Rate (%)</label
+                    >
+                    <div class="flex items-center">
+                      <input
+                        type="number"
+                        id="tax-rate"
+                        class="w-24 border rounded-lg px-3 py-2"
+                        value="15"
+                        min="0"
+                        max="100"
+                        step="0.1"
+                      />
+                      <span class="ml-2">%</span>
+                    </div>
+                  </div>
+                  <div>
+                    <label class="block text-sm text-gray-600 mb-1"
+                      >Service Charge (%)</label
+                    >
+                    <div class="flex items-center">
+                      <input
+                        type="number"
+                        id="service-charge"
+                        class="w-24 border rounded-lg px-3 py-2"
+                        value="10"
+                        min="0"
+                        max="100"
+                        step="0.1"
+                      />
+                      <span class="ml-2">%</span>
+                    </div>
+                  </div>
+                  <div>
+                    <label class="block text-sm text-gray-600 mb-1"
+                      >Minimum Order Amount</label
+                    >
+                    <div class="flex items-center">
+                      <span class="mr-2">$</span>
+                      <input
+                        type="number"
+                        id="min-order"
+                        class="w-24 border rounded-lg px-3 py-2"
+                        value="0"
+                        min="0"
+                        step="0.01"
+                      />
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Order Settings -->
+              <div class="setting-card border rounded-lg p-4">
+                <h3 class="font-bold mb-4 flex items-center">
+                  <i class="fas fa-shopping-cart text-red-600 mr-2"></i>
+                  Order Settings
+                </h3>
+                <div class="space-y-3">
+                  <div class="flex items-center justify-between">
+                    <span class="text-sm">Enable QR Code Orders</span>
+                    <label
+                      class="relative inline-flex items-center cursor-pointer"
+                    >
+                      <input type="checkbox" class="sr-only peer" checked />
+                      <div
+                        class="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-red-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-red-600"
+                      ></div>
+                    </label>
+                  </div>
+                  <div class="flex items-center justify-between">
+                    <span class="text-sm"
+                      >Require Waiter Confirmation for QR Orders</span
+                    >
+                    <label
+                      class="relative inline-flex items-center cursor-pointer"
+                    >
+                      <input type="checkbox" class="sr-only peer" checked />
+                      <div
+                        class="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-red-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-red-600"
+                      ></div>
+                    </label>
+                  </div>
+                  <div class="flex items-center justify-between">
+                    <span class="text-sm">Allow Order Modifications</span>
+                    <label
+                      class="relative inline-flex items-center cursor-pointer"
+                    >
+                      <input type="checkbox" class="sr-only peer" checked />
+                      <div
+                        class="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-red-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-red-600"
+                      ></div>
+                    </label>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Notification Settings -->
+              <div class="setting-card border rounded-lg p-4">
+                <h3 class="font-bold mb-4 flex items-center">
+                  <i class="fas fa-bell text-red-600 mr-2"></i>
+                  Notifications
+                </h3>
+                <div class="space-y-3">
+                  <div class="flex items-center justify-between">
+                    <span class="text-sm">Email Notifications</span>
+                    <label
+                      class="relative inline-flex items-center cursor-pointer"
+                    >
+                      <input type="checkbox" class="sr-only peer" checked />
+                      <div
+                        class="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-red-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-red-600"
+                      ></div>
+                    </label>
+                  </div>
+                  <div class="flex items-center justify-between">
+                    <span class="text-sm">SMS Notifications</span>
+                    <label
+                      class="relative inline-flex items-center cursor-pointer"
+                    >
+                      <input type="checkbox" class="sr-only peer" />
+                      <div
+                        class="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-red-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-red-600"
+                      ></div>
+                    </label>
+                  </div>
+                  <div class="flex items-center justify-between">
+                    <span class="text-sm">Low Stock Alerts</span>
+                    <label
+                      class="relative inline-flex items-center cursor-pointer"
+                    >
+                      <input type="checkbox" class="sr-only peer" checked />
+                      <div
+                        class="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-red-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-red-600"
+                      ></div>
+                    </label>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Integrations Tab -->
+        <div id="content-integrations" class="tab-content hidden">
+          <div class="bg-white rounded-lg shadow p-6">
+            <h2 class="text-lg font-bold mb-6">Integrations</h2>
+
+            <div class="space-y-6">
+              <!-- Payment Integrations -->
+              <div class="border rounded-lg p-4">
+                <h3 class="font-bold mb-4 flex items-center">
+                  <i class="fas fa-credit-card text-red-600 mr-2"></i>
+                  Payment Gateways
+                </h3>
+                <div class="space-y-4">
+                  <!-- CBE Integration -->
+                  <div
+                    class="flex items-center justify-between p-3 bg-gray-50 rounded"
+                  >
+                    <div class="flex items-center">
+                      <div
+                        class="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center mr-3"
+                      >
+                        <i class="fas fa-university text-blue-600"></i>
+                      </div>
+                      <div>
+                        <div class="font-medium">
+                          CBE (Commercial Bank of Ethiopia)
+                        </div>
+                        <div class="text-sm text-gray-600">
+                          Bank payment integration
+                        </div>
+                      </div>
+                    </div>
+                    <div>
+                      <label
+                        class="relative inline-flex items-center cursor-pointer"
+                      >
+                        <input type="checkbox" class="sr-only peer" />
+                        <div
+                          class="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"
+                        ></div>
+                      </label>
+                    </div>
+                  </div>
+
+                  <!-- Telebirr Integration -->
+                  <div
+                    class="flex items-center justify-between p-3 bg-gray-50 rounded"
+                  >
+                    <div class="flex items-center">
+                      <div
+                        class="w-10 h-10 bg-green-100 rounded-lg flex items-center justify-center mr-3"
+                      >
+                        <i class="fas fa-mobile-alt text-green-600"></i>
+                      </div>
+                      <div>
+                        <div class="font-medium">Telebirr</div>
+                        <div class="text-sm text-gray-600">
+                          Mobile money payment
+                        </div>
+                      </div>
+                    </div>
+                    <div>
+                      <label
+                        class="relative inline-flex items-center cursor-pointer"
+                      >
+                        <input type="checkbox" class="sr-only peer" />
+                        <div
+                          class="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-green-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-green-600"
+                        ></div>
+                      </label>
+                    </div>
+                  </div>
+
+                  <!-- CBE Wallet -->
+                  <div
+                    class="flex items-center justify-between p-3 bg-gray-50 rounded"
+                  >
+                    <div class="flex items-center">
+                      <div
+                        class="w-10 h-10 bg-purple-100 rounded-lg flex items-center justify-center mr-3"
+                      >
+                        <i class="fas fa-wallet text-purple-600"></i>
+                      </div>
+                      <div>
+                        <div class="font-medium">CBE Wallet</div>
+                        <div class="text-sm text-gray-600">
+                          Digital wallet payment
+                        </div>
+                      </div>
+                    </div>
+                    <div>
+                      <label
+                        class="relative inline-flex items-center cursor-pointer"
+                      >
+                        <input type="checkbox" class="sr-only peer" />
+                        <div
+                          class="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-purple-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-purple-600"
+                        ></div>
+                      </label>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- API Configuration -->
+              <div class="border rounded-lg p-4">
+                <h3 class="font-bold mb-4 flex items-center">
+                  <i class="fas fa-key text-red-600 mr-2"></i>
+                  API Configuration
+                </h3>
+                <div class="space-y-4">
+                  <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1"
+                      >API Key</label
+                    >
+                    <div class="flex">
+                      <input
+                        type="text"
+                        class="flex-1 border rounded-l-lg px-4 py-2 font-mono bg-gray-50"
+                        value="sk_live_1234567890abcdef"
+                        readonly
+                      />
+                      <button
+                        onclick="copyToClipboard('sk_live_1234567890abcdef')"
+                        class="bg-gray-200 text-gray-700 px-4 py-2 rounded-r-lg hover:bg-gray-300"
+                      >
+                        <i class="fas fa-copy"></i>
+                      </button>
+                    </div>
+                  </div>
+                  <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1"
+                      >Webhook URL</label
+                    >
+                    <div class="flex">
+                      <input
+                        type="text"
+                        class="flex-1 border rounded-l-lg px-4 py-2 font-mono bg-gray-50"
+                        value="https://your-restaurant.com/api/webhook/"
+                        readonly
+                      />
+                      <button
+                        onclick="copyToClipboard('https://your-restaurant.com/api/webhook/')"
+                        class="bg-gray-200 text-gray-700 px-4 py-2 rounded-r-lg hover:bg-gray-300"
+                      >
+                        <i class="fas fa-copy"></i>
+                      </button>
+                    </div>
+                  </div>
+                  <div>
+                    <button
+                      onclick="regenerateApiKey()"
+                      class="bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700"
+                    >
+                      <i class="fas fa-redo mr-2"></i>Regenerate API Key
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Add Branch Modal -->
+    <div
+      id="add-branch-modal"
+      class="fixed inset-0 bg-black bg-opacity-50 z-50 hidden items-center justify-center p-4"
+    >
+      <div class="bg-white rounded-lg max-w-md w-full">
+        <div class="p-6">
+          <h3 class="text-lg font-bold mb-4">Add New Branch</h3>
+          <div class="space-y-4">
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-1"
+                >Branch Name</label
+              >
+              <input
+                type="text"
+                id="branch-name"
+                class="w-full border rounded-lg px-4 py-2 focus:ring-2 focus:ring-red-500 focus:border-transparent"
+              />
+            </div>
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-1"
+                >Location</label
+              >
+              <textarea
+                id="branch-location"
+                class="w-full border rounded-lg px-4 py-2 focus:ring-2 focus:ring-red-500 focus:border-transparent"
+                rows="2"
+              ></textarea>
+            </div>
+            <div class="grid grid-cols-2 gap-4">
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1"
+                  >Phone</label
+                >
+                <input
+                  type="tel"
+                  id="branch-phone"
+                  class="w-full border rounded-lg px-4 py-2 focus:ring-2 focus:ring-red-500 focus:border-transparent"
+                />
+              </div>
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1"
+                  >Initial Tables</label
+                >
+                <input
+                  type="number"
+                  id="branch-tables"
+                  class="w-full border rounded-lg px-4 py-2 focus:ring-2 focus:ring-red-500 focus:border-transparent"
+                  value="10"
+                  min="1"
+                  max="100"
+                />
+              </div>
+            </div>
+          </div>
+          <div class="mt-6 flex justify-end space-x-3">
+            <button
+              onclick="closeAddBranchModal()"
+              class="border border-gray-300 text-gray-700 px-4 py-2 rounded-lg hover:bg-gray-50"
+            >
+              Cancel
+            </button>
+            <button
+              onclick="saveNewBranch()"
+              class="bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700"
+            >
+              Save Branch
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      // Tab switching
+      function switchTab(tabName) {
+        // Update tab buttons
+        document.querySelectorAll('[id^="tab-"]').forEach((tab) => {
+          tab.classList.remove("tab-active", "text-red-600");
+          tab.classList.add("text-gray-500");
+        });
+        document
+          .getElementById(`tab-${tabName}`)
+          .classList.add("tab-active", "text-red-600");
+        document
+          .getElementById(`tab-${tabName}`)
+          .classList.remove("text-gray-500");
+
+        // Update tab content
+        document.querySelectorAll(".tab-content").forEach((content) => {
+          content.classList.add("hidden");
+          content.classList.remove("active");
+        });
+        document
+          .getElementById(`content-${tabName}`)
+          .classList.remove("hidden");
+        document.getElementById(`content-${tabName}`).classList.add("active");
+      }
+
+      // Save changes
+      function saveAllChanges() {
+        const changes = {
+          name: document.getElementById("restaurant-name").value,
+          description: document.getElementById("restaurant-description").value,
+          phone: document.getElementById("restaurant-phone").value,
+          email: document.getElementById("restaurant-email").value,
+          address: document.getElementById("restaurant-address").value,
+          primary_color: document.getElementById("primary-color-hex").value,
+          is_active:
+            document.querySelector('input[name="restaurant-status"]:checked')
+              .value === "active",
+          tax_rate: document.getElementById("tax-rate").value,
+          service_charge: document.getElementById("service-charge").value,
+          min_order: document.getElementById("min-order").value,
+        };
+
+        console.log("Saving changes:", changes);
+        alert("Changes saved successfully!");
+
+        // In a real implementation, this would send to API
+        // fetch('/api/restaurants/restaurants/{{ restaurant.id }}/', {
+        //     method: 'PUT',
+        //     headers: {
+        //         'Content-Type': 'application/json',
+        //         'X-CSRFToken': getCookie('csrftoken')
+        //     },
+        //     body: JSON.stringify(changes)
+        // });
+      }
+
+      // Branch management
+      function showAddBranchModal() {
+        document.getElementById("add-branch-modal").classList.remove("hidden");
+      }
+
+      function closeAddBranchModal() {
+        document.getElementById("add-branch-modal").classList.add("hidden");
+      }
+
+      function saveNewBranch() {
+        const branchData = {
+          name: document.getElementById("branch-name").value,
+          location: document.getElementById("branch-location").value,
+          phone: document.getElementById("branch-phone").value,
+          table_count: document.getElementById("branch-tables").value,
+        };
+
+        if (!branchData.name || !branchData.location) {
+          alert("Please fill in required fields");
+          return;
+        }
+
+        console.log("Adding branch:", branchData);
+        alert("Branch added successfully!");
+        closeAddBranchModal();
+
+        // In real implementation, this would refresh the branches table
+      }
+
+      function editBranch(branchId) {
+        alert(`Edit branch ${branchId} - This would open edit modal`);
+      }
+
+      function toggleBranchStatus(branchId) {
+        if (confirm("Toggle branch status?")) {
+          alert(`Branch ${branchId} status toggled`);
+        }
+      }
+
+      function deleteBranch(branchId) {
+        if (confirm("Are you sure you want to delete this branch?")) {
+          alert(`Branch ${branchId} deleted`);
+        }
+      }
+
+      // Logo upload
+      document
+        .getElementById("logo-upload")
+        .addEventListener("change", function (event) {
+          const file = event.target.files[0];
+          if (file) {
+            const reader = new FileReader();
+            reader.onload = function (e) {
+              document.getElementById(
+                "logo-preview"
+              ).innerHTML = `<img src="${e.target.result}" alt="Logo" class="w-32 h-32 object-contain mx-auto">`;
+            };
+            reader.readAsDataURL(file);
+          }
+        });
+
+      // Color picker synchronization
+      document
+        .getElementById("primary-color")
+        .addEventListener("input", function () {
+          document.getElementById("primary-color-hex").value = this.value;
+        });
+
+      document
+        .getElementById("primary-color-hex")
+        .addEventListener("input", function () {
+          const color = this.value;
+          if (/^#[0-9A-F]{6}$/i.test(color)) {
+            document.getElementById("primary-color").value = color;
+          }
+        });
+
+      // Utility functions
+      function copyToClipboard(text) {
+        navigator.clipboard.writeText(text).then(() => {
+          alert("Copied to clipboard!");
+        });
+      }
+
+      function regenerateApiKey() {
+        if (
+          confirm(
+            "Regenerate API key? Existing integrations will stop working."
+          )
+        ) {
+          alert("API key regenerated!");
+        }
+      }
+
+      // Helper function to get CSRF token
+      function getCookie(name) {
+        let cookieValue = null;
+        if (document.cookie && document.cookie !== "") {
+          const cookies = document.cookie.split(";");
+          for (let i = 0; i < cookies.length; i++) {
+            const cookie = cookies[i].trim();
+            if (cookie.substring(0, name.length + 1) === name + "=") {
+              cookieValue = decodeURIComponent(
+                cookie.substring(name.length + 1)
+              );
+              break;
+            }
+          }
+        }
+        return cookieValue;
+      }
+
+      // Initialize
+      document.addEventListener("DOMContentLoaded", function () {
+        // Set default tab
+        switchTab("info");
+      });
+    </script>
+  </body>
+</html>
