@@ -1,0 +1,31 @@
+<!-- test_auth.html -->
+<!DOCTYPE html>
+<html>
+  <body>
+    <h1>Auth Test</h1>
+    <button onclick="testAuth()">Test Auth</button>
+    <div id="result"></div>
+
+    <script>
+      function testAuth() {
+        const token = localStorage.getItem("access_token");
+        const role = localStorage.getItem("user_role");
+
+        document.getElementById("result").innerHTML = `
+                <h3>LocalStorage Contents:</h3>
+                <p>Token: ${
+                  token
+                    ? "Exists (" + token.substring(0, 20) + "...)"
+                    : "NOT FOUND"
+                }</p>
+                <p>Role: ${role || "NOT FOUND"}</p>
+                <p>All localStorage:</p>
+                <pre>${JSON.stringify(localStorage, null, 2)}</pre>
+            `;
+      }
+
+      // Run on load
+      testAuth();
+    </script>
+  </body>
+</html>

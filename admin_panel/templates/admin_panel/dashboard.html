@@ -40,8 +40,13 @@
             <span class="bg-yellow-100 text-yellow-800 px-3 py-1 rounded-full"
               >{{ user_role|title }}</span
             >
-            <div class="relative group">
-              <button class="flex items-center space-x-2">
+            <div class="relative" id="user-menu-wrapper">
+              <button
+                id="user-menu-btn"
+                class="flex items-center space-x-2"
+                aria-haspopup="true"
+                aria-expanded="false"
+              >
                 <div
                   class="w-8 h-8 bg-red-100 rounded-full flex items-center justify-center"
                 >
@@ -53,27 +58,34 @@
                 <i class="fas fa-chevron-down text-gray-500"></i>
               </button>
               <div
-                class="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg py-2 hidden group-hover:block"
+                id="user-menu"
+                class="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg py-2 hidden"
+                role="menu"
+                aria-hidden="true"
               >
                 <a
                   href="#"
                   class="block px-4 py-2 text-gray-700 hover:bg-gray-100"
+                  role="menuitem"
                 >
-                  <i class="fas fa-user mr-2"></i>Profile
-                </a>
+                  <i class="fas fa-user mr-2"></i>Profile</a
+                >
                 <a
                   href="#"
                   class="block px-4 py-2 text-gray-700 hover:bg-gray-100"
+                  role="menuitem"
                 >
-                  <i class="fas fa-cog mr-2"></i>Settings
-                </a>
+                  <i class="fas fa-cog mr-2"></i>Settings</a
+                >
                 <div class="border-t my-1"></div>
                 <a
-                  href="/logout/"
+                  href="#"
+                  onclick="logout(); return false;"
                   class="block px-4 py-2 text-red-600 hover:bg-red-50"
+                  role="menuitem"
                 >
-                  <i class="fas fa-sign-out-alt mr-2"></i>Logout
-                </a>
+                  <i class="fas fa-sign-out-alt mr-2"></i>Logout</a
+                >
               </div>
             </div>
           </div>
@@ -393,6 +405,47 @@
         loadActivity();
         loadRealData();
       });
+    </script>
+    <script src="/static/js/auth-manager.js"></script>
+    <script>
+      // User menu toggle: show/hide on click, hide on outside click or Escape
+      (function () {
+        const btn = document.getElementById("user-menu-btn");
+        const menu = document.getElementById("user-menu");
+        if (!btn || !menu) return;
+
+        function openMenu() {
+          menu.classList.remove("hidden");
+          menu.setAttribute("aria-hidden", "false");
+          btn.setAttribute("aria-expanded", "true");
+        }
+
+        function closeMenu() {
+          menu.classList.add("hidden");
+          menu.setAttribute("aria-hidden", "true");
+          btn.setAttribute("aria-expanded", "false");
+        }
+
+        btn.addEventListener("click", function (e) {
+          e.preventDefault();
+          if (menu.classList.contains("hidden")) openMenu();
+          else closeMenu();
+        });
+
+        // Close when clicking outside
+        document.addEventListener("click", function (e) {
+          if (
+            !document.getElementById("user-menu-wrapper").contains(e.target)
+          ) {
+            closeMenu();
+          }
+        });
+
+        // Close on ESC
+        document.addEventListener("keydown", function (e) {
+          if (e.key === "Escape") closeMenu();
+        });
+      })();
     </script>
   </body>
 </html>

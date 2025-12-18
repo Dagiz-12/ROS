@@ -21,7 +21,7 @@ from .serializers import (
     CartAddItemSerializer, CartUpdateItemSerializer, OrderStatusUpdateSerializer
 )
 from menu.models import MenuItem
-from accounts.permissions import IsAdminUser, IsManagerOrAdmin, IsWaiterOrHigher
+from accounts.permissions import IsAdminUser, IsManagerOrAdmin, IsWaiterOrHigher, IsCashierOrHigher
 
 
 # ==================== HTML TEMPLATE VIEWS ====================
@@ -141,9 +141,15 @@ def admin_dashboard(request):
 class TableViewSet(viewsets.ModelViewSet):
     """ViewSet for table management"""
     queryset = Table.objects.all()
-    permission_classes = [IsAuthenticated, IsManagerOrAdmin]
-    filter_backends = [DjangoFilterBackend,
-                       filters.SearchFilter, filters.OrderingFilter]
+    # Allow cashier (and all roles above) to access orders endpoints as well
+    permission_classes = [IsAuthenticated, IsCashierOrHigher]
+    # Remove DjangoFilterBackend due to compatibility issues with django-filter
+    # and Django versions causing ChoiceField initialization errors.
+    filter_backends = [
+        filters.SearchFilter,
+        filters.OrderingFilter,
+    ]
+    # Keep filterset_fields for future use if DjangoFilterBackend is restored
     filterset_fields = ['branch', 'status', 'is_active']
     search_fields = ['table_number', 'table_name', 'location_description']
     ordering_fields = ['table_number', 'capacity', 'created_at']
@@ -391,7 +397,8 @@ class OrderViewSet(viewsets.ModelViewSet):
     """ViewSet for order management"""
     queryset = Order.objects.all()
     serializer_class = OrderSerializer
-    permission_classes = [IsAuthenticated, IsWaiterOrHigher]
+    # Default permission: allow cashier and higher so cashier UI can fetch orders
+    permission_classes = [IsAuthenticated, IsCashierOrHigher]
    # filter_backends = [DjangoFilterBackend,
     #                  filters.SearchFilter, filters.OrderingFilter]
     # filterset_fields = ['table', 'status',
@@ -707,5 +714,23 @@ def debug_auth(request):
         'headers': dict(request.headers),
     })
 
-# Add to urls.py
-# path('debug-auth/', debug_auth, name='debug-auth'),
+
+# Add to accounts/views.py for debugging
+
+
+@api_view(['POST'])
+def debug_login(request):
+    """Debug login endpoint to see what's being returned"""
+    from rest_framework_simplejwt.views import TokenObtainPairView
+    from rest_framework.response import Response
+
+    # Call the actual login view
+    token_view = TokenObtainPairView()
+    response = token_view.post(request)
+
+    print("=== DEBUG LOGIN RESPONSE ===")
+    print("Status:", response.status_code)
+    print("Data:", response.data)
+    print("Headers:", dict(response.headers))
+
+    return response

@@ -30,6 +30,9 @@
     <!-- Favicon -->
     <link rel="icon" type="image/png" href="/static/images/favicon.png" />
 
+    <!-- Custom CSS -->
+    <link href="/static/css/styles.css" rel="stylesheet" />
+
     {% block extra_css %}{% endblock %}
   </head>
   <body class="bg-gray-50 text-gray-800 min-h-screen">
@@ -394,248 +397,113 @@
     {% endif %} {% block extra_js %}{% endblock %}
 
     <script>
-                                    // Base URL for API
-                                    const API_BASE_URL = "/api";
+      // Base URL for API
+      const API_BASE_URL = "/api";
 
-                                    // Authentication token
-                                    const accessToken = localStorage.getItem('access_token');
-                                    const userRole = localStorage.getItem('user_role');
+      // Helper functions
+      function getCookie(name) {
+          let cookieValue = null;
+          if (document.cookie && document.cookie !== '') {
+              const cookies = document.cookie.split(';');
+              for (let i = 0; i < cookies.length; i++) {
+                  const cookie = cookies[i].trim();
+                  if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                      cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                      break;
+                  }
+              }
+          }
+          return cookieValue;
+      }
 
-                                    // Add authorization header to all requests if token exists
-                                    if (accessToken) {
-                                      $.ajaxSetup({
-                                        headers: {
-                                          'Authorization': 'Bearer ' + accessToken
-                                        }
-                                      });
-                                    }
+      function getAuthHeaders() {
+          const token = localStorage.getItem('access_token');
+          const headers = {
+              'Content-Type': 'application/json',
+              'X-CSRFToken': getCookie('csrftoken')
+          };
 
-                                    // Mobile menu toggle
-                                    $("#mobile-menu-btn").click(function () {
-                                      $("#mobile-menu").removeClass("translate-x-full");
-                                      $("#overlay").removeClass("hidden");
-                                    });
+          if (token) {
+              headers['Authorization'] = 'Bearer ' + token;
+          }
 
-                                    $("#close-mobile-menu").click(function () {
-                                      $("#mobile-menu").addClass("translate-x-full");
-                                      $("#overlay").addClass("hidden");
-                                    });
+          return headers;
+      }
 
-                                    $("#overlay").click(function () {
-                                      $("#mobile-menu").addClass("translate-x-full");
-                                      $("#overlay").addClass("hidden");
-                                    });
+      // Mobile menu toggle
+      $("#mobile-menu-btn").click(function () {
+          $("#mobile-menu").removeClass("translate-x-full");
+          $("#overlay").removeClass("hidden");
+      });
 
-                                    // Show cart drawer (only for customer interface)
-                                    {% if table %}
-                                    function showCart() {
-                                      $("#cart-drawer").removeClass("translate-x-full");
-                                      $("#overlay").removeClass("hidden");
-                                      if (typeof cartManager !== 'undefined') {
-                                        cartManager.loadCart();
-                                      }
-                                    }
+      $("#close-mobile-menu").click(function () {
+          $("#mobile-menu").addClass("translate-x-full");
+          $("#overlay").addClass("hidden");
+      });
 
-                                    // Hide cart drawer
-                                    function hideCart() {
-                                      $("#cart-drawer").addClass("translate-x-full");
-                                      $("#overlay").addClass("hidden");
-                                    }
+      $("#overlay").click(function () {
+          $("#mobile-menu").addClass("translate-x-full");
+          $("#overlay").addClass("hidden");
+      });
 
-                                    // Update cart count on page load
-                                    $(document).ready(function () {
-                                      if (typeof cartManager !== 'undefined') {
-                                        cartManager.updateCartCount();
-                                      }
-                                    });
-                                    {% endif %}
+      // Show cart drawer (only for customer interface)
+      {% if table %}
+      function showCart() {
+          $("#cart-drawer").removeClass("translate-x-full");
+          $("#overlay").removeClass("hidden");
+          if (typeof cartManager !== 'undefined') {
+              cartManager.loadCart();
+          }
+      }
 
-                                    // Logout function
-                                    async function logout() {
-                                      try {
-                                        // Call logout API
-                                        await fetch('/api/auth/logout/', {
-                                          method: 'POST',
-                                          headers: {
-                                            'Authorization': 'Bearer ' + accessToken,
-                                            'X-CSRFToken': getCookie('csrftoken')
-                                          }
-                                        });
-                                      } catch (error) {
-                                        console.log('Logout API error:', error);
-                                      }
+      // Hide cart drawer
+      function hideCart() {
+          $("#cart-drawer").addClass("translate-x-full");
+          $("#overlay").addClass("hidden");
+      }
 
-                                      // Clear local storage
-                                      localStorage.removeItem('access_token');
-                                      localStorage.removeItem('refresh_token');
-                                      localStorage.removeItem('user_role');
-                                      localStorage.removeItem('username');
+      // Update cart count on page load
+      $(document).ready(function () {
+          if (typeof cartManager !== 'undefined') {
+              cartManager.updateCartCount();
+          }
+      });
+      {% endif %}
 
-                                      // Redirect to login page
-                                      window.location.href = '/login/';
-                                    }
-
-                                    // Get CSRF token from cookie
-                                    function getCookie(name) {
-                                      let cookieValue = null;
-                                      if (document.cookie && document.cookie !== '') {
-                                        const cookies = document.cookie.split(';');
-                                        for (let i = 0; i < cookies.length; i++) {
-                                          const cookie = cookies[i].trim();
-                                          if (cookie.substring(0, name.length + 1) === (name + '=')) {
-                                            cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-                                            break;
-                                          }
-                                        }
-                                      }
-                                      return cookieValue;
-                                    }
-
-                                    // Check authentication on page load
-                                    $(document).ready(function() {
-                                      // Show role navigation if user is authenticated
-                                      if (accessToken && userRole) {
-                                        $('#role-navigation').removeClass('hidden');
-                                      }
-
-                                      // Check token expiration
-                                      checkTokenExpiration();
-                                    });
-
-                                    // Function to check token expiration
-                                    function checkTokenExpiration() {
-                                      if (!accessToken) return;
-
-                                      // Decode JWT to check expiration
-                                      try {
-                                        const payload = JSON.parse(atob(accessToken.split('.')[1]));
-                                        const expiration = payload.exp * 1000; // Convert to milliseconds
-                                        const now = Date.now();
-
-                                        // If token expires in less than 5 minutes, show warning
-                                        if (expiration - now < 5 * 60 * 1000) {
-                                          showToast('Your session will expire soon. Please save your work.', 'warning');
-
-                                          // Refresh token if less than 1 minute
-                                          if (expiration - now < 60 * 1000) {
-                                            refreshToken();
-                                          }
-                                        }
-                                      } catch (error) {
-                                        console.log('Token validation error:', error);
-                                      }
-                                    }
-
-                                    // Refresh token function
-                                    async function refreshToken() {
-                                      const refreshToken = localStorage.getItem('refresh_token');
-                                      if (!refreshToken) return;
-
-                                      try {
-                                        const response = await fetch('/api/auth/token/refresh/', {
-                                          method: 'POST',
-                                          headers: {
-                                            'Content-Type': 'application/json'
-                                          },
-                                          body: JSON.stringify({ refresh: refreshToken })
-                                        });
-
-                                        if (response.ok) {
-                                          const data = await response.json();
-                                          localStorage.setItem('access_token', data.access);
-                                          console.log('Token refreshed successfully');
-                                        }
-                                      } catch (error) {
-                                        console.log('Token refresh error:', error);
-                                      }
-                                    }
-
-                                    // Toast notification function
-                                    function showToast(message, type = 'info') {
-                                      const toast = document.createElement('div');
-                                      toast.className = `fixed top-4 right-4 p-4 rounded-lg shadow-lg z-50 transform transition-transform duration-300 ${
-                                        type === 'error' ? 'bg-red-100 text-red-800 border border-red-200' :
-                                        type === 'success' ? 'bg-green-100 text-green-800 border border-green-200' :
-                                        type === 'warning' ? 'bg-yellow-100 text-yellow-800 border border-yellow-200' :
-                                        'bg-blue-100 text-blue-800 border border-blue-200'
-                                      }`;
-
-                                      toast.innerHTML = `
-                                        <div class="flex items-center">
-                                          <i class="fas fa-${
-                                            type === 'error' ? 'exclamation-circle' :
-                                            type === 'success' ? 'check-circle' :
-                                            type === 'warning' ? 'exclamation-triangle' :
-                                            'info-circle'
-                                          } mr-3"></i>
-                                          <span>${message}</span>
-                                        </div>
-                                      `;
-
-                                      document.body.appendChild(toast);
-
-                                      // Remove toast after 5 seconds
-                                      setTimeout(() => {
-                                        toast.style.transform = 'translateX(100%)';
-                                        setTimeout(() => {
-                                          document.body.removeChild(toast);
-                                        }, 300);
-                                      }, 5000);
-                                    }
-
-                                    // Auto-refresh token every 10 minutes
-                                    setInterval(refreshToken, 10 * 60 * 1000);
-
-
-
-                              // logout script
-
-                              // In base.html - Simplified logout
-                      // In base.html - Fix logout function
-            // In base.html - Keep only one logout function
+      // SINGLE LOGOUT FUNCTION
       async function logout() {
-          // Clear client-side storage immediately
+          try {
+              const csrfToken = getCookie('csrftoken');
+              await fetch('/api/auth/logout/', {
+                  method: 'POST',
+                  headers: {
+                      'Content-Type': 'application/json',
+                      'X-CSRFToken': csrfToken
+                  },
+                  credentials: 'include'
+              });
+          } catch (error) {
+              console.log('Logout API error:', error);
+          }
+
+          // Clear ALL client-side storage
           localStorage.clear();
           sessionStorage.clear();
 
-          // Redirect to logout page
-          window.location.href = '/logout/';
+          // Redirect to login page
+          window.location.href = '/login/';
       }
 
-            // Make sure getCookie function exists
-            function getCookie(name) {
-                let cookieValue = null;
-                if (document.cookie && document.cookie !== '') {
-                    const cookies = document.cookie.split(';');
-                    for (let i = 0; i < cookies.length; i++) {
-                        const cookie = cookies[i].trim();
-                        if (cookie.substring(0, name.length + 1) === (name + '=')) {
-                            cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-                            break;
-                        }
-                    }
-                }
-                return cookieValue;
-            }
+      // Check authentication on page load
+      $(document).ready(function() {
+          const accessToken = localStorage.getItem('access_token');
+          const userRole = localStorage.getItem('user_role');
 
-                      function getAuthHeaders() {
-                      const token = localStorage.getItem('access_token');
-                      const headers = {
-                          'Content-Type': 'application/json',
-                          'X-CSRFToken': getCookie('csrftoken')
-                      };
-
-                      if (token) {
-                          headers['Authorization'] = `Bearer ${token}`;
-                      }
-
-                      return headers;
-                  }
-
-                  // Then in your JavaScript API calls, use:
-                  fetch('/api/tables/tables/', {
-                      headers: getAuthHeaders()
-                  })
+          // Show role navigation if user is authenticated
+          if (accessToken && userRole) {
+              $('#role-navigation').removeClass('hidden');
+          }
+      });
     </script>
   </body>
 </html>

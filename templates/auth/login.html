@@ -4,6 +4,7 @@
   class="min-h-screen flex items-center justify-center bg-gradient-to-br from-red-50 to-white py-12 px-4 sm:px-6 lg:px-8"
 >
   <div class="max-w-md w-full space-y-8 bg-white p-8 rounded-2xl shadow-xl">
+    <!-- Header -->
     <div class="text-center">
       <div class="flex justify-center mb-6">
         <div class="bg-red-600 text-white p-4 rounded-xl">
@@ -23,17 +24,17 @@
     <form class="mt-8 space-y-6" id="login-form">
       {% csrf_token %}
 
-      <!-- Role Selection -->
+      <!-- Role Selection (Optional - now just visual) -->
       <div>
         <label class="block text-sm font-medium text-gray-700 mb-2">
-          I am signing in as:
+          Select your interface:
         </label>
         <div class="grid grid-cols-2 md:grid-cols-3 gap-3 mb-6">
           <button
             type="button"
-            onclick="selectRole('waiter')"
-            id="role-waiter"
-            class="role-btn flex flex-col items-center justify-center p-4 border-2 border-gray-200 rounded-xl hover:border-blue-500 hover:bg-blue-50 transition"
+            onclick="selectInterface('waiter')"
+            id="interface-waiter"
+            class="interface-btn flex flex-col items-center justify-center p-4 border-2 border-gray-200 rounded-xl hover:border-blue-500 hover:bg-blue-50 transition"
           >
             <i class="fas fa-user-tie text-2xl text-blue-500 mb-2"></i>
             <span class="text-sm font-medium">Waiter</span>
@@ -41,9 +42,9 @@
 
           <button
             type="button"
-            onclick="selectRole('chef')"
-            id="role-chef"
-            class="role-btn flex flex-col items-center justify-center p-4 border-2 border-gray-200 rounded-xl hover:border-green-500 hover:bg-green-50 transition"
+            onclick="selectInterface('chef')"
+            id="interface-chef"
+            class="interface-btn flex flex-col items-center justify-center p-4 border-2 border-gray-200 rounded-xl hover:border-green-500 hover:bg-green-50 transition"
           >
             <i class="fas fa-utensils text-2xl text-green-500 mb-2"></i>
             <span class="text-sm font-medium">Chef</span>
@@ -51,9 +52,9 @@
 
           <button
             type="button"
-            onclick="selectRole('cashier')"
-            id="role-cashier"
-            class="role-btn flex flex-col items-center justify-center p-4 border-2 border-gray-200 rounded-xl hover:border-purple-500 hover:bg-purple-50 transition"
+            onclick="selectInterface('cashier')"
+            id="interface-cashier"
+            class="interface-btn flex flex-col items-center justify-center p-4 border-2 border-gray-200 rounded-xl hover:border-purple-500 hover:bg-purple-50 transition"
           >
             <i class="fas fa-cash-register text-2xl text-purple-500 mb-2"></i>
             <span class="text-sm font-medium">Cashier</span>
@@ -61,9 +62,9 @@
 
           <button
             type="button"
-            onclick="selectRole('manager')"
-            id="role-manager"
-            class="role-btn flex flex-col items-center justify-center p-4 border-2 border-gray-200 rounded-xl hover:border-red-500 hover:bg-red-50 transition"
+            onclick="selectInterface('manager')"
+            id="interface-manager"
+            class="interface-btn flex flex-col items-center justify-center p-4 border-2 border-gray-200 rounded-xl hover:border-red-500 hover:bg-red-50 transition"
           >
             <i class="fas fa-user-tie text-2xl text-red-500 mb-2"></i>
             <span class="text-sm font-medium">Manager</span>
@@ -71,15 +72,21 @@
 
           <button
             type="button"
-            onclick="selectRole('admin')"
-            id="role-admin"
-            class="role-btn flex flex-col items-center justify-center p-4 border-2 border-gray-200 rounded-xl hover:border-yellow-500 hover:bg-yellow-50 transition"
+            onclick="selectInterface('admin')"
+            id="interface-admin"
+            class="interface-btn flex flex-col items-center justify-center p-4 border-2 border-gray-200 rounded-xl hover:border-yellow-500 hover:bg-yellow-50 transition"
           >
             <i class="fas fa-user-shield text-2xl text-yellow-500 mb-2"></i>
             <span class="text-sm font-medium">Admin</span>
           </button>
         </div>
-        <input type="hidden" id="selected-role" name="role" value="" />
+        <div
+          id="interface-hint"
+          class="text-xs text-gray-500 text-center hidden"
+        >
+          <i class="fas fa-info-circle mr-1"></i>
+          <span>Role will be auto-detected from your credentials</span>
+        </div>
       </div>
 
       <!-- Username/Email Field -->
@@ -165,20 +172,31 @@
         <span id="error-text">Invalid username or password</span>
       </div>
 
+      <!-- Success Message -->
+      <div
+        id="success-message"
+        class="hidden p-3 bg-green-50 border border-green-200 text-green-600 rounded-lg text-sm"
+      >
+        <i class="fas fa-check-circle mr-2"></i>
+        <span id="success-text">Login successful! Redirecting...</span>
+      </div>
+
       <!-- Submit Button -->
       <div>
         <button
           type="submit"
           id="submit-btn"
-          class="group relative w-full flex justify-center py-3 px-4 border border-transparent text-sm font-medium rounded-lg text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 transition"
+          class="group relative w-full flex justify-center py-3 px-4 border border-transparent text-sm font-medium rounded-lg text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 transition disabled:opacity-50 disabled:cursor-not-allowed"
         >
           <span class="absolute left-0 inset-y-0 flex items-center pl-3">
             <i class="fas fa-sign-in-alt"></i>
           </span>
-          Sign in
-          <span id="loading-spinner" class="hidden ml-2">
-            <i class="fas fa-spinner fa-spin"></i>
-          </span>
+          <span id="submit-text">Sign in</span>
+          <div id="loading-spinner" class="hidden ml-2">
+            <div
+              class="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"
+            ></div>
+          </div>
         </button>
       </div>
     </form>
@@ -218,6 +236,10 @@
           >
         </div>
       </div>
+      <p class="text-xs text-gray-500 mt-3">
+        <i class="fas fa-lightbulb mr-1"></i>
+        Your role will be automatically detected from your username
+      </p>
     </div>
 
     <!-- QR Access Info -->
@@ -236,121 +258,36 @@
   </div>
 </div>
 
+<!-- Load auth manager -->
+<script src="/static/js/auth-manager.js"></script>
+
 <script>
-  function getCookie(name) {
-    let cookieValue = null;
-    if (document.cookie && document.cookie !== "") {
-      const cookies = document.cookie.split(";");
-      for (let i = 0; i < cookies.length; i++) {
-        const cookie = cookies[i].trim();
-        // Does this cookie string begin with the name we want?
-        if (cookie.substring(0, name.length + 1) === name + "=") {
-          cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-          break;
-        }
-      }
-    }
-    return cookieValue;
-  }
+  // Auto-select interface based on username
+  let selectedInterface = "";
 
-  const csrftoken = getCookie("csrftoken");
-
-  // Form submission - FIXED VERSION
-  document
-    .getElementById("login-form")
-    .addEventListener("submit", async function (e) {
-      e.preventDefault();
-
-      const formData = {
-        username: document.getElementById("username").value,
-        password: document.getElementById("password").value,
-        role: document.getElementById("selected-role").value,
-      };
-
-      if (!formData.role) {
-        showError("Please select your role first");
-        return;
-      }
-
-      // Show loading
-      const submitBtn = document.getElementById("submit-btn");
-      const loadingSpinner = document.getElementById("loading-spinner");
-      submitBtn.disabled = true;
-      loadingSpinner.classList.remove("hidden");
-
-      try {
-        // FIXED: Use proper headers with CSRF token
-        const response = await fetch("/api/auth/login/", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            "X-CSRFToken": csrftoken, // Use the token we got from cookie
-          },
-          body: JSON.stringify(formData),
-        });
-
-        const data = await response.json();
-
-        if (response.ok) {
-          // Store token in localStorage for API calls
-          localStorage.setItem("access_token", data.token);
-          localStorage.setItem("user_role", data.user.role);
-          localStorage.setItem("username", data.user.username);
-
-          // Also store in sessionStorage for immediate use
-          sessionStorage.setItem("logged_in", "true");
-          sessionStorage.setItem("user_role", data.user.role);
-
-          // Redirect based on role
-          const redirectUrls = {
-            waiter: "/waiter/dashboard/",
-            chef: "/chef/dashboard/",
-            cashier: "/cashier/dashboard/",
-            manager: "/restaurant-admin/dashboard/",
-            admin: "/admin/",
-          };
-
-          window.location.href =
-            redirectUrls[data.user.role] || "/waiter/dashboard/";
-        } else {
-          showError(data.detail || data.message || "Invalid credentials");
-        }
-      } catch (error) {
-        console.error("Login error:", error);
-        showError("Network error. Please try again.");
-      } finally {
-        submitBtn.disabled = false;
-        loadingSpinner.classList.add("hidden");
-      }
-    });
-
-  let selectedRole = "";
-
-  // Role selection
-  function selectRole(role) {
-    selectedRole = role;
+  function selectInterface(interface) {
+    selectedInterface = interface;
 
     // Reset all buttons
-    document.querySelectorAll(".role-btn").forEach((btn) => {
+    document.querySelectorAll(".interface-btn").forEach((btn) => {
       btn.classList.remove(
-        "border-2",
-        "border-red-600",
-        "bg-red-50",
         "border-blue-600",
         "bg-blue-50",
         "border-green-600",
         "bg-green-50",
         "border-purple-600",
         "bg-purple-50",
+        "border-red-600",
+        "bg-red-50",
         "border-yellow-600",
         "bg-yellow-50"
       );
       btn.classList.add("border-gray-200");
     });
 
-    // Highlight selected role
-    const btn = document.getElementById(`role-${role}`);
-    const roleColors = {
+    // Highlight selected interface
+    const btn = document.getElementById(`interface-${interface}`);
+    const interfaceColors = {
       waiter: ["border-blue-600", "bg-blue-50"],
       chef: ["border-green-600", "bg-green-50"],
       cashier: ["border-purple-600", "bg-purple-50"],
@@ -359,21 +296,21 @@
     };
 
     btn.classList.remove("border-gray-200");
-    btn.classList.add(...roleColors[role]);
+    btn.classList.add(...interfaceColors[interface]);
 
-    // Update hidden input
-    document.getElementById("selected-role").value = role;
+    // Show hint
+    document.getElementById("interface-hint").classList.remove("hidden");
 
-    // Update username placeholder
+    // Update username placeholder hint
     const usernameInput = document.getElementById("username");
     const roleExamples = {
-      waiter: "waiter1, waiter2, ...",
-      chef: "chef1, chef2, ...",
-      cashier: "cashier1, cashier2, ...",
-      manager: "manager1, manager2, ...",
+      waiter: "waiter1",
+      chef: "chef1",
+      cashier: "cashier1",
+      manager: "manager1",
       admin: "admin",
     };
-    usernameInput.placeholder = `Enter your username (e.g., ${roleExamples[role]})`;
+    usernameInput.placeholder = `e.g., ${roleExamples[interface]}`;
   }
 
   // Toggle password visibility
@@ -392,77 +329,13 @@
     }
   }
 
-  // Form submission
-  document
-    .getElementById("login-form")
-    .addEventListener("submit", async function (e) {
-      e.preventDefault();
-
-      // Validate role selection
-      if (!selectedRole) {
-        showError("Please select your role first");
-        return;
-      }
-
-      const formData = {
-        username: document.getElementById("username").value,
-        password: document.getElementById("password").value,
-        role: selectedRole,
-      };
-
-      // Show loading
-      const submitBtn = document.getElementById("submit-btn");
-      const loadingSpinner = document.getElementById("loading-spinner");
-      submitBtn.disabled = true;
-      loadingSpinner.classList.remove("hidden");
-
-      try {
-        const response = await fetch("/api/auth/login/", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            "X-CSRFToken": document.querySelector("[name=csrfmiddlewaretoken]")
-              .value,
-          },
-          body: JSON.stringify(formData),
-        });
-
-        const data = await response.json();
-
-        if (response.ok) {
-          // Store token
-          localStorage.setItem("access_token", data.access);
-          localStorage.setItem("refresh_token", data.refresh);
-          localStorage.setItem("user_role", data.role);
-          localStorage.setItem("username", data.username);
-
-          // Redirect based on role
-          const redirectUrls = {
-            waiter: "/api/tables/waiter/dashboard/",
-            chef: "/api/tables/chef/dashboard/",
-            cashier: "/api/tables/cashier/dashboard/",
-            manager: "/restaurant-admin/dashboard/",
-            admin: "/admin/",
-          };
-
-          window.location.href =
-            redirectUrls[data.role] || "/api/tables/waiter/dashboard/";
-        } else {
-          showError(data.detail || "Invalid credentials");
-        }
-      } catch (error) {
-        showError("Network error. Please try again.");
-        console.error("Login error:", error);
-      } finally {
-        submitBtn.disabled = false;
-        loadingSpinner.classList.add("hidden");
-      }
-    });
-
+  // Show/hide messages
   function showError(message) {
     const errorDiv = document.getElementById("error-message");
     const errorText = document.getElementById("error-text");
+    const successDiv = document.getElementById("success-message");
 
+    successDiv.classList.add("hidden");
     errorText.textContent = message;
     errorDiv.classList.remove("hidden");
 
@@ -472,15 +345,119 @@
     }, 5000);
   }
 
-  // Auto-select role based on URL parameter
-  const urlParams = new URLSearchParams(window.location.search);
-  const roleParam = urlParams.get("role");
-  if (
-    roleParam &&
-    ["waiter", "chef", "cashier", "manager", "admin"].includes(roleParam)
-  ) {
-    selectRole(roleParam);
+  function showSuccess(message) {
+    const errorDiv = document.getElementById("error-message");
+    const successDiv = document.getElementById("success-message");
+    const successText = document.getElementById("success-text");
+
+    errorDiv.classList.add("hidden");
+    successText.textContent = message;
+    successDiv.classList.remove("hidden");
   }
+
+  // Update interface based on username input
+  document.getElementById("username").addEventListener("input", function (e) {
+    const username = e.target.value.toLowerCase();
+
+    // Auto-detect interface based on username
+    if (username.includes("waiter")) {
+      selectInterface("waiter");
+    } else if (username.includes("chef")) {
+      selectInterface("chef");
+    } else if (username.includes("cashier")) {
+      selectInterface("cashier");
+    } else if (username.includes("manager")) {
+      selectInterface("manager");
+    } else if (username.includes("admin")) {
+      selectInterface("admin");
+    }
+  });
+
+  // Handle form submission
+  document
+    .getElementById("login-form")
+    .addEventListener("submit", async function (e) {
+      e.preventDefault();
+
+      const username = document.getElementById("username").value.trim();
+      const password = document.getElementById("password").value;
+
+      if (!username || !password) {
+        showError("Please enter both username and password");
+        return;
+      }
+
+      // UI Loading state
+      const submitBtn = document.getElementById("submit-btn");
+      const submitText = document.getElementById("submit-text");
+      const loadingSpinner = document.getElementById("loading-spinner");
+
+      submitBtn.disabled = true;
+      submitText.textContent = "Signing in...";
+      loadingSpinner.classList.remove("hidden");
+
+      try {
+        const result = await window.authManager.login(username, password);
+
+        if (result.success) {
+          showSuccess("Login successful! Redirecting...");
+
+          // DEBUG: Check localStorage before redirect
+          console.log("Before redirect - checking localStorage:");
+          console.log(
+            "Token:",
+            localStorage.getItem("access_token") ? "Exists" : "Missing"
+          );
+          console.log("Role:", localStorage.getItem("user_role"));
+
+          // Wait a moment to ensure localStorage is updated
+          setTimeout(() => {
+            console.log("Redirecting now...");
+            window.authManager.redirectBasedOnRole();
+          }, 1000); // Give it 1 second
+        } else {
+          showError(
+            result.error || "Login failed. Please check your credentials."
+          );
+
+          // Reset UI
+          submitBtn.disabled = false;
+          submitText.textContent = "Sign in";
+          loadingSpinner.classList.add("hidden");
+        }
+      } catch (error) {
+        showError("An unexpected error occurred. Please try again.");
+        console.error("Login error:", error);
+
+        // Reset UI
+        submitBtn.disabled = false;
+        submitText.textContent = "Sign in";
+        loadingSpinner.classList.add("hidden");
+      }
+    });
+
+  // Auto-select based on URL parameter
+  const urlParams = new URLSearchParams(window.location.search);
+  const interfaceParam = urlParams.get("interface");
+  if (
+    interfaceParam &&
+    ["waiter", "chef", "cashier", "manager", "admin"].includes(interfaceParam)
+  ) {
+    selectInterface(interfaceParam);
+  }
+
+  // Check if user is already logged in
+  document.addEventListener("DOMContentLoaded", function () {
+    const token = localStorage.getItem("access_token");
+    if (token) {
+      // Try to verify token and redirect if valid
+      window.authManager.verifyToken().then((isValid) => {
+        if (isValid) {
+          window.authManager.redirectBasedOnRole();
+        }
+      });
+    }
+  });
 </script>
 
 <style>
@@ -488,8 +465,22 @@
     font-family: "Playfair Display", serif;
   }
 
-  .role-btn.selected {
-    transform: scale(0.98);
+  .interface-btn {
+    transition: all 0.3s ease;
+  }
+
+  .interface-btn:hover {
+    transform: translateY(-2px);
+  }
+
+  @media (max-width: 640px) {
+    .interface-btn {
+      padding: 12px;
+    }
+
+    .interface-btn i {
+      font-size: 1.5rem;
+    }
   }
 </style>
 {% endblock %}
