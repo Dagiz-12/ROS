@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>New Order - Waiter Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+    <script src="{% static 'js/auth-manager.js' %}"></script>
+    <script src="{% static 'js/waiter-new-order.js' %}"></script>
+    <style>
+      .menu-item {
+        transition: all 0.2s ease;
+      }
+      .menu-item:hover {
+        transform: translateY(-2px);
+      }
+      .category-tab.active {
+        background-color: #dc2626;
+        color: white;
+      }
+      .cart-item-added {
+        animation: slideIn 0.3s ease;
+      }
+      @keyframes slideIn {
+        from {
+          transform: translateX(100%);
+          opacity: 0;
+        }
+        to {
+          transform: translateX(0);
+          opacity: 1;
+        }
+      }
+      .quantity-btn {
+        transition: background-color 0.2s ease;
+      }
+      .quantity-btn:active {
+        transform: scale(0.95);
+      }
+    </style>
+  </head>
+  <body class="bg-gray-50">
+    <!-- Navigation -->
+    <nav class="bg-white shadow-lg">
+      <div class="container mx-auto px-4 py-3">
+        <div class="flex justify-between items-center">
+          <div class="flex items-center space-x-3">
+            <a
+              href="{% url 'waiter-dashboard' %}"
+              class="text-gray-600 hover:text-red-600"
+            >
+              <i class="fas fa-arrow-left"></i>
+            </a>
+            <i class="fas fa-plus-circle text-2xl text-red-600"></i>
+            <div>
+              <h1 class="text-xl font-bold">Create New Order</h1>
+              <p class="text-sm text-gray-600">
+                {{ user.get_full_name|default:user.username }}
+              </p>
+            </div>
+          </div>
+          <div class="flex items-center space-x-4">
+            <span class="bg-red-100 text-red-800 px-3 py-1 rounded-full"
+              >{{ user_role|title }}</span
+            >
+            <div class="relative">
+              <button
+                id="cart-preview"
+                class="bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700"
+              >
+                <i class="fas fa-shopping-cart mr-2"></i>
+                <span id="cart-count">0</span> items
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="container mx-auto px-4 py-6">
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <!-- Left Column: Table Selection & Menu -->
+        <div class="lg:col-span-2">
+          <!-- Table Selection -->
+          <div class="bg-white rounded-lg shadow p-4 mb-6">
+            <h2 class="text-lg font-bold mb-4">Select Table</h2>
+            <div class="flex flex-wrap gap-3" id="tables-container">
+              <!-- Tables will be loaded here -->
+              <div class="text-gray-500">Loading tables...</div>
+            </div>
+
+            <div class="mt-4">
+              <label class="block text-sm font-medium text-gray-700 mb-2"
+                >Customer Name (Optional)</label
+              >
+              <input
+                type="text"
+                id="customer-name"
+                class="w-full border rounded-lg px-4 py-2 focus:ring-2 focus:ring-red-500 focus:border-transparent"
+                placeholder="Enter customer name"
+              />
+            </div>
+          </div>
+
+          <!-- Menu Categories -->
+          <div class="bg-white rounded-lg shadow p-4 mb-6">
+            <h2 class="text-lg font-bold mb-4">Menu</h2>
+            <div
+              class="flex space-x-2 overflow-x-auto pb-2 mb-4"
+              id="categories-container"
+            >
+              <!-- Categories will be loaded here -->
+            </div>
+
+            <!-- Search -->
+            <div class="mb-4">
+              <div class="relative">
+                <input
+                  type="text"
+                  id="menu-search"
+                  class="w-full border rounded-lg px-4 py-2 pl-10 focus:ring-2 focus:ring-red-500 focus:border-transparent"
+                  placeholder="Search menu items..."
+                />
+                <i
+                  class="fas fa-search absolute left-3 top-3 text-gray-400"
+                ></i>
+              </div>
+            </div>
+
+            <!-- Menu Items -->
+            <div
+              id="menu-items-container"
+              class="grid grid-cols-1 md:grid-cols-2 gap-4"
+            >
+              <!-- Menu items will be loaded here -->
+              <div class="col-span-2 text-center py-12 text-gray-500">
+                <div
+                  class="spinner w-12 h-12 border-4 border-red-600 border-t-transparent rounded-full animate-spin mx-auto mb-4"
+                ></div>
+                <p>Loading menu...</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Right Column: Order Cart -->
+        <div class="lg:col-span-1">
+          <div class="bg-white rounded-lg shadow sticky top-4">
+            <div class="p-4 border-b">
+              <h2 class="text-xl font-bold">Order Summary</h2>
+              <div class="text-sm text-gray-600" id="table-selection">
+                No table selected
+              </div>
+            </div>
+
+            <!-- Cart Items -->
+            <div class="p-4 max-h-96 overflow-y-auto">
+              <div id="cart-items-container">
+                <div class="text-center py-8 text-gray-500">
+                  <i class="fas fa-shopping-cart text-3xl mb-3"></i>
+                  <p>Cart is empty</p>
+                  <p class="text-sm">Add items from the menu</p>
+                </div>
+              </div>
+            </div>
+
+            <!-- Order Summary -->
+            <div class="p-4 border-t bg-gray-50">
+              <div class="space-y-2 mb-4">
+                <div class="flex justify-between">
+                  <span>Subtotal</span>
+                  <span id="cart-subtotal">$0.00</span>
+                </div>
+                <div class="flex justify-between">
+                  <span>Tax (15%)</span>
+                  <span id="cart-tax">$0.00</span>
+                </div>
+                <div class="border-t pt-2 mt-2">
+                  <div class="flex justify-between font-bold text-lg">
+                    <span>Total</span>
+                    <span id="cart-total">$0.00</span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Special Instructions -->
+              <div class="mb-4">
+                <label class="block text-sm font-medium text-gray-700 mb-2">
+                  Special Instructions
+                </label>
+                <textarea
+                  id="special-instructions"
+                  class="w-full border rounded-lg px-3 py-2 focus:ring-2 focus:ring-red-500 focus:border-transparent"
+                  rows="2"
+                  placeholder="Any special requests?"
+                ></textarea>
+              </div>
+
+              <!-- Order Buttons -->
+              <div class="space-y-2">
+                <button
+                  id="submit-order-btn"
+                  class="w-full bg-red-600 text-white py-3 rounded-lg font-bold hover:bg-red-700 disabled:opacity-50 disabled:cursor-not-allowed"
+                  disabled
+                >
+                  <i class="fas fa-paper-plane mr-2"></i>Submit to Kitchen
+                </button>
+                <button
+                  onclick="waiterNewOrder.clearCart()"
+                  class="w-full border border-gray-300 text-gray-700 py-3 rounded-lg font-bold hover:bg-gray-50"
+                >
+                  <i class="fas fa-trash mr-2"></i>Clear Cart
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Item Modal for customization -->
+    <div
+      id="item-modal"
+      class="fixed inset-0 bg-black bg-opacity-50 z-50 hidden items-center justify-center p-4"
+    >
+      <div
+        class="bg-white rounded-lg max-w-md w-full max-h-[90vh] overflow-y-auto"
+      >
+        <div class="p-6">
+          <!-- Item customization will be loaded here -->
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

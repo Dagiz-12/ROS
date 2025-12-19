@@ -3,6 +3,7 @@ from .models import Table, Cart, CartItem, Order, OrderItem
 from menu.serializers import MenuItemSerializer
 from restaurants.serializers import BranchSerializer
 from accounts.serializers import UserSerializer
+from menu.models import MenuItem
 
 
 class TableSerializer(serializers.ModelSerializer):
@@ -181,3 +182,89 @@ class OrderStatusUpdateSerializer(serializers.Serializer):
     status = serializers.ChoiceField(
         choices=Order.STATUS_CHOICES, required=True)
     notes = serializers.CharField(required=False, allow_blank=True)
+
+
+# In tables/serializers.py
+
+class OrderWithItemsSerializer(serializers.Serializer):
+    """Professional serializer for creating orders with items"""
+    table = serializers.IntegerField(required=True)
+    order_type = serializers.ChoiceField(
+        choices=Order.ORDER_TYPE_CHOICES,
+        required=True,
+        error_messages={
+            'invalid_choice': f"Must be one of: {[c[0] for c in Order.ORDER_TYPE_CHOICES]}"
+        }
+    )
+    customer_name = serializers.CharField(
+        required=False,
+        default='Guest',
+        max_length=100,
+        trim_whitespace=True
+    )
+    notes = serializers.CharField(
+        required=False,
+        allow_blank=True,
+        default=''
+    )
+    is_priority = serializers.BooleanField(default=False)
+
+    items = serializers.ListField(
+        child=serializers.DictField(),
+        required=True,
+        min_length=1,
+        error_messages={
+            'min_length': 'At least one item is required'
+        }
+    )
+
+    def validate_table(self, value):
+        """Validate table exists and is active"""
+        try:
+            table = Table.objects.get(id=value, is_active=True)
+            return table.id
+        except Table.DoesNotExist:
+            raise serializers.ValidationError("Table not found or inactive")
+
+    def validate_items(self, value):
+        """Validate each item"""
+        validated_items = []
+
+        for idx, item in enumerate(value):
+            # Check required fields
+            if 'menu_item' not in item:
+                raise serializers.ValidationError(
+                    f"Item {idx}: 'menu_item' is required")
+            if 'quantity' not in item:
+                raise serializers.ValidationError(
+                    f"Item {idx}: 'quantity' is required")
+
+            # Validate types
+            try:
+                menu_item_id = int(item['menu_item'])
+                quantity = int(item['quantity'])
+
+                if quantity < 1:
+                    raise serializers.ValidationError(
+                        f"Item {idx}: Quantity must be positive")
+
+                # Check menu item exists and is available
+                menu_item = MenuItem.objects.get(id=menu_item_id)
+                if not menu_item.is_available:
+                    raise serializers.ValidationError(
+                        f"Item {idx}: Menu item is not available")
+
+                validated_items.append({
+                    'menu_item': menu_item_id,
+                    'quantity': quantity,
+                    'special_instructions': str(item.get('special_instructions', '')).strip()
+                })
+
+            except (ValueError, TypeError):
+                raise serializers.ValidationError(
+                    f"Item {idx}: Invalid data types")
+            except MenuItem.DoesNotExist:
+                raise serializers.ValidationError(
+                    f"Item {idx}: Menu item not found")
+
+        return validated_items

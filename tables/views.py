@@ -12,13 +12,14 @@ from django.db.models import Q
 from django_filters.rest_framework import DjangoFilterBackend
 import uuid
 from django.http import HttpResponseForbidden
+from django.conf import settings
 
 
 from .models import Table, Cart, CartItem, Order, OrderItem
 from .serializers import (
     TableSerializer, TableCreateSerializer, CartSerializer, CartItemSerializer,
     OrderSerializer, OrderCreateSerializer, QRValidationSerializer,
-    CartAddItemSerializer, CartUpdateItemSerializer, OrderStatusUpdateSerializer
+    CartAddItemSerializer, CartUpdateItemSerializer, OrderStatusUpdateSerializer, OrderWithItemsSerializer
 )
 from menu.models import MenuItem
 from accounts.permissions import IsAdminUser, IsManagerOrAdmin, IsWaiterOrHigher, IsCashierOrHigher
@@ -454,31 +455,30 @@ class OrderViewSet(viewsets.ModelViewSet):
         return Order.objects.none()
 
     def create(self, request, *args, **kwargs):
-        """Create a new order"""
-        serializer = self.get_serializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
+        """
+        Create order. Supports both cart-based and item-based creation.
 
-        # For QR orders, set requires_waiter_confirmation=True
-        if serializer.validated_data.get('order_type') == 'qr':
-            serializer.validated_data['requires_waiter_confirmation'] = True
+        For cart-based: Send {'cart_id': X, ...}
+        For item-based: Use /create-with-items/ endpoint
+        """
+        # If cart_id is provided, use existing logic
+        if 'cart_id' in request.data:
+            return super().create(request, *args, **kwargs)
 
-        order = serializer.save()
+        # Otherwise, redirect to create-with-items endpoint
+        # Or implement item-based creation here
+        return Response({
+            'error': 'For creating orders with items directly, use /create-with-items/ endpoint',
+            'endpoint': '/api/tables/orders/create-with-items/',
+            'required_fields': ['table', 'order_type', 'items']
+        }, status=400)
 
-        # Log the order creation
-        # audit_log.delay(
-        #     user_id=request.user.id if request.user.is_authenticated else None,
-        #     action='CREATE',
-        #     model_name='Order',
-        #     object_id=order.id,
-        #     details={'order_number': order.order_number}
-        # )
-
-        headers = self.get_success_headers(serializer.data)
-        return Response(
-            OrderSerializer(order).data,
-            status=status.HTTP_201_CREATED,
-            headers=headers
-        )
+    @action(detail=True, methods=['post'])
+    def calculate_totals(self, request, pk=None):
+        """Recalculate order totals"""
+        order = self.get_object()
+        order.calculate_totals()
+        return Response(OrderSerializer(order).data)
 
     @action(detail=True, methods=['post'])
     def update_status(self, request, pk=None):
@@ -696,41 +696,97 @@ def submit_qr_order(request):
     }, status=201)
 
 
-# debug views
+# views for order creation
 
-# Add to core/views.py or tables/views.py
-
-
-@login_required
-def debug_auth(request):
-    """Debug endpoint to check authentication status"""
-    return JsonResponse({
-        'authenticated': request.user.is_authenticated,
-        'username': request.user.username if request.user.is_authenticated else None,
-        'role': request.user.role if hasattr(request.user, 'role') else None,
-        'session_id': request.session.session_key,
-        'has_session': hasattr(request, 'session') and request.session.session_key is not None,
-        'cookies': dict(request.COOKIES),
-        'headers': dict(request.headers),
-    })
-
-
-# Add to accounts/views.py for debugging
-
+# Updated create_order_with_items view using serializer
+# In tables/views.py
 
 @api_view(['POST'])
-def debug_login(request):
-    """Debug login endpoint to see what's being returned"""
-    from rest_framework_simplejwt.views import TokenObtainPairView
-    from rest_framework.response import Response
+@permission_classes([IsAuthenticated])
+def create_order_with_items(request):
+    """
+    Professional endpoint for creating orders with items.
 
-    # Call the actual login view
-    token_view = TokenObtainPairView()
-    response = token_view.post(request)
+    Example POST:
+    {
+        "table": 1,
+        "order_type": "waiter",
+        "customer_name": "John Doe",
+        "notes": "Extra napkins",
+        "is_priority": false,
+        "items": [
+            {
+                "menu_item": 1,
+                "quantity": 2,
+                "special_instructions": "No onions"
+            }
+        ]
+    }
+    """
+    # Validate request data
+    serializer = OrderWithItemsSerializer(data=request.data)
 
-    print("=== DEBUG LOGIN RESPONSE ===")
-    print("Status:", response.status_code)
-    print("Data:", response.data)
-    print("Headers:", dict(response.headers))
+    if not serializer.is_valid():
+        return Response({
+            'success': False,
+            'errors': serializer.errors,
+            'message': 'Validation failed'
+        }, status=400)
 
-    return response
+    data = serializer.validated_data
+
+    try:
+        # Get table
+        table = Table.objects.get(id=data['table'])
+
+        # Prepare additional kwargs
+        order_kwargs = {
+            'customer_name': data['customer_name'],
+            'notes': data['notes'],
+            'is_priority': data['is_priority']
+        }
+
+        # Add waiter for waiter orders
+        if data['order_type'] == 'waiter':
+            order_kwargs['waiter'] = request.user
+
+        # Use OrderManager for consistency
+        from .utils import OrderManager  # Create utils.py if needed
+
+        order = OrderManager.create_order_with_items(
+            table=table,
+            order_type=data['order_type'],
+            items_data=data['items'],
+            **order_kwargs
+        )
+
+        # Return success response
+        return Response({
+            'success': True,
+            'order': OrderSerializer(order).data,
+            'message': f'Order #{order.order_number} created successfully'
+        }, status=201)
+
+    except Table.DoesNotExist:
+        return Response({
+            'success': False,
+            'error': 'Table not found'
+        }, status=404)
+
+    except ValueError as e:
+        return Response({
+            'success': False,
+            'error': str(e)
+        }, status=400)
+
+    except Exception as e:
+        # Log the error for debugging
+        import traceback
+        print(f"Error creating order: {e}")
+        print(traceback.format_exc())
+
+        return Response({
+            'success': False,
+            'error': 'Internal server error',
+            'debug': str(e) if settings.DEBUG else None
+        }, status=500)

@@ -15,6 +15,7 @@ from .serializers import (
 )
 from restaurants.models import Restaurant
 from accounts.permissions import IsAdminUser, IsManagerOrAdmin, IsChefOrHigher
+from django.db import models
 
 
 class CategoryViewSet(viewsets.ModelViewSet):
@@ -177,6 +178,8 @@ class MenuItemViewSet(viewsets.ModelViewSet):
         return Response(serializer.data)
 
 
+# In menu/views.py - Fix the PublicMenuView
+
 class PublicMenuView(APIView):
     """Public view for restaurant menu (no authentication required)"""
     permission_classes = []
@@ -191,13 +194,39 @@ class PublicMenuView(APIView):
             categories = Category.objects.filter(
                 restaurant=restaurant,
                 is_active=True
-            ).prefetch_related('items').order_by('order_index')
+            ).prefetch_related(
+                models.Prefetch(
+                    'items',
+                    queryset=MenuItem.objects.filter(is_available=True),
+                    to_attr='available_items'
+                )
+            ).order_by('order_index')
 
-            # Filter to only include available items
+            # Use a custom serializer or modify the data structure
+            data = []
             for category in categories:
-                category.items = category.items.filter(is_available=True)
+                category_data = {
+                    'id': category.id,
+                    'name': category.name,
+                    'description': category.description,
+                    'order_index': category.order_index,
+                    'items': []
+                }
 
-            serializer = CategoryWithItemsSerializer(categories, many=True)
+                # Get available items from the prefetched queryset
+                for item in category.available_items:
+                    category_data['items'].append({
+                        'id': item.id,
+                        'name': item.name,
+                        'description': item.description,
+                        'price': str(item.price),  # Convert Decimal to string
+                        'image': item.image.url if item.image else None,
+                        'preparation_time': item.preparation_time,
+                        'is_available': item.is_available,
+                        'category_id': category.id
+                    })
+
+                data.append(category_data)
 
             return Response({
                 'restaurant': {
@@ -205,7 +234,7 @@ class PublicMenuView(APIView):
                     'name': restaurant.name,
                     'description': restaurant.description
                 },
-                'categories': serializer.data
+                'categories': data
             })
 
         except Restaurant.DoesNotExist:
@@ -214,6 +243,8 @@ class PublicMenuView(APIView):
                 status=status.HTTP_404_NOT_FOUND
             )
 
+
+# In menu/views.py - Fix RestaurantMenuView
 
 class RestaurantMenuView(viewsets.GenericViewSet):
     """View for restaurant-specific menu operations"""
@@ -229,20 +260,46 @@ class RestaurantMenuView(viewsets.GenericViewSet):
                 status=status.HTTP_400_BAD_REQUEST
             )
 
-        # Get all active categories with items
+        # Filter based on user role
+        show_unavailable = user.role in ['admin', 'manager', 'chef']
+
+        # Get categories with filtered items
         categories = Category.objects.filter(
             restaurant=user.restaurant,
             is_active=True
-        ).prefetch_related('items').order_by('order_index')
+        ).prefetch_related(
+            models.Prefetch(
+                'items',
+                queryset=MenuItem.objects.filter(
+                    is_available=True) if not show_unavailable else MenuItem.objects.all(),
+                to_attr='filtered_items'
+            )
+        ).order_by('order_index')
 
-        # Filter items based on user role
-        show_unavailable = user.role in ['admin', 'manager', 'chef']
+        # Build response data
+        data = []
+        for category in categories:
+            category_data = {
+                'id': category.id,
+                'name': category.name,
+                'description': category.description,
+                'order_index': category.order_index,
+                'items': []
+            }
 
-        if not show_unavailable:
-            for category in categories:
-                category.items = category.items.filter(is_available=True)
+            for item in category.filtered_items:
+                category_data['items'].append({
+                    'id': item.id,
+                    'name': item.name,
+                    'description': item.description,
+                    'price': str(item.price),
+                    'image': item.image.url if item.image else None,
+                    'preparation_time': item.preparation_time,
+                    'is_available': item.is_available,
+                    'category_id': category.id
+                })
 
-        serializer = CategoryWithItemsSerializer(categories, many=True)
+            data.append(category_data)
 
         return Response({
             'restaurant': {
@@ -250,5 +307,5 @@ class RestaurantMenuView(viewsets.GenericViewSet):
                 'name': user.restaurant.name
             },
             'show_unavailable': show_unavailable,
-            'categories': serializer.data
+            'categories': data
         })

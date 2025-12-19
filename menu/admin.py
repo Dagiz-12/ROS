@@ -56,13 +56,17 @@ class CategoryAdmin(admin.ModelAdmin):
 
     # Custom actions
     def activate_categories(self, request, queryset):
+        """Activate selected categories"""
         updated = queryset.update(is_active=True)
         self.message_user(request, f"Activated {updated} categories.")
+    # FIX: Remove % formatting
     activate_categories.short_description = "Activate selected categories"
 
     def deactivate_categories(self, request, queryset):
+        """Deactivate selected categories"""
         updated = queryset.update(is_active=False)
         self.message_user(request, f"Deactivated {updated} categories.")
+    # FIX: Remove % formatting
     deactivate_categories.short_description = "Deactivate selected categories"
 
 
@@ -75,7 +79,7 @@ class MenuItemAdmin(admin.ModelAdmin):
         'price_display',
         'image_preview',
         'preparation_time',
-        'availability_status',
+        'is_available',
         'created_at'
     ]
 
@@ -153,31 +157,40 @@ class MenuItemAdmin(admin.ModelAdmin):
     availability_status.short_description = 'Status'
 
     # Custom actions
+
     def mark_as_available(self, request, queryset):
+        """Mark selected items as available"""
         updated = queryset.update(is_available=True)
         self.message_user(request, f"Marked {updated} items as available.")
-    mark_as_available.short_description = "Mark as available"
+    # FIX: Remove % formatting from short_description
+    mark_as_available.short_description = "Mark selected items as available"
 
     def mark_as_unavailable(self, request, queryset):
+        """Mark selected items as unavailable"""
         updated = queryset.update(is_available=False)
         self.message_user(request, f"Marked {updated} items as unavailable.")
-    mark_as_unavailable.short_description = "Mark as unavailable"
+    # FIX: Remove % formatting from short_description
+    mark_as_unavailable.short_description = "Mark selected items as unavailable"
 
     def increase_price_10(self, request, queryset):
+        """Increase price by 10% for selected items"""
         for item in queryset:
             item.price *= 1.10  # Increase by 10%
             item.save(update_fields=['price'])
         self.message_user(
             request, f"Increased price for {queryset.count()} items by 10%.")
-    increase_price_10.short_description = "Increase price by 10%"
+    # FIX: Remove % formatting from short_description
+    increase_price_10.short_description = "Increase price by 10 percent"
 
     def decrease_price_10(self, request, queryset):
+        """Decrease price by 10% for selected items"""
         for item in queryset:
             item.price *= 0.90  # Decrease by 10%
             item.save(update_fields=['price'])
         self.message_user(
             request, f"Decreased price for {queryset.count()} items by 10%.")
-    decrease_price_10.short_description = "Decrease price by 10%"
+    # FIX: Remove % formatting from short_description
+    decrease_price_10.short_description = "Decrease price by 10 percent"
 
     # Custom save method to handle image cleanup
     def save_model(self, request, obj, form, change):

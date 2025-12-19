@@ -1,3 +1,4 @@
+from decimal import Decimal
 from django.db import models
 from django.conf import settings
 from restaurants.models import Branch
@@ -6,6 +7,7 @@ import io
 from django.core.files.base import ContentFile
 import uuid
 from django.utils import timezone
+from menu.models import MenuItem
 
 
 class Table(models.Model):
@@ -58,7 +60,7 @@ class Table(models.Model):
     def generate_qr_code(self):
         """Generate QR code for the table"""
         # Create QR code data
-        qr_data = f"restaurant://table/{self.qr_token}"
+        qr_data = f"http://localhost:8000/qr-menu/{self.branch.restaurant.id}/{self.id}/"
 
         # Generate QR code
         qr = qrcode.QRCode(
@@ -76,6 +78,7 @@ class Table(models.Model):
         # Save to BytesIO
         buffer = io.BytesIO()
         img.save(buffer, format='PNG')
+        buffer.seek(0)
 
         # Save to ImageField
         filename = f"table_{self.table_number}_{self.branch.id}_qr.png"
@@ -262,23 +265,42 @@ class Order(models.Model):
 
         return f"{date_str}{new_num:04d}"
 
+    # In tables/models.py - Order model
+
     def calculate_totals(self):
         """Calculate order totals from items"""
+        from decimal import Decimal
+
         items = self.items.all()
-        self.subtotal = sum(item.total_price for item in items)
 
-        # Default tax: 15% (configurable per restaurant)
-        self.tax_amount = self.subtotal * 0.15
+        # Calculate subtotal
+        self.subtotal = Decimal('0.00')
+        for item in items:
+            self.subtotal += item.total_price
 
-        # Default service charge: 10% (configurable)
-        self.service_charge = self.subtotal * 0.10
+        # Use Decimal for tax and service calculations
+        tax_rate = Decimal('0.15')  # 15%
+        service_rate = Decimal('0.10')  # 10%
+
+        self.tax_amount = self.subtotal * tax_rate
+        self.service_charge = self.subtotal * service_rate
 
         # Calculate total
-        self.total_amount = self.subtotal + self.tax_amount + \
-            self.service_charge - self.discount_amount
+        self.total_amount = (self.subtotal +
+                             self.tax_amount +
+                             self.service_charge -
+                             self.discount_amount)
 
-        self.save(update_fields=['subtotal', 'tax_amount',
-                  'service_charge', 'total_amount'])
+        # Round to 2 decimal places
+        self.subtotal = self.subtotal.quantize(Decimal('0.01'))
+        self.tax_amount = self.tax_amount.quantize(Decimal('0.01'))
+        self.service_charge = self.service_charge.quantize(Decimal('0.01'))
+        self.total_amount = self.total_amount.quantize(Decimal('0.01'))
+
+        # Save only these fields
+        update_fields = ['subtotal', 'tax_amount',
+                         'service_charge', 'total_amount']
+        self.save(update_fields=update_fields)
 
     def get_preparation_time(self):
         """Estimate preparation time based on items"""
@@ -354,3 +376,6 @@ class OrderItem(models.Model):
         if not self.unit_price:
             self.unit_price = self.menu_item.price
         super().save(*args, **kwargs)
+
+
+#
