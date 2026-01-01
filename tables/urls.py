@@ -37,6 +37,10 @@ urlpatterns = [
     # QR validation
     path('validate-qr/', views.validate_qr_token, name='validate-qr'),
     path('submit-qr-order/', views.submit_qr_order, name='submit-qr-order'),
+
+    # orders print view
+
+    path('orders/<int:order_id>/print/', views.print_order, name='print-order'),
 ]
 
 # REMOVE ALL TEMPLATE VIEWS FROM THIS FILE!

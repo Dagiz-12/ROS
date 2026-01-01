@@ -53,6 +53,9 @@
     </style>
   </head>
   <body class="bg-gray-900 text-white">
+    <!-- CSRF Token for AJAX requests -->
+    {% csrf_token %}
+    
     <!-- Navigation -->
     <nav
       class="bg-gray-800 shadow-lg px-4 py-3 flex items-center justify-between"
@@ -158,7 +161,7 @@
 
     <audio id="order-ready-sound" preload="auto" crossorigin="anonymous">
       <source
-        src="/static/audio/mixkit-correct-answer-tone-2870.mp3"
+        src="/static/audio/restaurant-bell-101396.mp3"
         type="audio/mpeg"
       />
       <source

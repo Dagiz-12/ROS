@@ -212,6 +212,7 @@
 
     <script>
       const API_BASE = "/api/tables";
+      const USER_ROLE = "{{ user.role }}";
       let allTables = [];
 
       async function loadTables() {
@@ -337,11 +338,12 @@
                                 : ""
                             }
                             
-                            <button onclick="event.stopPropagation(); updateStatus(${
+                            <button onclick="event.stopPropagation(); updateTableStatus(${
                               table.id
                             })" 
                                     class="flex-1 border border-gray-300 py-2 rounded text-sm hover:bg-gray-50">
-                                <i class="fas fa-edit mr-1"></i>Status
+                                <i class="fas fa-edit mr-1"></i>
+                                ${table.status === 'cleaning' ? 'Mark Ready' : 'Change Status'}
                             </button>
                         </div>
                     </div>
@@ -463,7 +465,7 @@
                             
                             <button onclick="updateTableStatus(${table.id})" 
                                     class="border border-gray-300 py-2 rounded hover:bg-gray-50">
-                                Change Status
+                                ${table.status === 'cleaning' ? 'Mark as Ready' : 'Change Status'}
                             </button>
                         </div>
                     </div>
@@ -483,38 +485,116 @@
       }
 
       async function updateTableStatus(tableId) {
-        const newStatus = prompt(
-          "Enter new status (available, occupied, reserved, cleaning):"
-        );
-        if (
-          !newStatus ||
-          !["available", "occupied", "reserved", "cleaning"].includes(newStatus)
-        ) {
-          alert("Invalid status");
-          return;
+        const table = allTables.find((t) => t.id === tableId);
+        if (!table) return;
+
+        // Get available status transitions based on current status and user role
+        const availableStatuses = getAvailableStatuses(table.status);
+
+        if (availableStatuses.length === 0) {
+            alert("No status changes available for your role");
+            return;
         }
 
-        try {
-          const response = await fetch(
-            `${API_BASE}/tables/${tableId}/update_status/`,
-            {
-              method: "POST",
-              headers: {
-                "Content-Type": "application/json",
-                "X-CSRFToken": getCookie("csrftoken"),
-              },
-              body: JSON.stringify({ status: newStatus }),
-            }
-          );
+        // Create status selection modal
+        const modal = document.createElement("div");
+        modal.className = "fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4";
+        modal.innerHTML = `
+            <div class="bg-white rounded-lg max-w-sm w-full">
+                <div class="p-6">
+                    <div class="flex justify-between items-center mb-4">
+                        <h3 class="text-lg font-bold">Change Table Status</h3>
+                        <button onclick="this.closest('.fixed').remove()" class="text-gray-500 hover:text-gray-700">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </div>
+                    
+                    <div class="mb-4">
+                        <p class="text-sm text-gray-600">Table ${table.table_number}</p>
+                        <p class="text-sm text-gray-600">Current: <span class="capitalize font-medium">${table.status}</span></p>
+                    </div>
+                    
+                    <div class="space-y-2">
+                        ${availableStatuses.map(status => `
+                            <button onclick="selectTableStatus(${tableId}, '${status}')" 
+                                    class="w-full text-left px-4 py-3 border rounded-lg hover:bg-gray-50 transition capitalize">
+                                <div class="font-medium">${status}</div>
+                                <div class="text-sm text-gray-500">${getStatusDescription(status)}</div>
+                            </button>
+                        `).join('')}
+                    </div>
+                </div>
+            </div>
+        `;
+        
+        document.body.appendChild(modal);
+      }
 
-          if (response.ok) {
-            alert("Table status updated!");
-            loadTables();
-            closeModal();
-          }
+      function getAvailableStatuses(currentStatus) {
+        // Define available transitions based on user role
+        const transitions = {
+            'waiter': {
+                'cleaning': ['available'],
+                'available': ['reserved'],
+            },
+            'manager': {
+                'available': ['reserved', 'out_of_service'],
+                'occupied': ['cleaning'],
+                'reserved': ['available'],
+                'cleaning': ['available'],
+                'out_of_service': ['available'],
+            },
+            'admin': {
+                'available': ['reserved', 'out_of_service'],
+                'occupied': ['cleaning', 'available'],
+                'reserved': ['available'],
+                'cleaning': ['available'],
+                'out_of_service': ['available'],
+            }
+        };
+
+        const userTransitions = transitions[USER_ROLE] || transitions['waiter'];
+        return userTransitions[currentStatus] || [];
+      }
+
+      function getStatusDescription(status) {
+        const descriptions = {
+            'available': 'Ready for customers',
+            'occupied': 'Currently in use',
+            'reserved': 'Reserved for customer',
+            'cleaning': 'Being cleaned',
+            'out_of_service': 'Temporarily unavailable'
+        };
+        return descriptions[status] || '';
+      }
+
+      async function selectTableStatus(tableId, newStatus) {
+        try {
+            const response = await fetch(
+                `${API_BASE}/tables/${tableId}/update_status/`,
+                {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "X-CSRFToken": getCookie("csrftoken"),
+                    },
+                    body: JSON.stringify({ status: newStatus }),
+                }
+            );
+
+            if (response.ok) {
+                // Remove the modal
+                document.querySelector('.fixed.inset-0').remove();
+                alert("Table status updated!");
+                loadTables();
+                closeModal();
+            } else {
+                const error = await response.json();
+                alert(`Failed to update status: ${error.error || 'Unknown error'}`);
+            }
         } catch (error) {
-          console.error("Error updating status:", error);
-          alert("Failed to update status");
+            console.error("Error updating status:", error);
+            alert("Failed to update status");
         }
       }
 
@@ -595,6 +675,22 @@
 
       // Initial load
       document.addEventListener("DOMContentLoaded", loadTables);
+
+      // Helper function to get CSRF token
+      function getCookie(name) {
+        let cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+          const cookies = document.cookie.split(';');
+          for (let i = 0; i < cookies.length; i++) {
+            const cookie = cookies[i].trim();
+            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+              cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+              break;
+            }
+          }
+        }
+        return cookieValue;
+      }
     </script>
   </body>
 </html>

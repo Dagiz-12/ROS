@@ -8,11 +8,14 @@ from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.views import APIView
 from django.shortcuts import get_object_or_404
 from django.utils import timezone
+from django.utils.decorators import method_decorator
+from django.views.decorators.csrf import csrf_exempt
 from django.db.models import Q
 from django_filters.rest_framework import DjangoFilterBackend
 import uuid
 from django.http import HttpResponseForbidden
 from django.conf import settings
+from django.http import HttpResponse
 
 
 from .models import Table, Cart, CartItem, Order, OrderItem
@@ -22,7 +25,7 @@ from .serializers import (
     CartAddItemSerializer, CartUpdateItemSerializer, OrderStatusUpdateSerializer, OrderWithItemsSerializer
 )
 from menu.models import MenuItem
-from accounts.permissions import IsAdminUser, IsManagerOrAdmin, IsWaiterOrHigher, IsCashierOrHigher
+from accounts.permissions import IsAdminUser, IsManagerOrAdmin, IsWaiterOrHigher, IsCashierOrHigher, IsChefOrHigher
 
 
 # ==================== HTML TEMPLATE VIEWS ====================
@@ -142,8 +145,8 @@ def admin_dashboard(request):
 class TableViewSet(viewsets.ModelViewSet):
     """ViewSet for table management"""
     queryset = Table.objects.all()
-    # Allow cashier (and all roles above) to access orders endpoints as well
-    permission_classes = [IsAuthenticated, IsCashierOrHigher]
+    # Allow waiters and higher to manage tables
+    permission_classes = [IsWaiterOrHigher]
     # Remove DjangoFilterBackend due to compatibility issues with django-filter
     # and Django versions causing ChoiceField initialization errors.
     filter_backends = [
@@ -201,15 +204,50 @@ class TableViewSet(viewsets.ModelViewSet):
     def update_status(self, request, pk=None):
         """Update table status"""
         table = self.get_object()
+        user = request.user
         new_status = request.data.get('status')
 
-        if new_status in dict(Table.STATUS_CHOICES):
-            table.status = new_status
-            table.save()
-            serializer = self.get_serializer(table)
-            return Response(serializer.data)
+        if new_status not in dict(Table.STATUS_CHOICES):
+            return Response({'error': 'Invalid status'}, status=400)
 
-        return Response({'error': 'Invalid status'}, status=400)
+        # Validate status transition based on user role
+        if not self.validate_table_status_transition(table.status, new_status, user.role):
+            return Response({
+                'error': f'Cannot change status from {table.status} to {new_status}'
+            }, status=400)
+
+        table.status = new_status
+        table.save()
+        serializer = self.get_serializer(table)
+        return Response(serializer.data)
+
+    def validate_table_status_transition(self, current_status, new_status, user_role):
+        """Validate if table status transition is allowed for user role"""
+        valid_transitions = {
+            'waiter': {
+                'cleaning': ['available'],
+                'available': ['reserved'],  # Waiters can reserve tables
+            },
+            'manager': {
+                'available': ['reserved', 'out_of_service'],
+                'occupied': ['cleaning'],
+                'reserved': ['available'],
+                'cleaning': ['available'],
+                'out_of_service': ['available'],
+            },
+            'admin': {
+                'available': ['reserved', 'out_of_service'],
+                'occupied': ['cleaning', 'available'],
+                'reserved': ['available'],
+                'cleaning': ['available'],
+                'out_of_service': ['available'],
+            },
+        }
+
+        if user_role not in valid_transitions:
+            return False
+
+        return new_status in valid_transitions[user_role].get(current_status, [])
 
 # Public QR Endpoints (No authentication required for customers)
 
@@ -398,8 +436,8 @@ class OrderViewSet(viewsets.ModelViewSet):
     """ViewSet for order management"""
     queryset = Order.objects.all()
     serializer_class = OrderSerializer
-    # Default permission: allow cashier and higher so cashier UI can fetch orders
-    permission_classes = [IsAuthenticated, IsCashierOrHigher]
+    # Restrict to staff only
+    permission_classes = [IsWaiterOrHigher]
    # filter_backends = [DjangoFilterBackend,
     #                  filters.SearchFilter, filters.OrderingFilter]
     # filterset_fields = ['table', 'status',
@@ -480,7 +518,7 @@ class OrderViewSet(viewsets.ModelViewSet):
         order.calculate_totals()
         return Response(OrderSerializer(order).data)
 
-    @action(detail=True, methods=['post'])
+    @action(detail=True, methods=['post'], permission_classes=[IsWaiterOrHigher])
     def update_status(self, request, pk=None):
         """Update order status"""
         order = self.get_object()
@@ -516,6 +554,7 @@ class OrderViewSet(viewsets.ModelViewSet):
             order.served_at = now
         elif new_status == 'completed':
             order.completed_at = now
+            order.is_paid = True  # Auto-Mark as paid when completed
         elif new_status == 'cancelled':
             order.cancelled_at = now
 
@@ -523,6 +562,9 @@ class OrderViewSet(viewsets.ModelViewSet):
             order.notes += f"\n{now}: {notes}" if order.notes else f"{now}: {notes}"
 
         order.save()
+
+        from .utils import OrderManager
+        OrderManager.update_table_status(order, new_status)
 
         return Response(OrderSerializer(order).data)
 
@@ -587,7 +629,7 @@ class OrderViewSet(viewsets.ModelViewSet):
         serializer = self.get_serializer(queryset, many=True)
         return Response(serializer.data)
 
-    @action(detail=False, methods=['get'])
+    @action(detail=False, methods=['get'], permission_classes=[IsChefOrHigher])
     def kitchen_orders(self, request):
         """Get orders for kitchen display (confirmed & preparing)"""
         queryset = self.get_queryset().filter(
@@ -600,12 +642,13 @@ class OrderViewSet(viewsets.ModelViewSet):
             orders_data.append({
                 'id': order.id,
                 'order_number': order.order_number,
-                'table_number': order.table.table_number,
+                'table_number': order.table.table_number if order.table else 'N/A',
                 'items': [
                     {
-                        'name': item.menu_item.name,
+                        'name': item.menu_item.name if item.menu_item else 'Unknown Item',  # FIXED HERE
                         'quantity': item.quantity,
-                        'instructions': item.special_instructions
+                        'instructions': item.special_instructions,
+                        'preparation_time': item.menu_item.preparation_time if item.menu_item else 15
                     }
                     for item in order.items.all()
                 ],
@@ -790,3 +833,63 @@ def create_order_with_items(request):
             'error': 'Internal server error',
             'debug': str(e) if settings.DEBUG else None
         }, status=500)
+
+
+# print fuction for orders
+
+# Add to tables/views.py
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def print_order(request, order_id):
+    """Generate printable order receipt"""
+    try:
+        order = Order.objects.get(id=order_id)
+
+        # Create HTML for printing
+        html_content = f"""
+        <html>
+        <head>
+            <style>
+                body {{ font-family: Arial, sans-serif; margin: 20px; }}
+                .receipt {{ max-width: 400px; margin: 0 auto; }}
+                .header {{ text-align: center; border-bottom: 2px solid #000; padding-bottom: 10px; margin-bottom: 20px; }}
+                .items {{ margin: 20px 0; }}
+                .item {{ display: flex; justify-content: space-between; margin: 5px 0; }}
+                .total {{ border-top: 2px solid #000; padding-top: 10px; margin-top: 20px; font-weight: bold; }}
+                .footer {{ text-align: center; margin-top: 30px; font-size: 12px; color: #666; }}
+            </style>
+        </head>
+        <body>
+            <div class="receipt">
+                <div class="header">
+                    <h2>ORDER RECEIPT</h2>
+                    <p>Order #{order.order_number}</p>
+                    <p>Table: {order.table.table_number if order.table else 'N/A'}</p>
+                    <p>Date: {order.placed_at.strftime('%Y-%m-%d %H:%M')}</p>
+                </div>
+                
+                <div class="items">
+                    <h3>Items:</h3>
+                    {''.join([f'<div class="item"><span>{item.quantity}x {item.menu_item.name}</span><span>${item.total_price:.2f}</span></div>' for item in order.items.all()])}
+                </div>
+                
+                <div class="total">
+                    <div class="item"><span>Subtotal:</span><span>${order.subtotal}</span></div>
+                    <div class="item"><span>Tax:</span><span>${order.tax_amount}</span></div>
+                    <div class="item"><span>Service:</span><span>${order.service_charge}</span></div>
+                    <div class="item"><span>Total:</span><span>${order.total_amount}</span></div>
+                </div>
+                
+                <div class="footer">
+                    <p>Thank you for dining with us!</p>
+                </div>
+            </div>
+        </body>
+        </html>
+        """
+
+        return HttpResponse(html_content)
+
+    except Order.DoesNotExist:
+        return Response({'error': 'Order not found'}, status=404)

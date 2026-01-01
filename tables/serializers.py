@@ -87,10 +87,11 @@ class OrderItemSerializer(serializers.ModelSerializer):
     menu_item_details = MenuItemSerializer(source='menu_item', read_only=True)
     total_price = serializers.DecimalField(
         max_digits=10, decimal_places=2, read_only=True)
+    name = serializers.CharField(source='menu_item.name', read_only=True)
 
     class Meta:
         model = OrderItem
-        fields = ['id', 'order', 'menu_item', 'menu_item_details', 'quantity',
+        fields = ['id', 'order', 'menu_item', 'menu_item_details', 'name', 'quantity',
                   'unit_price', 'special_instructions', 'total_price']
         read_only_fields = ['id', 'order', 'unit_price']
 
@@ -105,10 +106,14 @@ class OrderSerializer(serializers.ModelSerializer):
         source='get_status_display', read_only=True)
     preparation_time = serializers.SerializerMethodField()
 
+    # Add this field to make it easier for JavaScript
+    table_number = serializers.SerializerMethodField()
+    table_name = serializers.SerializerMethodField()
+
     class Meta:
         model = Order
         fields = [
-            'id', 'order_number', 'table', 'table_details', 'waiter', 'waiter_details',
+            'id', 'order_number', 'table', 'table_details', 'table_number', 'table_name', 'waiter', 'waiter_details',
             'customer_name', 'order_type', 'order_type_display', 'status', 'status_display',
             'notes', 'subtotal', 'tax_amount', 'service_charge', 'discount_amount',
             'total_amount', 'placed_at', 'confirmed_at', 'preparation_started_at',
@@ -122,6 +127,16 @@ class OrderSerializer(serializers.ModelSerializer):
 
     def get_preparation_time(self, obj):
         return obj.get_preparation_time()
+
+    def get_table_number(self, obj):
+        if obj.table:
+            return obj.table.table_number
+        return None
+
+    def get_table_name(self, obj):
+        if obj.table:
+            return obj.table.table_name
+        return None
 
 
 class OrderCreateSerializer(serializers.ModelSerializer):

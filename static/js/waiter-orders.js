@@ -114,14 +114,14 @@ class WaiterOrders {
                     <div class="text-xs text-gray-500">${order.order_type || 'waiter'}</div>
                 </td>
                 <td class="px-4 py-3">
-                    <div class="font-medium">${order.table?.table_number || 'N/A'}</div>
+                    <div class="font-medium">${order.table_number || 'N/A'}</div>
                     <div class="text-xs text-gray-500">${order.customer_name || 'Guest'}</div>
                 </td>
                 <td class="px-4 py-3">
-                    <div class="text-sm">${order.items_count || 0} items</div>
+                    <div class="text-sm">${order.items?.length || 0} items</div>
                     <div class="text-xs text-gray-500 truncate max-w-xs">
-                        ${order.items?.slice(0, 2).map(item => `${item.quantity}x ${item.menu_item?.name}`).join(', ') || ''}
-                        ${order.items?.length > 2 ? '...' : ''}
+                        ${order.items?.slice(0, 2).map(item => `${item.quantity}x ${item.name || 'Item'}`).join(', ') || ''}
+                    ${order.items?.length > 2 ? '...' : ''}
                     </div>
                 </td>
                 <td class="px-4 py-3 font-bold">
@@ -215,7 +215,7 @@ class WaiterOrders {
                 <div class="flex justify-between items-start mb-6">
                     <div>
                         <h3 class="text-2xl font-bold">Order ${order.order_number}</h3>
-                        <p class="text-gray-600">Table ${order.table?.table_number} • ${order.customer_name || 'Guest'}</p>
+                        <p class="text-gray-600">Table ${order.table_number || 'N/A'} • ${order.customer_name || 'Guest'}</p>
                     </div>
                     <button onclick="waiterOrders.closeOrderModal()" class="text-gray-500 hover:text-gray-700">
                         <i class="fas fa-times text-2xl"></i>
@@ -230,12 +230,12 @@ class WaiterOrders {
                                 ${order.items?.map(item => `
                                 <div class="flex justify-between items-center p-2 bg-white rounded">
                                     <div>
-                                        <div class="font-medium">${item.quantity}x ${item.menu_item?.name}</div>
+                                        <div class="font-medium">${item.quantity}x ${item.name || 'Unknown Item'}</div>
                                         ${item.special_instructions ? `
                                         <div class="text-sm text-gray-600 italic">${item.special_instructions}</div>
                                         ` : ''}
                                     </div>
-                                    <div class="font-bold">$${(item.quantity * (item.unit_price || item.menu_item?.price || 0)).toFixed(2)}</div>
+                                    <div class="font-bold">$${(item.quantity * (item.unit_price || 0)).toFixed(2)}</div>
                                 </div>
                                 `).join('') || '<p class="text-gray-500">No items</p>'}
                             </div>
@@ -363,6 +363,7 @@ class WaiterOrders {
         }
     }
 
+    
     printOrder(orderId) {
         window.open(`${this.apiBase}/orders/${orderId}/print/`, '_blank');
     }
@@ -395,7 +396,7 @@ class WaiterOrders {
         const headers = ['Order #', 'Table', 'Customer', 'Items', 'Total', 'Status', 'Date'];
         const csvData = this.filteredOrders.map(order => [
             order.order_number || `#${order.id}`,
-            order.table?.table_number || 'N/A',
+            order.table_number || 'N/A',
             order.customer_name || 'Guest',
             order.items_count || 0,
             `$${order.total_amount || '0.00'}`,
@@ -426,38 +427,36 @@ class WaiterOrders {
     }
 
     filterOrders() {
-        const searchTerm = document.getElementById('search-orders')?.value.toLowerCase() || '';
+        const searchTerm = (document.getElementById('search-orders')?.value || '').toLowerCase().trim();
         const statusFilter = document.getElementById('status-filter')?.value || 'all';
         const timeFilter = document.getElementById('time-filter')?.value || 'today';
 
-        let filtered = this.allOrders;
+        let filtered = [...this.allOrders];
 
-        // Search filter
-        if (searchTerm) {
-            filtered = filtered.filter(order => 
-                (order.order_number && order.order_number.toLowerCase().includes(searchTerm)) ||
-                (order.customer_name && order.customer_name.toLowerCase().includes(searchTerm)) ||
-                (order.table?.table_number && order.table.table_number.toString().includes(searchTerm))
-            );
-        }
-
-        // Status filter
+        // Status filter (fastest, do first)
         if (statusFilter !== 'all') {
             filtered = filtered.filter(order => order.status === statusFilter);
         }
 
         // Time filter
         if (timeFilter !== 'all') {
-            const cutoffDate = new Date();
-            if (timeFilter === 'today') {
-                cutoffDate.setHours(0, 0, 0, 0);
-            } else if (timeFilter === 'yesterday') {
-                cutoffDate.setDate(cutoffDate.getDate() - 1);
-                cutoffDate.setHours(0, 0, 0, 0);
-            } else if (timeFilter === 'week') {
-                cutoffDate.setDate(cutoffDate.getDate() - 7);
-            } else if (timeFilter === 'month') {
-                cutoffDate.setMonth(cutoffDate.getMonth() - 1);
+            const now = new Date();
+            let cutoffDate = new Date();
+
+            switch (timeFilter) {
+                case 'today':
+                    cutoffDate.setHours(0, 0, 0, 0);
+                    break;
+                case 'yesterday':
+                    cutoffDate.setDate(now.getDate() - 1);
+                    cutoffDate.setHours(0, 0, 0, 0);
+                    break;
+                case 'week':
+                    cutoffDate.setDate(now.getDate() - 7);
+                    break;
+                case 'month':
+                    cutoffDate.setMonth(now.getMonth() - 1);
+                    break;
             }
 
             filtered = filtered.filter(order => {
@@ -467,9 +466,69 @@ class WaiterOrders {
             });
         }
 
+        // Search filter (most complex, do last)
+        if (searchTerm) {
+            filtered = filtered.filter(order => {
+                // Search in order number
+                if (order.order_number && order.order_number.toLowerCase().includes(searchTerm)) {
+                    return true;
+                }
+
+                // Search in customer name
+                if (order.customer_name && order.customer_name.toLowerCase().includes(searchTerm)) {
+                    return true;
+                }
+
+                // Search in table number
+                if (order.table_number && order.table_number.toString().includes(searchTerm)) {
+                    return true;
+                }
+
+                // Search in table name
+                if (order.table_name && order.table_name.toLowerCase().includes(searchTerm)) {
+                    return true;
+                }
+
+                // Search in item names
+                if (order.items && order.items.some(item => 
+                    item.name && item.name.toLowerCase().includes(searchTerm)
+                )) {
+                    return true;
+                }
+
+                // Search in special instructions
+                if (order.items && order.items.some(item => 
+                    item.special_instructions && item.special_instructions.toLowerCase().includes(searchTerm)
+                )) {
+                    return true;
+                }
+
+                return false;
+            });
+        }
+
         this.filteredOrders = filtered;
         this.currentPage = 1;
         this.renderOrdersTable();
+        
+        // Update search result count
+        let resultCountEl = document.getElementById('search-result-count');
+        if (!resultCountEl) {
+            resultCountEl = document.createElement('div');
+            resultCountEl.id = 'search-result-count';
+            resultCountEl.className = 'text-sm text-gray-600 mt-2';
+            const searchContainer = document.getElementById('search-orders')?.parentElement;
+            if (searchContainer) {
+                searchContainer.appendChild(resultCountEl);
+            }
+        }
+        
+        if (searchTerm) {
+            resultCountEl.textContent = `Found ${filtered.length} orders matching "${searchTerm}"`;
+            resultCountEl.classList.remove('hidden');
+        } else {
+            resultCountEl.classList.add('hidden');
+        }
     }
 
     showLoading() {

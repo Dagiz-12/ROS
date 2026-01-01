@@ -419,9 +419,7 @@
                   Operating Hours
                 </h3>
                 <div class="space-y-3">
-                  {% for day in
-                  'Monday,Tuesday,Wednesday,Thursday,Friday,Saturday,Sunday'|split:','
-                  %}
+                  {% for day in days_of_week %}
                   <div class="flex items-center justify-between">
                     <span class="text-sm">{{ day }}</span>
                     <div class="flex items-center space-x-2">

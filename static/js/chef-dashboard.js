@@ -386,7 +386,7 @@ async verifyToken() {
         switch(status) {
             case 'confirmed':
                 actionButton = `
-                    <button onclick="chefDashboard.startPreparing(${order.id})" 
+                    <button onclick="startPreparing(${order.id})" 
                             class="bg-yellow-500 hover:bg-yellow-600 text-white px-3 py-1 rounded text-sm transition">
                         <i class="fas fa-play mr-1"></i>Start
                     </button>
@@ -404,7 +404,7 @@ async verifyToken() {
                     </div>
                 `;
                 actionButton = `
-                    <button onclick="chefDashboard.markAsReady(${order.id})" 
+                    <button onclick="markAsReady(${order.id})" 
                             class="bg-green-500 hover:bg-green-600 text-white px-3 py-1 rounded text-sm transition">
                         <i class="fas fa-check mr-1"></i>Ready
                     </button>
@@ -414,7 +414,7 @@ async verifyToken() {
                 
             case 'ready':
                 actionButton = `
-                    <button onclick="chefDashboard.notifyWaiter(${order.id})" 
+                    <button onclick="notifyWaiter(${order.id})" 
                             class="w-full bg-blue-500 hover:bg-blue-600 text-white py-2 rounded text-sm transition">
                         <i class="fas fa-bell mr-2"></i>Notify Waiter
                     </button>
@@ -818,3 +818,9 @@ async verifyToken() {
 document.addEventListener('DOMContentLoaded', function() {
     window.chefDashboard = new ChefDashboard();
 });
+
+
+// Make functions globally accessible
+window.startPreparing = (orderId) => window.chefDashboard.startPreparing(orderId);
+window.markAsReady = (orderId) => window.chefDashboard.markAsReady(orderId);
+window.notifyWaiter = (orderId) => window.chefDashboard.notifyWaiter(orderId);

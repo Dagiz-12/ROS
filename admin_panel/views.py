@@ -125,6 +125,7 @@ def admin_restaurant_management(request):
         'restaurant': restaurant,
         'branches': branches,
         'user_role': user.role,
+        'days_of_week': ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'],
     }
 
     return render(request, 'admin_panel/restaurant_management.html', context)

@@ -176,23 +176,24 @@
             >
               <i class="fas fa-plus-circle mr-1"></i> New Order
             </a>
-            {% endif %} {% if user.role == 'chef' or user.role == 'manager' or
-            user.role == 'admin' %}
+            {% endif %} 
+            {% if user.role == 'chef' or user.role == 'manager' or user.role == 'admin' %}
             <a
               href="{% url 'chef-dashboard' %}"
               class="text-sm font-medium text-gray-700 hover:text-red-600 transition"
             >
               <i class="fas fa-utensils mr-1"></i> Kitchen
             </a>
-            {% endif %} {% if user.role == 'cashier' or user.role == 'manager'
-            or user.role == 'admin' %}
+            {% endif %} 
+            {% if user.role == 'cashier' or user.role == 'manager' or user.role == 'admin' %}
             <a
               href="{% url 'cashier-dashboard' %}"
               class="text-sm font-medium text-gray-700 hover:text-red-600 transition"
             >
               <i class="fas fa-cash-register mr-1"></i> Payments
             </a>
-            {% endif %} {% if user.role == 'manager' or user.role == 'admin' %}
+            {% endif %}
+            {% if user.role == 'manager' or user.role == 'admin' %}
             <a
               href="{% url 'admin-dashboard' %}"
               class="text-sm font-medium text-gray-700 hover:text-red-600 transition"
@@ -240,8 +241,7 @@
 
         <!-- Mobile Navigation Links -->
         <nav class="space-y-2">
-          {% if user.role == 'waiter' or user.role == 'manager' or user.role ==
-          'admin' %}
+          {% if user.role == 'waiter' or user.role == 'manager' or user.role == 'admin' %}
           <a
             href="{% url 'waiter-dashboard' %}"
             class="flex items-center space-x-3 p-3 text-gray-700 hover:bg-gray-100 rounded-lg transition"
@@ -270,8 +270,8 @@
             <i class="fas fa-plus-circle text-gray-400 w-6"></i>
             <span>New Order</span>
           </a>
-          {% endif %} {% if user.role == 'chef' or user.role == 'manager' or
-          user.role == 'admin' %}
+          {% endif %} 
+          {% if user.role == 'chef' or user.role == 'manager' or user.role == 'admin' %}
           <a
             href="{% url 'chef-dashboard' %}"
             class="flex items-center space-x-3 p-3 text-gray-700 hover:bg-gray-100 rounded-lg transition"
@@ -279,8 +279,8 @@
             <i class="fas fa-utensils text-gray-400 w-6"></i>
             <span>Kitchen</span>
           </a>
-          {% endif %} {% if user.role == 'cashier' or user.role == 'manager' or
-          user.role == 'admin' %}
+          {% endif %}
+          {% if user.role == 'cashier' or user.role == 'manager' or user.role == 'admin' %}
           <a
             href="{% url 'cashier-dashboard' %}"
             class="flex items-center space-x-3 p-3 text-gray-700 hover:bg-gray-100 rounded-lg transition"
@@ -288,7 +288,8 @@
             <i class="fas fa-cash-register text-gray-400 w-6"></i>
             <span>Payments</span>
           </a>
-          {% endif %} {% if user.role == 'manager' or user.role == 'admin' %}
+          {% endif %} 
+          {% if user.role == 'manager' or user.role == 'admin' %}
           <a
             href="{% url 'admin-dashboard' %}"
             class="flex items-center space-x-3 p-3 text-gray-700 hover:bg-gray-100 rounded-lg transition"
