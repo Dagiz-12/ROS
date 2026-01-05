@@ -344,10 +344,17 @@ class Order(models.Model):
         self.served_at = timezone.now()
         self.save()
 
-    def mark_completed(self):
-        """Mark order as completed"""
+    def mark_completed(self, update_sales=True):
+        """Mark order as completed and update sales statistics"""
         self.status = 'completed'
         self.completed_at = timezone.now()
+
+        if update_sales:
+            # Update menu item sales statistics
+            for order_item in self.items.all():
+                menu_item = order_item.menu_item
+                menu_item.update_sales(order_item.quantity)
+
         self.save()
 
 

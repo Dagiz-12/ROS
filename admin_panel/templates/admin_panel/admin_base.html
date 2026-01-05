@@ -1,0 +1,553 @@
+<!-- templates/admin_panel/admin_base.html -->
+{% load static %}
+<!DOCTYPE html>
+<html lang="en" class="h-full">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Restaurant Admin{% endblock %}</title>
+    
+    <!-- Core CSS/JS (Always Loaded) -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- SweetAlert2 for professional alerts -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    
+    <!-- Chart.js (only load on pages that need it) -->
+    {% block chart_js %}{% endblock %}
+    
+    <!-- Custom Admin Styles -->
+    <style>
+        /* SweetAlert2 Restaurant Theme */
+        .swal2-popup {
+            border-radius: 12px !important;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif !important;
+        }
+        .swal2-confirm {
+            background-color: #dc2626 !important;
+            border-color: #dc2626 !important;
+            transition: background-color 0.2s;
+        }
+        .swal2-confirm:hover {
+            background-color: #b91c1c !important;
+        }
+        
+        /* Restaurant Admin Theme Variables */
+        :root {
+            --primary-color: #dc2626;
+            --primary-light: #fef2f2;
+            --secondary-color: #3b82f6;
+            --success-color: #10b981;
+            --warning-color: #f59e0b;
+            --danger-color: #ef4444;
+        }
+        
+        /* Custom Utility Classes */
+        .admin-stat-card {
+            background: linear-gradient(135deg, #ffffff 0%, #f9fafb 100%);
+            transition: all 0.3s ease;
+            border: 1px solid #e5e7eb;
+            border-radius: 0.75rem;
+        }
+        
+        .admin-stat-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        }
+        
+        .sidebar-link {
+            transition: all 0.2s;
+            border-left: 4px solid transparent;
+            border-radius: 0.375rem;
+        }
+        
+        .sidebar-link:hover {
+            background-color: #f9fafb;
+        }
+        
+        .sidebar-link.active {
+            background-color: var(--primary-light);
+            color: var(--primary-color);
+            border-left-color: var(--primary-color);
+            font-weight: 600;
+        }
+        
+        .profit-badge {
+            display: inline-flex;
+            align-items: center;
+            padding: 0.25rem 0.625rem;
+            border-radius: 9999px;
+            font-size: 0.75rem;
+            font-weight: 500;
+        }
+        
+        .profit-high { background-color: #d1fae5; color: #065f46; }
+        .profit-medium { background-color: #fef3c7; color: #92400e; }
+        .profit-low { background-color: #fee2e2; color: #991b1b; }
+        
+        .btn-primary {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 0.5rem;
+            font-weight: 500;
+            transition: background-color 0.2s;
+        }
+        
+        .btn-primary:hover {
+            background-color: #b91c1c;
+        }
+        
+        .btn-secondary {
+            background-color: #f3f4f6;
+            color: #374151;
+            padding: 0.5rem 1rem;
+            border-radius: 0.5rem;
+            font-weight: 500;
+            transition: all 0.2s;
+            border: 1px solid #d1d5db;
+        }
+        
+        .btn-secondary:hover {
+            background-color: #e5e7eb;
+        }
+        
+        .loading-spinner {
+            animation: spin 1s linear infinite;
+            border: 3px solid #f3f4f6;
+            border-top-color: #dc2626;
+            border-radius: 50%;
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        
+        /* Mobile sidebar overlay */
+        .sidebar-overlay {
+            position: fixed;
+            inset: 0;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 40;
+        }
+        
+        /* Custom scrollbar */
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 6px;
+        }
+        
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 3px;
+        }
+        
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #c1c1c1;
+            border-radius: 3px;
+        }
+        
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+            background: #a1a1a1;
+        }
+    </style>
+    
+    <!-- Extra head content for child templates -->
+    {% block extra_head %}{% endblock %}
+</head>
+<body class="bg-gray-50 h-full">
+    <!-- Top Navigation Bar -->
+    <nav class="bg-white shadow-lg border-b border-gray-200 fixed top-0 left-0 right-0 z-30">
+        <div class="px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16">
+                <!-- Left: Logo & Menu Toggle -->
+                <div class="flex items-center">
+                    <!-- Mobile menu button -->
+                    <button id="sidebar-toggle-mobile" class="lg:hidden p-2 rounded-md text-gray-500 hover:text-gray-700 hover:bg-gray-100">
+                        <i class="fas fa-bars text-xl"></i>
+                    </button>
+                    
+                    <!-- Brand/Logo -->
+                    <div class="flex items-center ml-2 lg:ml-0">
+                        <div class="w-8 h-8 bg-red-100 rounded-lg flex items-center justify-center">
+                            <i class="fas fa-chart-line text-red-600"></i>
+                        </div>
+                        <div class="ml-3">
+                            <h1 class="text-lg font-bold text-gray-900">Restaurant Intelligence</h1>
+                            {% if restaurant %}
+                            <p class="text-xs text-gray-600">{{ restaurant.name }}</p>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Center: Quick Actions (hidden on mobile) -->
+                <div class="hidden lg:flex items-center space-x-4">
+                    <div class="flex items-center space-x-2">
+                        <button onclick="window.location.href='/restaurant-admin/dashboard/'" 
+                                class="px-3 py-1 text-sm font-medium rounded-lg hover:bg-gray-100 {% if request.path == '/restaurant-admin/dashboard/' %}bg-red-50 text-red-600{% endif %}">
+                            <i class="fas fa-tachometer-alt mr-2"></i>Dashboard
+                        </button>
+                        <button onclick="window.location.href='/restaurant-admin/analytics/'" 
+                                class="px-3 py-1 text-sm font-medium rounded-lg hover:bg-gray-100 {% if 'analytics' in request.path %}bg-red-50 text-red-600{% endif %}">
+                            <i class="fas fa-chart-bar mr-2"></i>Analytics
+                        </button>
+                        <button onclick="window.location.href='/restaurant-admin/reports/'" 
+                                class="px-3 py-1 text-sm font-medium rounded-lg hover:bg-gray-100 {% if 'reports' in request.path %}bg-red-50 text-red-600{% endif %}">
+                            <i class="fas fa-file-alt mr-2"></i>Reports
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Right: User Menu & Notifications -->
+                <div class="flex items-center space-x-4">
+                    <!-- Notifications -->
+                    <div class="relative">
+                        <button id="notifications-btn" class="p-2 text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded-full relative">
+                            <i class="fas fa-bell text-xl"></i>
+                            <span id="notification-count" class="absolute -top-1 -right-1 w-5 h-5 bg-red-500 text-white text-xs rounded-full flex items-center justify-center hidden">
+                                0
+                            </span>
+                        </button>
+                        <!-- Notifications dropdown would go here -->
+                    </div>
+                    
+                    <!-- User Menu -->
+                    <div class="relative" id="user-menu-container">
+                        <button id="user-menu-btn" class="flex items-center space-x-3 focus:outline-none">
+                            <div class="w-8 h-8 bg-red-100 rounded-full flex items-center justify-center">
+                                <i class="fas fa-user text-red-600"></i>
+                            </div>
+                            <div class="hidden lg:block text-left">
+                                <div class="text-sm font-medium text-gray-900">{{ user.get_full_name|default:user.username }}</div>
+                                <div class="text-xs text-gray-500">{{ user.get_role_display|default:user.role|title }}</div>
+                            </div>
+                            <i class="fas fa-chevron-down text-gray-400 text-sm"></i>
+                        </button>
+                        
+                        <!-- User Dropdown Menu -->
+                        <div id="user-dropdown" class="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg py-2 hidden z-50 border border-gray-200">
+                            <a href="#" class="block px-4 py-2 text-gray-700 hover:bg-gray-100">
+                                <i class="fas fa-user mr-2"></i>My Profile
+                            </a>
+                            <a href="#" class="block px-4 py-2 text-gray-700 hover:bg-gray-100">
+                                <i class="fas fa-cog mr-2"></i>Settings
+                            </a>
+                            <div class="border-t my-1"></div>
+                            <a href="#" onclick="logout()" class="block px-4 py-2 text-red-600 hover:bg-red-50">
+                                <i class="fas fa-sign-out-alt mr-2"></i>Logout
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Layout -->
+    <div class="pt-16 flex h-full">
+        <!-- Sidebar (Desktop) -->
+        <aside id="sidebar-desktop" class="hidden lg:block w-64 bg-white border-r border-gray-200 fixed left-0 top-16 bottom-0 overflow-y-auto custom-scrollbar z-20">
+            <div class="p-4">
+                <!-- Restaurant Info -->
+                {% if restaurant %}
+                <div class="mb-6 p-3 bg-gray-50 rounded-lg">
+                    <div class="flex items-center">
+                        {% if restaurant.logo %}
+                        <img src="{{ restaurant.logo.url }}" alt="{{ restaurant.name }}" class="w-10 h-10 rounded mr-3">
+                        {% else %}
+                        <div class="w-10 h-10 bg-red-100 rounded mr-3 flex items-center justify-center">
+                            <i class="fas fa-store text-red-600"></i>
+                        </div>
+                        {% endif %}
+                        <div>
+                            <h3 class="font-medium text-gray-900">{{ restaurant.name|truncatechars:20 }}</h3>
+                            <p class="text-xs text-gray-500">{{ restaurant.branch_set.count }} branch{{ restaurant.branch_set.count|pluralize:"es" }}</p>
+                        </div>
+                    </div>
+                </div>
+                {% endif %}
+
+                <!-- Navigation Links -->
+                <nav class="space-y-1">
+                    <a href="{% url 'admin-dashboard' %}" 
+                       class="sidebar-link flex items-center space-x-3 p-3 {% if request.path == '/restaurant-admin/dashboard/' %}active{% endif %}">
+                        <i class="fas fa-tachometer-alt text-gray-500 w-6"></i>
+                        <span>Dashboard</span>
+                    </a>
+                    
+                    <a href="{% url 'admin-restaurant' %}" 
+                       class="sidebar-link flex items-center space-x-3 p-3 {% if 'restaurant' in request.path %}active{% endif %}">
+                        <i class="fas fa-store text-gray-500 w-6"></i>
+                        <span>Restaurant</span>
+                    </a>
+                    
+                    <a href="{% url 'admin-menu' %}" 
+                       class="sidebar-link flex items-center space-x-3 p-3 {% if 'menu' in request.path %}active{% endif %}">
+                        <i class="fas fa-utensils text-gray-500 w-6"></i>
+                        <span>Menu</span>
+                    </a>
+                    
+                    <a href="{% url 'admin-staff' %}" 
+                       class="sidebar-link flex items-center space-x-3 p-3 {% if 'staff' in request.path %}active{% endif %}">
+                        <i class="fas fa-users text-gray-500 w-6"></i>
+                        <span>Staff</span>
+                    </a>
+                    
+                    <a href="{% url 'admin-tables' %}" 
+                       class="sidebar-link flex items-center space-x-3 p-3 {% if 'tables' in request.path %}active{% endif %}">
+                        <i class="fas fa-table text-gray-500 w-6"></i>
+                        <span>Tables</span>
+                    </a>
+                    
+                    <a href="{% url 'admin-analytics' %}" 
+                       class="sidebar-link flex items-center space-x-3 p-3 {% if 'analytics' in request.path %}active{% endif %}">
+                        <i class="fas fa-chart-line text-gray-500 w-6"></i>
+                        <span>Analytics</span>
+                    </a>
+                    
+                    <a href="{% url 'admin-reports' %}" 
+                       class="sidebar-link flex items-center space-x-3 p-3 {% if 'reports' in request.path %}active{% endif %}">
+                        <i class="fas fa-file-alt text-gray-500 w-6"></i>
+                        <span>Reports</span>
+                    </a>
+                    
+                    <!-- System Admin Link -->
+                    <div class="pt-4 mt-4 border-t border-gray-200">
+                        <a href="/admin/" target="_blank" 
+                           class="sidebar-link flex items-center space-x-3 p-3 text-sm text-gray-500 hover:text-gray-700">
+                            <i class="fas fa-tools"></i>
+                            <span>System Admin</span>
+                            <i class="fas fa-external-link-alt text-xs ml-auto"></i>
+                        </a>
+                    </div>
+                </nav>
+            </div>
+        </aside>
+
+        <!-- Mobile Sidebar Overlay (hidden by default) -->
+        <div id="sidebar-overlay" class="sidebar-overlay hidden lg:hidden"></div>
+
+        <!-- Mobile Sidebar (hidden by default) -->
+        <aside id="sidebar-mobile" class="fixed left-0 top-0 bottom-0 w-64 bg-white shadow-xl transform -translate-x-full transition-transform duration-300 ease-in-out z-50 lg:hidden">
+            <div class="p-4 h-full overflow-y-auto custom-scrollbar">
+                <!-- Close button -->
+                <div class="flex justify-end mb-4">
+                    <button id="sidebar-close-mobile" class="p-2 text-gray-500 hover:text-gray-700">
+                        <i class="fas fa-times text-xl"></i>
+                    </button>
+                </div>
+                
+                <!-- Same navigation as desktop -->
+                {% include "admin_panel/components/sidebar_nav.html" %}
+            </div>
+        </aside>
+
+        <!-- Main Content Area -->
+        <main class="flex-1 lg:ml-64">
+            <!-- Page Header (optional, can be overridden) -->
+            {% block page_header %}
+            <div class="px-4 sm:px-6 lg:px-8 py-4 border-b border-gray-200 bg-white">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <h2 class="text-xl font-bold text-gray-900">{% block page_title %}Dashboard{% endblock %}</h2>
+                        <p class="text-sm text-gray-600">{% block page_subtitle %}Restaurant management and analytics{% endblock %}</p>
+                    </div>
+                    <div class="flex items-center space-x-2">
+                        {% block page_actions %}{% endblock %}
+                    </div>
+                </div>
+            </div>
+            {% endblock %}
+
+            <!-- Main Content -->
+            <div class="px-4 sm:px-6 lg:px-8 py-6">
+                {% block content %}{% endblock %}
+            </div>
+            
+            <!-- Footer (optional) -->
+            {% block footer %}
+            <div class="px-4 sm:px-6 lg:px-8 py-4 border-t border-gray-200 bg-gray-50">
+                <div class="text-center text-sm text-gray-500">
+                    <p>Restaurant Ordering System v2.0 • {% now "Y" %}</p>
+                </div>
+            </div>
+            {% endblock %}
+        </main>
+    </div>
+
+    <!-- Core JavaScript -->
+    <script src="{% static 'js/auth-manager.js' %}"></script>
+    
+    <!-- SweetAlert2 Helper Functions -->
+    <script>
+        // Restaurant-themed alert functions
+        function showSuccess(message, title = 'Success!') {
+            Swal.fire({
+                icon: 'success',
+                title: title,
+                text: message,
+                confirmButtonColor: '#10b981',
+                timer: 3000
+            });
+        }
+        
+        function showError(message, title = 'Error!') {
+            Swal.fire({
+                icon: 'error',
+                title: title,
+                text: message,
+                confirmButtonColor: '#ef4444'
+            });
+        }
+        
+        function showWarning(message, title = 'Warning!') {
+            Swal.fire({
+                icon: 'warning',
+                title: title,
+                text: message,
+                confirmButtonColor: '#f59e0b'
+            });
+        }
+        
+        function showConfirm(message, callback, title = 'Are you sure?') {
+            Swal.fire({
+                title: title,
+                text: message,
+                icon: 'question',
+                showCancelButton: true,
+                confirmButtonColor: '#dc2626',
+                cancelButtonColor: '#6b7280',
+                confirmButtonText: 'Yes, proceed',
+                cancelButtonText: 'Cancel'
+            }).then((result) => {
+                if (result.isConfirmed && callback) {
+                    callback();
+                }
+            });
+        }
+        
+        // Loading toast
+        function showLoading(message = 'Processing...') {
+            const swal = Swal.fire({
+                title: message,
+                allowOutsideClick: false,
+                allowEscapeKey: false,
+                didOpen: () => {
+                    Swal.showLoading();
+                }
+            });
+            return swal;
+        }
+        
+        // Hide loading
+        function hideLoading() {
+            Swal.close();
+        }
+        
+        // Toast notification
+        function showToast(message, type = 'success') {
+            const Toast = Swal.mixin({
+                toast: true,
+                position: 'top-end',
+                showConfirmButton: false,
+                timer: 3000,
+                timerProgressBar: true,
+                didOpen: (toast) => {
+                    toast.addEventListener('mouseenter', Swal.stopTimer)
+                    toast.addEventListener('mouseleave', Swal.resumeTimer)
+                }
+            });
+            
+            Toast.fire({
+                icon: type,
+                title: message
+            });
+        }
+        
+        // Logout function
+        function logout() {
+            showConfirm('Are you sure you want to logout?', () => {
+                if (typeof authManager !== 'undefined') {
+                    authManager.logout();
+                } else {
+                    window.location.href = '/logout/';
+                }
+            });
+        }
+    </script>
+    
+    <!-- Admin Base JavaScript -->
+    <script>
+        // Sidebar toggle for mobile
+        document.addEventListener('DOMContentLoaded', function() {
+            const sidebarToggle = document.getElementById('sidebar-toggle-mobile');
+            const sidebarClose = document.getElementById('sidebar-close-mobile');
+            const sidebarMobile = document.getElementById('sidebar-mobile');
+            const sidebarOverlay = document.getElementById('sidebar-overlay');
+            
+            // Open mobile sidebar
+            if (sidebarToggle) {
+                sidebarToggle.addEventListener('click', function() {
+                    sidebarMobile.classList.remove('-translate-x-full');
+                    sidebarOverlay.classList.remove('hidden');
+                });
+            }
+            
+            // Close mobile sidebar
+            function closeMobileSidebar() {
+                sidebarMobile.classList.add('-translate-x-full');
+                sidebarOverlay.classList.add('hidden');
+            }
+            
+            if (sidebarClose) {
+                sidebarClose.addEventListener('click', closeMobileSidebar);
+            }
+            
+            if (sidebarOverlay) {
+                sidebarOverlay.addEventListener('click', closeMobileSidebar);
+            }
+            
+            // User menu dropdown
+            const userMenuBtn = document.getElementById('user-menu-btn');
+            const userDropdown = document.getElementById('user-dropdown');
+            
+            if (userMenuBtn && userDropdown) {
+                userMenuBtn.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    userDropdown.classList.toggle('hidden');
+                });
+                
+                // Close dropdown when clicking outside
+                document.addEventListener('click', function(e) {
+                    if (!document.getElementById('user-menu-container').contains(e.target)) {
+                        userDropdown.classList.add('hidden');
+                    }
+                });
+            }
+            
+            // Notifications dropdown
+            const notificationsBtn = document.getElementById('notifications-btn');
+            // Add notifications dropdown functionality here
+            
+            // Check for unread notifications
+            function checkNotifications() {
+                // This would make an API call in real implementation
+                // const count = 3; // Example count
+                // const badge = document.getElementById('notification-count');
+                // if (count > 0) {
+                //     badge.textContent = count;
+                //     badge.classList.remove('hidden');
+                // }
+            }
+            
+            checkNotifications();
+            // Check every 60 seconds
+            setInterval(checkNotifications, 60000);
+        });
+    </script>
+    
+    <!-- Child template scripts -->
+    {% block extra_scripts %}{% endblock %}
+</body>
+</html>

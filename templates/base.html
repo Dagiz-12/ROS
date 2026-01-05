@@ -33,6 +33,27 @@
     <!-- Custom CSS -->
     <link href="/static/css/styles.css" rel="stylesheet" />
 
+
+    <!-- Add to base template -->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<style>
+/* Custom SweetAlert2 theme for restaurant */
+.swal2-popup {
+    border-radius: 12px !important;
+    font-family: -apple-system, BlinkMacSystemFont, sans-serif !important;
+}
+
+.swal2-confirm {
+    background-color: #dc2626 !important;
+    border-color: #dc2626 !important;
+}
+</style>
+
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+
     {% block extra_css %}{% endblock %}
   </head>
   <body class="bg-gray-50 text-gray-800 min-h-screen">
