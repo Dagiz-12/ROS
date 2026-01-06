@@ -3978,3 +3978,160 @@ Not Found: /favicon.ico
 Method Not Allowed: /restaurant-admin/api/menu/categories/
 Not Found: /favicon.ico
 Method Not Allowed: /restaurant-admin/api/menu/categories/
+Watching for file changes with StatReloader
+Not Found: /favicon.ico
+Method Not Allowed: /restaurant-admin/api/menu/categories/
+Method Not Allowed: /restaurant-admin/api/menu/categories/
+C:\Users\USER\DAGIIIz\eco\res\res3\ROS\admin_panel\views.py changed, reloading.
+Watching for file changes with StatReloader
+C:\Users\USER\DAGIIIz\eco\res\res3\ROS\admin_panel\views.py changed, reloading.
+Watching for file changes with StatReloader
+C:\Users\USER\DAGIIIz\eco\res\res3\ROS\admin_panel\views.py changed, reloading.
+Watching for file changes with StatReloader
+Bad Request: /restaurant-admin/api/menu/items/13/
+Bad Request: /restaurant-admin/api/menu/items/13/
+Bad Request: /restaurant-admin/api/menu/items/13/
+C:\Users\USER\DAGIIIz\eco\res\res3\ROS\admin_panel\views.py changed, reloading.
+Watching for file changes with StatReloader
+C:\Users\USER\DAGIIIz\eco\res\res3\ROS\admin_panel\views.py changed, reloading.
+Watching for file changes with StatReloader
+C:\Users\USER\DAGIIIz\eco\res\res3\ROS\admin_panel\views.py changed, reloading.
+Watching for file changes with StatReloader
+C:\Users\USER\DAGIIIz\eco\res\res3\ROS\admin_panel\views.py changed, reloading.
+Watching for file changes with StatReloader
+C:\Users\USER\DAGIIIz\eco\res\res3\ROS\admin_panel\views.py changed, reloading.
+Watching for file changes with StatReloader
+C:\Users\USER\DAGIIIz\eco\res\res3\ROS\admin_panel\views.py changed, reloading.
+Watching for file changes with StatReloader
+C:\Users\USER\DAGIIIz\eco\res\res3\ROS\admin_panel\views.py changed, reloading.
+Watching for file changes with StatReloader
+Not Found: /favicon.ico
+Not Found: /favicon.ico
+Watching for file changes with StatReloader
+Not Found: /favicon.ico
+Not Found: /favicon.ico
+Internal Server Error: /restaurant-admin/menu/
+Traceback (most recent call last):
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django\urls\base.py", line 81, in reverse
+    extra, resolver = resolver.namespace_dict[ns]
+KeyError: 'inventory'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django\contrib\auth\decorators.py", line 59, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+  File "C:\Users\USER\DAGIIIz\eco\res\res3\ROS\admin_panel\views.py", line 172, in admin_menu_management
+    return render(request, 'admin_panel/menu_management.html', context)
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django\shortcuts.py", line 25, in render
+    content = loader.render_to_string(template_name, context, request, using=using)
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django\template\loader.py", line 62, in render_to_string
+    return template.render(context, request)
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django\template\backends\django.py", line 107, in render
+    return self.template.render(context)
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django\template\base.py", line 171, in render
+    return self._render(context)
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django\template\base.py", line 163, in _render
+    return self.nodelist.render(context)
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django\template\base.py", line 1016, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django\template\base.py", line 1016, in <listcomp>
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django\template\base.py", line 977, in render_annotated
+    return self.render(context)
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django\template\loader_tags.py", line 159, in render
+    return compiled_parent._render(context)
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django\template\base.py", line 163, in _render
+    return self.nodelist.render(context)
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django\template\base.py", line 1016, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django\template\base.py", line 1016, in <listcomp>
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django\template\base.py", line 977, in render_annotated
+    return self.render(context)
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django\template\loader_tags.py", line 210, in render
+    return template.render(context)
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django\template\base.py", line 173, in render
+    return self._render(context)
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django\template\base.py", line 163, in _render
+    return self.nodelist.render(context)
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django\template\base.py", line 1016, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django\template\base.py", line 1016, in <listcomp>
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django\template\base.py", line 977, in render_annotated
+    return self.render(context)
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django\template\defaulttags.py", line 480, in render
+    url = reverse(view_name, args=args, kwargs=kwargs, current_app=current_app)
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django\urls\base.py", line 92, in reverse
+    raise NoReverseMatch("%s is not a registered namespace" % key)
+django.urls.exceptions.NoReverseMatch: 'inventory' is not a registered namespace
+Internal Server Error: /restaurant-admin/menu/
+Traceback (most recent call last):
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django\urls\base.py", line 81, in reverse
+    extra, resolver = resolver.namespace_dict[ns]
+KeyError: 'inventory'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django\contrib\auth\decorators.py", line 59, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+  File "C:\Users\USER\DAGIIIz\eco\res\res3\ROS\admin_panel\views.py", line 172, in admin_menu_management
+    return render(request, 'admin_panel/menu_management.html', context)
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django\shortcuts.py", line 25, in render
+    content = loader.render_to_string(template_name, context, request, using=using)
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django\template\loader.py", line 62, in render_to_string
+    return template.render(context, request)
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django\template\backends\django.py", line 107, in render
+    return self.template.render(context)
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django\template\base.py", line 171, in render
+    return self._render(context)
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django\template\base.py", line 163, in _render
+    return self.nodelist.render(context)
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django\template\base.py", line 1016, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django\template\base.py", line 1016, in <listcomp>
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django\template\base.py", line 977, in render_annotated
+    return self.render(context)
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django\template\loader_tags.py", line 159, in render
+    return compiled_parent._render(context)
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django\template\base.py", line 163, in _render
+    return self.nodelist.render(context)
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django\template\base.py", line 1016, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django\template\base.py", line 1016, in <listcomp>
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django\template\base.py", line 977, in render_annotated
+    return self.render(context)
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django\template\loader_tags.py", line 210, in render
+    return template.render(context)
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django\template\base.py", line 173, in render
+    return self._render(context)
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django\template\base.py", line 163, in _render
+    return self.nodelist.render(context)
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django\template\base.py", line 1016, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django\template\base.py", line 1016, in <listcomp>
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django\template\base.py", line 977, in render_annotated
+    return self.render(context)
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django\template\defaulttags.py", line 480, in render
+    url = reverse(view_name, args=args, kwargs=kwargs, current_app=current_app)
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django\urls\base.py", line 92, in reverse
+    raise NoReverseMatch("%s is not a registered namespace" % key)
+django.urls.exceptions.NoReverseMatch: 'inventory' is not a registered namespace
+C:\Users\USER\DAGIIIz\eco\res\res3\ROS\inventory\urls.py changed, reloading.
+Watching for file changes with StatReloader
+C:\Users\USER\DAGIIIz\eco\res\res3\ROS\inventory\urls.py changed, reloading.
+Watching for file changes with StatReloader
+Watching for file changes with StatReloader

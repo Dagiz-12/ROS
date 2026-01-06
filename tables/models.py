@@ -224,6 +224,10 @@ class Order(models.Model):
     is_priority = models.BooleanField(default=False)  # Rush order flag
     requires_waiter_confirmation = models.BooleanField(
         default=True)  # For QR orders
+    inventory_deducted = models.BooleanField(
+        default=False,
+        help_text="Whether inventory has been automatically deducted for this order"
+    )    # for inventory management
 
     class Meta:
         ordering = ['-placed_at']

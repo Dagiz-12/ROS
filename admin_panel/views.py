@@ -653,18 +653,18 @@ def api_profit_table(request):
 
 # Menu Management API Endpoints
 
-@api_view(['GET'])
+@api_view(['GET', 'POST'])
 @permission_classes([IsAuthenticated, IsManagerOrAdmin])
 def api_menu_categories(request):
     """API endpoint for menu categories CRUD"""
     user = request.user
 
     if user.role not in ['admin', 'manager']:
-        return JsonResponse({'error': 'Permission denied'}, status=403)
+        return Response({'error': 'Permission denied'}, status=403)
 
     restaurant = user.restaurant
     if not restaurant:
-        return JsonResponse({'error': 'No restaurant found'}, status=404)
+        return Response({'error': 'No restaurant found'}, status=404)
 
     if request.method == 'GET':
         categories = Category.objects.filter(
@@ -677,19 +677,18 @@ def api_menu_categories(request):
             'is_active': cat.is_active,
             'items_count': cat.items.count()
         } for cat in categories]
-        return JsonResponse({'success': True, 'categories': data})
+        return Response({'success': True, 'categories': data})
 
     elif request.method == 'POST':
         try:
-            data = json.loads(request.body)
             category = Category.objects.create(
                 restaurant=restaurant,
-                name=data['name'],
-                description=data.get('description', ''),
-                order_index=data.get('order_index', 0),
-                is_active=data.get('is_active', True)
+                name=request.data['name'],
+                description=request.data.get('description', ''),
+                order_index=request.data.get('order_index', 0),
+                is_active=request.data.get('is_active', True)
             )
-            return JsonResponse({
+            return Response({
                 'success': True,
                 'category': {
                     'id': category.id,
@@ -701,27 +700,26 @@ def api_menu_categories(request):
                 }
             })
         except Exception as e:
-            return JsonResponse({'success': False, 'error': str(e)}, status=400)
-
-    return JsonResponse({'error': 'Method not allowed'}, status=405)
+            return Response({'success': False, 'error': str(e)}, status=400)
 
 
-@login_required
+@api_view(['GET', 'PUT', 'DELETE'])
+@permission_classes([IsAuthenticated, IsManagerOrAdmin])
 def api_menu_category_detail(request, category_id):
     """API endpoint for individual category CRUD"""
     user = request.user
 
     if user.role not in ['admin', 'manager']:
-        return JsonResponse({'error': 'Permission denied'}, status=403)
+        return Response({'error': 'Permission denied'}, status=403)
 
     restaurant = user.restaurant
     if not restaurant:
-        return JsonResponse({'error': 'No restaurant found'}, status=404)
+        return Response({'error': 'No restaurant found'}, status=404)
 
     try:
         category = Category.objects.get(id=category_id, restaurant=restaurant)
     except Category.DoesNotExist:
-        return JsonResponse({'error': 'Category not found'}, status=404)
+        return Response({'error': 'Category not found'}, status=404)
 
     if request.method == 'GET':
         data = {
@@ -732,17 +730,16 @@ def api_menu_category_detail(request, category_id):
             'is_active': category.is_active,
             'items_count': category.items.count()
         }
-        return JsonResponse({'success': True, 'category': data})
+        return Response({'success': True, 'category': data})
 
     elif request.method == 'PUT':
         try:
-            data = json.loads(request.body)
-            category.name = data['name']
-            category.description = data.get('description', '')
-            category.order_index = data.get('order_index', 0)
-            category.is_active = data.get('is_active', True)
+            category.name = request.data['name']
+            category.description = request.data.get('description', '')
+            category.order_index = request.data.get('order_index', 0)
+            category.is_active = request.data.get('is_active', True)
             category.save()
-            return JsonResponse({
+            return Response({
                 'success': True,
                 'category': {
                     'id': category.id,
@@ -754,26 +751,25 @@ def api_menu_category_detail(request, category_id):
                 }
             })
         except Exception as e:
-            return JsonResponse({'success': False, 'error': str(e)}, status=400)
+            return Response({'success': False, 'error': str(e)}, status=400)
 
     elif request.method == 'DELETE':
         category.delete()
-        return JsonResponse({'success': True})
-
-    return JsonResponse({'error': 'Method not allowed'}, status=405)
+        return Response({'success': True})
 
 
-@login_required
+@api_view(['GET', 'POST'])
+@permission_classes([IsAuthenticated, IsManagerOrAdmin])
 def api_menu_items(request):
     """API endpoint for menu items CRUD"""
     user = request.user
 
     if user.role not in ['admin', 'manager']:
-        return JsonResponse({'error': 'Permission denied'}, status=403)
+        return Response({'error': 'Permission denied'}, status=403)
 
     restaurant = user.restaurant
     if not restaurant:
-        return JsonResponse({'error': 'No restaurant found'}, status=404)
+        return Response({'error': 'No restaurant found'}, status=404)
 
     if request.method == 'GET':
         items = MenuItem.objects.filter(
@@ -784,28 +780,45 @@ def api_menu_items(request):
             'description': item.description,
             'price': float(item.price),
             'cost_price': float(item.cost_price) if item.cost_price else 0,
+            'profit_margin': float(item.profit_margin) if item.profit_margin else 0,
+            'sold_count': item.sold_count,
             'preparation_time': item.preparation_time,
             'is_available': item.is_available,
             'image': item.image.url if item.image else None,
             'category': item.category.id,
             'category_name': item.category.name
         } for item in items]
-        return JsonResponse({'success': True, 'items': data})
+        return Response({'success': True, 'items': data})
 
     elif request.method == 'POST':
         try:
+            category_id = request.data.get('category')
+            if not category_id:
+                raise ValueError("Category is required")
+
+            price_str = request.data.get('price')
+            if not price_str:
+                raise ValueError("Price is required")
+
+            cost_price_str = request.data.get('cost_price', '0')
+            cost_price = Decimal(
+                cost_price_str) if cost_price_str else Decimal('0')
+
+            prep_time_str = request.data.get('preparation_time', '0')
+            prep_time = int(prep_time_str) if prep_time_str else 0
+
             item = MenuItem.objects.create(
-                category_id=request.POST.get('category'),
-                name=request.POST.get('name'),
-                description=request.POST.get('description', ''),
-                price=request.POST.get('price'),
-                cost_price=request.POST.get('cost_price', 0),
-                preparation_time=request.POST.get('preparation_time', 0),
-                is_available=request.POST.get('is_available') == 'true',
+                category_id=int(category_id),
+                name=request.data.get('name'),
+                description=request.data.get('description', ''),
+                price=Decimal(price_str),
+                cost_price=cost_price,
+                preparation_time=prep_time,
+                is_available=request.data.get('is_available') == 'true',
                 image=request.FILES.get(
                     'image') if 'image' in request.FILES else None
             )
-            return JsonResponse({
+            return Response({
                 'success': True,
                 'item': {
                     'id': item.id,
@@ -813,6 +826,8 @@ def api_menu_items(request):
                     'description': item.description,
                     'price': float(item.price),
                     'cost_price': float(item.cost_price) if item.cost_price else 0,
+                    'profit_margin': float(item.profit_margin) if item.profit_margin else 0,
+                    'sold_count': item.sold_count,
                     'preparation_time': item.preparation_time,
                     'is_available': item.is_available,
                     'image': item.image.url if item.image else None,
@@ -821,28 +836,27 @@ def api_menu_items(request):
                 }
             })
         except Exception as e:
-            return JsonResponse({'success': False, 'error': str(e)}, status=400)
-
-    return JsonResponse({'error': 'Method not allowed'}, status=405)
+            return Response({'success': False, 'error': str(e)}, status=400)
 
 
-@login_required
+@api_view(['GET', 'PUT', 'DELETE'])
+@permission_classes([IsAuthenticated, IsManagerOrAdmin])
 def api_menu_item_detail(request, item_id):
     """API endpoint for individual menu item CRUD"""
     user = request.user
 
     if user.role not in ['admin', 'manager']:
-        return JsonResponse({'error': 'Permission denied'}, status=403)
+        return Response({'error': 'Permission denied'}, status=403)
 
     restaurant = user.restaurant
     if not restaurant:
-        return JsonResponse({'error': 'No restaurant found'}, status=404)
+        return Response({'error': 'No restaurant found'}, status=404)
 
     try:
         item = MenuItem.objects.get(
             id=item_id, category__restaurant=restaurant)
     except MenuItem.DoesNotExist:
-        return JsonResponse({'error': 'Item not found'}, status=404)
+        return Response({'error': 'Item not found'}, status=404)
 
     if request.method == 'GET':
         data = {
@@ -851,29 +865,46 @@ def api_menu_item_detail(request, item_id):
             'description': item.description,
             'price': float(item.price),
             'cost_price': float(item.cost_price) if item.cost_price else 0,
+            'profit_margin': float(item.profit_margin) if item.profit_margin else 0,
+            'sold_count': item.sold_count,
             'preparation_time': item.preparation_time,
             'is_available': item.is_available,
             'image': item.image.url if item.image else None,
             'category': item.category.id,
             'category_name': item.category.name
         }
-        return JsonResponse({'success': True, 'item': data})
+        return Response({'success': True, 'item': data})
 
     elif request.method == 'PUT':
         try:
-            item.category_id = request.POST.get('category', item.category_id)
-            item.name = request.POST.get('name', item.name)
-            item.description = request.POST.get('description', '')
-            item.price = request.POST.get('price', item.price)
-            item.cost_price = request.POST.get(
-                'cost_price', item.cost_price or 0)
-            item.preparation_time = request.POST.get(
+            category_id = request.data.get('category', item.category_id)
+            if not category_id:
+                raise ValueError("Category is required")
+
+            price_str = request.data.get('price', item.price)
+            if not price_str:
+                raise ValueError("Price is required")
+
+            cost_price_str = request.data.get(
+                'cost_price', item.cost_price or '0')
+            cost_price = Decimal(
+                cost_price_str) if cost_price_str else Decimal('0')
+
+            prep_time_str = request.data.get(
                 'preparation_time', item.preparation_time)
-            item.is_available = request.POST.get('is_available') == 'true'
+            prep_time = int(prep_time_str) if prep_time_str else 0
+
+            item.category_id = int(category_id)
+            item.name = request.data.get('name', item.name)
+            item.description = request.data.get('description', '')
+            item.price = Decimal(price_str)
+            item.cost_price = cost_price
+            item.preparation_time = prep_time
+            item.is_available = request.data.get('is_available') == 'true'
             if 'image' in request.FILES:
                 item.image = request.FILES['image']
             item.save()
-            return JsonResponse({
+            return Response({
                 'success': True,
                 'item': {
                     'id': item.id,
@@ -881,6 +912,8 @@ def api_menu_item_detail(request, item_id):
                     'description': item.description,
                     'price': float(item.price),
                     'cost_price': float(item.cost_price) if item.cost_price else 0,
+                    'profit_margin': float(item.profit_margin) if item.profit_margin else 0,
+                    'sold_count': item.sold_count,
                     'preparation_time': item.preparation_time,
                     'is_available': item.is_available,
                     'image': item.image.url if item.image else None,
@@ -889,13 +922,11 @@ def api_menu_item_detail(request, item_id):
                 }
             })
         except Exception as e:
-            return JsonResponse({'success': False, 'error': str(e)}, status=400)
+            return Response({'success': False, 'error': str(e)}, status=400)
 
     elif request.method == 'DELETE':
         item.delete()
-        return JsonResponse({'success': True})
-
-    return JsonResponse({'error': 'Method not allowed'}, status=405)
+        return Response({'success': True})
 
 
 @login_required

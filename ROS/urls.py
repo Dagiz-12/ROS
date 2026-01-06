@@ -49,12 +49,16 @@ urlpatterns = [
     # Restaurant Admin Panel
     path('restaurant-admin/', include('admin_panel.urls')),
 
+    # ============ INVENTORY & PROFIT DASHBOARD TEMPLATES ============
+    path('profit-dashboard/', include('inventory.urls')),
+
     # ============ API ENDPOINTS ============
     path('api/auth/', include('accounts.urls')),
     path('api/restaurants/', include('restaurants.urls')),
     path('api/menu/', include('menu.urls')),
-    path('api/tables/', include('tables.urls')),  # Keep this as is for API
+    path('api/tables/', include('tables.urls')),
     path('api/', include('core.urls')),
+    path('api/inventory/', include('inventory.urls')),
 
 ]
 

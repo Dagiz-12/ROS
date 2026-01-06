@@ -1,4 +1,4 @@
-<!-- templates/admin_panel/components/sidebar_nav.html -->
+{% load static %}
 <!-- Restaurant Info -->
 {% if restaurant %}
 <div class="mb-6 p-3 bg-gray-50 rounded-lg">
@@ -48,6 +48,15 @@
        class="sidebar-link flex items-center space-x-3 p-3 {% if 'tables' in request.path %}active{% endif %}">
         <i class="fas fa-table text-gray-500 w-6"></i>
         <span>Tables</span>
+    </a>
+
+    <a href="{% url 'profit-dashboard' %}"
+        class="sidebar-link flex items-center space-x-3 p-3 {% if 'profit-dashboard' in request.path %}active{% endif %}">
+        <i class="fas fa-chart-line text-green-500 w-6"></i>
+        <span>Profit Analytics</span>
+        <span class="ml-auto">
+            <i class="fas fa-chart-bar text-xs text-green-400"></i>
+        </span>
     </a>
     
     <a href="{% url 'admin-analytics' %}" 

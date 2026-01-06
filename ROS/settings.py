@@ -49,6 +49,7 @@ INSTALLED_APPS = [
     'core',
     'tables',
     'admin_panel',
+    'inventory',
 ]
 
 MIDDLEWARE = [

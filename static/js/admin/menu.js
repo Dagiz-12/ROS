@@ -370,7 +370,7 @@ class MenuManager {
         // For FormData, create headers manually WITHOUT Content-Type
         const headers = {
             'Authorization': 'Bearer ' + localStorage.getItem('access_token'),
-            'X-CSRFToken': document.cookie.match(/csrftoken=([^;]+)/)?.[1] || ''
+            'X-CSRFToken': document.cookie.match(/csrftoken=([^;]+)/)?.[1] || '' 
         };
 
         const response = await fetch(url, {
@@ -574,7 +574,7 @@ class MenuManager {
         if (!items || items.length === 0) {
             tbody.innerHTML = `
                 <tr>
-                    <td colspan="8" class="px-6 py-8 text-center">
+                    <td colspan="10" class="px-6 py-8 text-center">
                         <div class="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
                             <i class="fas fa-utensils text-gray-400 text-2xl"></i>
                         </div>
@@ -613,6 +613,12 @@ class MenuManager {
                 </td>
                 <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                     $${item.cost_price ? parseFloat(item.cost_price).toFixed(2) : '0.00'}
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                    ${item.profit_margin ? item.profit_margin.toFixed(1) + '%' : '0.0%'}
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                    ${item.sold_count || 0}
                 </td>
                 <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                     ${item.preparation_time || 15} min
