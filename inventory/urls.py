@@ -1,7 +1,8 @@
+# inventory/urls.py
 from django.urls import path, include
 from rest_framework.routers import DefaultRouter
-from . import views, profit_views, template_views
-
+from . import views, profit_views
+# REMOVE: from . import template_views
 
 router = DefaultRouter()
 router.register(r'stock-items', views.StockItemViewSet, basename='stock-item')
@@ -13,7 +14,7 @@ router.register(r'reports', views.InventoryReportViewSet,
                 basename='inventory-report')
 
 urlpatterns = [
-    # API endpoints
+    # API endpoints only
     path('', include(router.urls)),
 
     # Inventory management endpoints
@@ -36,11 +37,6 @@ urlpatterns = [
          name='waste-analysis-detailed'),
     path('waste/record/', profit_views.record_waste, name='record-waste'),
 
-    # NEW: Template views (HTML pages)
-    path('', template_views.profit_dashboard_view,
-         name='profit-dashboard'),
-    path('menu-analysis/', template_views.menu_item_analysis_view,
-         name='menu-analysis'),
-    path('waste-dashboard/', template_views.waste_analysis_view,
-         name='waste-dashboard'),
+    # REMOVED TEMPLATE VIEWS FROM HERE
+    # They are now in the main urls.py
 ]

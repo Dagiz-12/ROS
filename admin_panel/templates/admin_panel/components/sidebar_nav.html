@@ -1,4 +1,6 @@
 {% load static %}
+
+
 <!-- Restaurant Info -->
 {% if restaurant %}
 <div class="mb-6 p-3 bg-gray-50 rounded-lg">
@@ -20,58 +22,72 @@
 
 <!-- Navigation Links -->
 <nav class="space-y-1">
+    <!-- Dashboard -->
     <a href="{% url 'admin-dashboard' %}" 
        class="sidebar-link flex items-center space-x-3 p-3 {% if request.path == '/restaurant-admin/dashboard/' %}active{% endif %}">
         <i class="fas fa-tachometer-alt text-gray-500 w-6"></i>
         <span>Dashboard</span>
     </a>
     
+    <!-- Restaurant Management -->
     <a href="{% url 'admin-restaurant' %}" 
        class="sidebar-link flex items-center space-x-3 p-3 {% if 'restaurant' in request.path %}active{% endif %}">
         <i class="fas fa-store text-gray-500 w-6"></i>
         <span>Restaurant</span>
     </a>
     
+    <!-- Menu Management -->
     <a href="{% url 'admin-menu' %}" 
        class="sidebar-link flex items-center space-x-3 p-3 {% if 'menu' in request.path %}active{% endif %}">
         <i class="fas fa-utensils text-gray-500 w-6"></i>
         <span>Menu</span>
     </a>
     
+    <!-- Staff Management -->
     <a href="{% url 'admin-staff' %}" 
        class="sidebar-link flex items-center space-x-3 p-3 {% if 'staff' in request.path %}active{% endif %}">
         <i class="fas fa-users text-gray-500 w-6"></i>
         <span>Staff</span>
     </a>
     
+    <!-- Table Management -->
     <a href="{% url 'admin-tables' %}" 
        class="sidebar-link flex items-center space-x-3 p-3 {% if 'tables' in request.path %}active{% endif %}">
         <i class="fas fa-table text-gray-500 w-6"></i>
         <span>Tables</span>
     </a>
-
-    <a href="{% url 'profit-dashboard' %}"
-        class="sidebar-link flex items-center space-x-3 p-3 {% if 'profit-dashboard' in request.path %}active{% endif %}">
+    
+    <!-- Profit Analytics (NEW) -->
+    <a href="{% url 'profit-dashboard' %}" 
+       class="sidebar-link flex items-center space-x-3 p-3 {% if 'profit-dashboard' in request.path %}active{% endif %}">
         <i class="fas fa-chart-line text-green-500 w-6"></i>
         <span>Profit Analytics</span>
         <span class="ml-auto">
             <i class="fas fa-chart-bar text-xs text-green-400"></i>
         </span>
     </a>
+
+    <!-- Waste Analytics -->
+
+    <a href="{% url 'waste-dashboard' %}" class="sidebar-link">
+    <i class="fas fa-trash-alt"></i> Waste Analytics
+    </a>
     
+    <!-- Analytics -->
     <a href="{% url 'admin-analytics' %}" 
        class="sidebar-link flex items-center space-x-3 p-3 {% if 'analytics' in request.path %}active{% endif %}">
         <i class="fas fa-chart-line text-gray-500 w-6"></i>
         <span>Analytics</span>
     </a>
     
+    <!-- Reports -->
     <a href="{% url 'admin-reports' %}" 
        class="sidebar-link flex items-center space-x-3 p-3 {% if 'reports' in request.path %}active{% endif %}">
         <i class="fas fa-file-alt text-gray-500 w-6"></i>
         <span>Reports</span>
     </a>
     
-    <!-- System Admin Link -->
+    <!-- System Admin Link (External) -->
     <div class="pt-4 mt-4 border-t border-gray-200">
         <a href="/admin/" target="_blank" 
            class="sidebar-link flex items-center space-x-3 p-3 text-sm text-gray-500 hover:text-gray-700">

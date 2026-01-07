@@ -1,4 +1,3 @@
-<!-- templates/admin_panel/admin_base.html -->
 {% load static %}
 <!DOCTYPE html>
 <html lang="en" class="h-full">
@@ -246,82 +245,10 @@
 
     <!-- Main Layout -->
     <div class="pt-16 flex h-full">
-        <!-- Sidebar (Desktop) -->
+        <!-- Sidebar (Desktop) - USING COMPONENT -->
         <aside id="sidebar-desktop" class="hidden lg:block w-64 bg-white border-r border-gray-200 fixed left-0 top-16 bottom-0 overflow-y-auto custom-scrollbar z-20">
             <div class="p-4">
-                <!-- Restaurant Info -->
-                {% if restaurant %}
-                <div class="mb-6 p-3 bg-gray-50 rounded-lg">
-                    <div class="flex items-center">
-                        {% if restaurant.logo %}
-                        <img src="{{ restaurant.logo.url }}" alt="{{ restaurant.name }}" class="w-10 h-10 rounded mr-3">
-                        {% else %}
-                        <div class="w-10 h-10 bg-red-100 rounded mr-3 flex items-center justify-center">
-                            <i class="fas fa-store text-red-600"></i>
-                        </div>
-                        {% endif %}
-                        <div>
-                            <h3 class="font-medium text-gray-900">{{ restaurant.name|truncatechars:20 }}</h3>
-                            <p class="text-xs text-gray-500">{{ restaurant.branch_set.count }} branch{{ restaurant.branch_set.count|pluralize:"es" }}</p>
-                        </div>
-                    </div>
-                </div>
-                {% endif %}
-
-                <!-- Navigation Links -->
-                <nav class="space-y-1">
-                    <a href="{% url 'admin-dashboard' %}" 
-                       class="sidebar-link flex items-center space-x-3 p-3 {% if request.path == '/restaurant-admin/dashboard/' %}active{% endif %}">
-                        <i class="fas fa-tachometer-alt text-gray-500 w-6"></i>
-                        <span>Dashboard</span>
-                    </a>
-                    
-                    <a href="{% url 'admin-restaurant' %}" 
-                       class="sidebar-link flex items-center space-x-3 p-3 {% if 'restaurant' in request.path %}active{% endif %}">
-                        <i class="fas fa-store text-gray-500 w-6"></i>
-                        <span>Restaurant</span>
-                    </a>
-                    
-                    <a href="{% url 'admin-menu' %}" 
-                       class="sidebar-link flex items-center space-x-3 p-3 {% if 'menu' in request.path %}active{% endif %}">
-                        <i class="fas fa-utensils text-gray-500 w-6"></i>
-                        <span>Menu</span>
-                    </a>
-                    
-                    <a href="{% url 'admin-staff' %}" 
-                       class="sidebar-link flex items-center space-x-3 p-3 {% if 'staff' in request.path %}active{% endif %}">
-                        <i class="fas fa-users text-gray-500 w-6"></i>
-                        <span>Staff</span>
-                    </a>
-                    
-                    <a href="{% url 'admin-tables' %}" 
-                       class="sidebar-link flex items-center space-x-3 p-3 {% if 'tables' in request.path %}active{% endif %}">
-                        <i class="fas fa-table text-gray-500 w-6"></i>
-                        <span>Tables</span>
-                    </a>
-                    
-                    <a href="{% url 'admin-analytics' %}" 
-                       class="sidebar-link flex items-center space-x-3 p-3 {% if 'analytics' in request.path %}active{% endif %}">
-                        <i class="fas fa-chart-line text-gray-500 w-6"></i>
-                        <span>Analytics</span>
-                    </a>
-                    
-                    <a href="{% url 'admin-reports' %}" 
-                       class="sidebar-link flex items-center space-x-3 p-3 {% if 'reports' in request.path %}active{% endif %}">
-                        <i class="fas fa-file-alt text-gray-500 w-6"></i>
-                        <span>Reports</span>
-                    </a>
-                    
-                    <!-- System Admin Link -->
-                    <div class="pt-4 mt-4 border-t border-gray-200">
-                        <a href="/admin/" target="_blank" 
-                           class="sidebar-link flex items-center space-x-3 p-3 text-sm text-gray-500 hover:text-gray-700">
-                            <i class="fas fa-tools"></i>
-                            <span>System Admin</span>
-                            <i class="fas fa-external-link-alt text-xs ml-auto"></i>
-                        </a>
-                    </div>
-                </nav>
+                {% include "admin_panel/components/sidebar_nav.html" %}
             </div>
         </aside>
 
@@ -331,14 +258,14 @@
         <!-- Mobile Sidebar (hidden by default) -->
         <aside id="sidebar-mobile" class="fixed left-0 top-0 bottom-0 w-64 bg-white shadow-xl transform -translate-x-full transition-transform duration-300 ease-in-out z-50 lg:hidden">
             <div class="p-4 h-full overflow-y-auto custom-scrollbar">
-                <!-- Close button -->
+                <!-- Only keep the close button -->
                 <div class="flex justify-end mb-4">
                     <button id="sidebar-close-mobile" class="p-2 text-gray-500 hover:text-gray-700">
                         <i class="fas fa-times text-xl"></i>
                     </button>
                 </div>
                 
-                <!-- Same navigation as desktop -->
+                <!-- The component already has restaurant info -->
                 {% include "admin_panel/components/sidebar_nav.html" %}
             </div>
         </aside>

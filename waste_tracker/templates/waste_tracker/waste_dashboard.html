@@ -1,0 +1,263 @@
+<!-- templates/waste_tracker/waste_dashboard.html -->
+{% extends "admin_panel/admin_base.html" %}
+{% load static %}
+
+{% block title %}Waste Analytics Dashboard{% endblock %}
+
+{% block chart_js %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+{% endblock %}
+
+{% block extra_head %}
+<link rel="stylesheet" href="{% static 'css/waste_tracker/waste-dashboard.css' %}">
+{% endblock %}
+
+{% block page_title %}Waste Analytics Dashboard{% endblock %}
+{% block page_subtitle %}Monitor and reduce food waste costs{% endblock %}
+
+{% block page_actions %}
+<button class="btn btn-primary" onclick="refreshDashboard()">
+    <i class="fas fa-sync-alt mr-2"></i>Refresh
+</button>
+<button class="btn btn-success ml-2" onclick="exportDashboard()">
+    <i class="fas fa-download mr-2"></i>Export
+</button>
+{% endblock %}
+
+{% block content %}
+<div class="waste-dashboard-container">
+    <!-- Dashboard Header -->
+    <div class="dashboard-header">
+        <div class="period-selector">
+            <label class="period-label">Period:</label>
+            <div class="period-buttons">
+                <button class="period-btn active" data-period="7">7 Days</button>
+                <button class="period-btn" data-period="30">30 Days</button>
+                <button class="period-btn" data-period="90">90 Days</button>
+                <button class="period-btn" data-period="custom">
+                    <i class="fas fa-calendar mr-2"></i>Custom
+                </button>
+            </div>
+            <div class="date-range-picker" id="date-range-picker" style="display: none;">
+                <input type="text" id="custom-date-range" placeholder="Select date range">
+            </div>
+        </div>
+        
+        {% if user.branch %}
+        <div class="branch-selector">
+            <span class="branch-label">Branch:</span>
+            <span class="branch-name">{{ branch.name }}</span>
+        </div>
+        {% endif %}
+    </div>
+
+    <!-- Summary Cards -->
+    <div class="summary-grid">
+        <div class="summary-card total-waste">
+            <div class="card-icon">
+                <i class="fas fa-money-bill-wave"></i>
+            </div>
+            <div class="card-content">
+                <h3>Total Waste Cost</h3>
+                <div class="card-value" id="total-waste-cost">$0.00</div>
+                <div class="card-change" id="waste-change">
+                    <i class="fas fa-arrow-up text-green-500"></i> 12% vs last period
+                </div>
+            </div>
+        </div>
+
+        <div class="summary-card waste-percentage">
+            <div class="card-icon">
+                <i class="fas fa-chart-pie"></i>
+            </div>
+            <div class="card-content">
+                <h3>Waste % of Food Cost</h3>
+                <div class="card-value" id="waste-percentage">0.0%</div>
+                <div class="card-target">
+                    <span class="target-label">Target:</span>
+                    <span class="target-value">≤ 5.0%</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="summary-card avg-daily">
+            <div class="card-icon">
+                <i class="fas fa-calendar-day"></i>
+            </div>
+            <div class="card-content">
+                <h3>Avg Daily Waste</h3>
+                <div class="card-value" id="avg-daily-waste">$0.00</div>
+                <div class="card-subtitle">per day</div>
+            </div>
+        </div>
+
+        <div class="summary-card reduction-potential">
+            <div class="card-icon">
+                <i class="fas fa-piggy-bank"></i>
+            </div>
+            <div class="card-content">
+                <h3>Reduction Potential</h3>
+                <div class="card-value" id="reduction-potential">$0.00</div>
+                <div class="card-subtitle">potential monthly savings</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Charts Section -->
+    <div class="charts-section">
+        <div class="chart-container full-width">
+            <div class="chart-header">
+                <h3>Waste Trend</h3>
+                <div class="chart-actions">
+                    <button class="chart-action-btn active" data-chart-type="line">
+                        <i class="fas fa-chart-line"></i> Line
+                    </button>
+                    <button class="chart-action-btn" data-chart-type="bar">
+                        <i class="fas fa-chart-bar"></i> Bar
+                    </button>
+                </div>
+            </div>
+            <div class="chart-body">
+                <canvas id="wasteTrendChart"></canvas>
+            </div>
+        </div>
+
+        <div class="chart-container">
+            <div class="chart-header">
+                <h3>Waste by Category</h3>
+            </div>
+            <div class="chart-body">
+                <canvas id="categoryChart"></canvas>
+            </div>
+        </div>
+
+        <div class="chart-container">
+            <div class="chart-header">
+                <h3>Waste by Reason</h3>
+            </div>
+            <div class="chart-body">
+                <canvas id="reasonChart"></canvas>
+            </div>
+        </div>
+    </div>
+
+    <!-- Detailed Analysis -->
+    <div class="analysis-section">
+        <div class="section-header">
+            <h2>Detailed Analysis</h2>
+            <div class="section-tabs">
+                <button class="tab-btn active" data-tab="top-items">Top Wasted Items</button>
+                <button class="tab-btn" data-tab="recurring-issues">Recurring Issues</button>
+                <button class="tab-btn" data-tab="station-analysis">By Station</button>
+                <button class="tab-btn" data-tab="staff-analysis">By Staff</button>
+            </div>
+        </div>
+
+        <div class="tab-content active" id="top-items-tab">
+            <div class="table-responsive">
+                <table class="analysis-table">
+                    <thead>
+                        <tr>
+                            <th>Item</th>
+                            <th>Category</th>
+                            <th>Quantity Wasted</th>
+                            <th>Total Cost</th>
+                            <th>Avg Cost/Incident</th>
+                            <th>Primary Reason</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody id="top-items-table">
+                        <!-- Will be populated by JavaScript -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="tab-content" id="recurring-issues-tab">
+            <div class="recurring-issues-list" id="recurring-issues-list">
+                <!-- Will be populated by JavaScript -->
+            </div>
+        </div>
+
+        <!-- Other tabs will be similarly structured -->
+    </div>
+
+    <!-- Alerts & Notifications -->
+    <div class="alerts-section">
+        <div class="section-header">
+            <h2>Active Alerts</h2>
+            <button class="btn btn-sm btn-outline" onclick="runAlertChecks()">
+                <i class="fas fa-bell mr-1"></i> Run Checks
+            </button>
+        </div>
+        <div class="alerts-grid" id="alerts-grid">
+            <!-- Alerts will be loaded here -->
+        </div>
+    </div>
+
+    <!-- Reduction Suggestions -->
+    <div class="suggestions-section">
+        <div class="section-header">
+            <h2>Reduction Suggestions</h2>
+        </div>
+        <div class="suggestions-list" id="suggestions-list">
+            <!-- Suggestions will be loaded here -->
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script src="{% static 'js/waste_tracker/waste-dashboard.js' %}"></script>
+<script>
+    // Initialize dashboard
+    document.addEventListener('DOMContentLoaded', function() {
+        const dashboard = new WasteDashboard({
+            userData: {
+                id: {{ user.id }},
+                role: '{{ user.role }}',
+                branch_id: {{ user.branch.id|default:'null' }},
+                restaurant_id: {{ user.restaurant.id }}
+            },
+            initialPeriod: '30'
+        });
+        window.wasteDashboard = dashboard;
+    });
+
+    // Helper functions
+    function refreshDashboard() {
+        if (window.wasteDashboard) {
+            window.wasteDashboard.refresh();
+            showToast('Dashboard refreshed', 'success');
+        }
+    }
+
+    function exportDashboard() {
+        if (window.wasteDashboard) {
+            window.wasteDashboard.exportData();
+        }
+    }
+
+    function runAlertChecks() {
+        fetch('/api/waste/alerts/run-checks/', {
+            method: 'POST',
+            headers: {
+                'X-CSRFToken': getCookie('csrftoken'),
+                'Content-Type': 'application/json'
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                showToast(`Ran alert checks. Created ${data.total_alerts_created} new alerts.`, 'success');
+                if (window.wasteDashboard) {
+                    window.wasteDashboard.loadAlerts();
+                }
+            }
+        });
+    }
+</script>
+{% endblock %}

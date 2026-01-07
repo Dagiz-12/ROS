@@ -50,6 +50,7 @@ INSTALLED_APPS = [
     'tables',
     'admin_panel',
     'inventory',
+    'waste_tracker',
 ]
 
 MIDDLEWARE = [

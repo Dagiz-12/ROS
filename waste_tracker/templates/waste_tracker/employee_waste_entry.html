@@ -1,0 +1,34 @@
+<!-- templates/waste_tracker/employee_waste_entry.html -->
+{% extends "base_auth.html" %}
+{% load static %}
+
+{% block title %}Record Waste - Restaurant System{% endblock %}
+
+{% block extra_head %}
+<link rel="stylesheet" href="{% static 'css/waste_tracker/employee-waste-entry.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="waste-entry-container" id="waste-entry-app">
+    <!-- Container for React/Vanilla JS app -->
+    <!-- Minimal HTML - JavaScript will handle everything -->
+</div>
+
+<!-- Include JavaScript -->
+<script src="{% static 'js/waste_tracker/employee-waste-entry.js' %}"></script>
+<script>
+    // Initialize the waste entry app
+    document.addEventListener('DOMContentLoaded', function() {
+        const appContainer = document.getElementById('waste-entry-app');
+        const userData = {
+            id: {{ user.id|default:'null' }},
+            username: '{{ user.username|default:"" }}',
+            role: '{{ user.role|default:"" }}',
+            branch_id: {{ user.branch.id|default:'null' }},
+            restaurant_id: {{ user.restaurant.id|default:'null' }}
+        };
+        
+        window.wasteEntryApp = new WasteEntryApp(appContainer, userData);
+    });
+</script>
+{% endblock %}
