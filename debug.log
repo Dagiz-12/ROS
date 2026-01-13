@@ -4456,3 +4456,120 @@ Watching for file changes with StatReloader
 C:\Users\USER\DAGIIIz\eco\res\res3\ROS\waste_tracker\views.py changed, reloading.
 Watching for file changes with StatReloader
 Not Found: /favicon.ico
+Watching for file changes with StatReloader
+Not Found: /favicon.ico
+Forbidden: /api/auth/verify-token/
+Not Found: /favicon.ico
+Forbidden: /api/waste/entry/
+Not Found: /favicon.ico
+Forbidden: /api/waste/entry/
+Not Found: /favicon.ico
+Forbidden: /api/auth/verify-token/
+Forbidden: /api/auth/verify-token/
+Not Found: /favicon.ico
+Watching for file changes with StatReloader
+Forbidden: /api/auth/verify-token/
+Forbidden: /api/waste/entry/
+C:\Users\USER\DAGIIIz\eco\res\res3\ROS\waste_tracker\views.py changed, reloading.
+Watching for file changes with StatReloader
+Forbidden: /api/waste/entry/
+Not Found: /favicon.ico
+Forbidden: /api/waste/entry/
+Not Found: /favicon.ico
+Not Found: /api/waste/employee/
+C:\Users\USER\DAGIIIz\eco\res\res3\ROS\waste_tracker\views.py changed, reloading.
+Watching for file changes with StatReloader
+Not Found: /favicon.ico
+Forbidden: /waste/entry/
+Watching for file changes with StatReloader
+Forbidden: /waste/entry/
+Not Found: /favicon.ico
+C:\Users\USER\DAGIIIz\eco\res\res3\ROS\waste_tracker\template_views.py changed, reloading.
+Watching for file changes with StatReloader
+Not Found: /favicon.ico
+Not Found: /favicon.ico
+C:\Users\USER\DAGIIIz\eco\res\res3\ROS\waste_tracker\views.py changed, reloading.
+Watching for file changes with StatReloader
+Not Found: /favicon.ico
+Not Found: /favicon.ico
+Not Found: /api/waste/reasons/
+Forbidden: /api/inventory/stock-items/
+Not Found: /api/waste/records/my_records/
+Not Found: /favicon.ico
+Watching for file changes with StatReloader
+Not Found: /api/waste/reasons/
+Forbidden: /api/inventory/stock-items/
+Not Found: /api/waste/records/my_records/
+Not Found: /favicon.ico
+C:\Users\USER\DAGIIIz\eco\res\res3\ROS\inventory\views.py changed, reloading.
+Watching for file changes with StatReloader
+Forbidden: /waste/api/reasons/
+Not Found: /favicon.ico
+Forbidden: /waste/api/reasons/
+Not Found: /favicon.ico
+C:\Users\USER\DAGIIIz\eco\res\res3\ROS\waste_tracker\urls.py changed, reloading.
+Watching for file changes with StatReloader
+Forbidden: /waste/api/reasons/
+Not Found: /favicon.ico
+C:\Users\USER\DAGIIIz\eco\res\res3\ROS\waste_tracker\views.py changed, reloading.
+Watching for file changes with StatReloader
+C:\Users\USER\DAGIIIz\eco\res\res3\ROS\waste_tracker\views.py changed, reloading.
+Watching for file changes with StatReloader
+C:\Users\USER\DAGIIIz\eco\res\res3\ROS\waste_tracker\views.py changed, reloading.
+Watching for file changes with StatReloader
+Not Found: /favicon.ico
+Internal Server Error: /waste/api/reasons/
+Traceback (most recent call last):
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django\views\decorators\csrf.py", line 65, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\rest_framework\viewsets.py", line 125, in view
+    return self.dispatch(request, *args, **kwargs)
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\rest_framework\views.py", line 509, in dispatch
+    response = self.handle_exception(exc)
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\rest_framework\views.py", line 469, in handle_exception
+    self.raise_uncaught_exception(exc)
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\rest_framework\views.py", line 480, in raise_uncaught_exception
+    raise exc
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\rest_framework\views.py", line 506, in dispatch
+    response = handler(request, *args, **kwargs)
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\rest_framework\mixins.py", line 38, in list
+    queryset = self.filter_queryset(self.get_queryset())
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\rest_framework\generics.py", line 150, in filter_queryset
+    queryset = backend().filter_queryset(self.request, queryset, self)
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django_filters\rest_framework\backends.py", line 72, in filter_queryset
+    if not filterset.is_valid() and self.raise_exception:
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django_filters\filterset.py", line 195, in is_valid
+    return self.is_bound and self.form.is_valid()
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django_filters\rest_framework\filterset.py", line 26, in form
+    form = super().form
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django_filters\filterset.py", line 250, in form
+    Form = self.get_form_class()
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django_filters\filterset.py", line 242, in get_form_class
+    [(name, filter_.field) for name, filter_ in self.filters.items()]
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django_filters\filterset.py", line 242, in <listcomp>
+    [(name, filter_.field) for name, filter_ in self.filters.items()]
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django_filters\filters.py", line 149, in field
+    self._field = self.field_class(label=self.label, **field_kwargs)
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django_filters\fields.py", line 278, in __init__
+    super().__init__(*args, **kwargs)
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django_filters\fields.py", line 258, in __init__
+    super().__init__(*args, **kwargs)
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django\forms\fields.py", line 895, in __init__
+    self.choices = choices
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django_filters\fields.py", line 264, in _set_choices
+    super()._set_choices(value)
+AttributeError: 'super' object has no attribute '_set_choices'
+Not Found: /favicon.ico
+Watching for file changes with StatReloader
+Not Found: /favicon.ico
+Not Found: /favicon.ico
+Not Found: /favicon.ico
+Not Found: /favicon.ico
+Watching for file changes with StatReloader
+Not Found: /favicon.ico
+Not Found: /favicon.ico
+Watching for file changes with StatReloader

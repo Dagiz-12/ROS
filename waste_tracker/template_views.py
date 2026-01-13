@@ -7,7 +7,7 @@ from .business_logic import EnhancedWasteAnalyzer, WasteAlertManager
 
 
 @login_required
-@role_required(['chef', 'cook', 'kitchen_staff', 'manager', 'admin'])
+@role_required(['chef', 'waiter', 'kitchen_staff', 'manager', 'admin'])
 def employee_waste_entry(request):
     """
     Employee interface for recording waste
@@ -125,7 +125,7 @@ def waste_targets(request):
 
 
 @login_required
-@role_required(['chef', 'cook', 'kitchen_staff', 'manager', 'admin'])
+@role_required(['chef', 'waiter', 'kitchen_staff', 'manager', 'admin'])
 def my_waste_records(request):
     """
     View personal waste records

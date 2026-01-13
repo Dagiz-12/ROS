@@ -23,6 +23,8 @@ api_patterns = [
     path('analytics/forecast/', views.waste_forecast, name='waste-forecast'),
     path('quick-entry/', views.quick_waste_entry, name='quick-waste-entry'),
     path('alerts/run-checks/', views.run_waste_alerts, name='run-waste-alerts'),
+    path('records/my_records/',
+         views.WasteRecordViewSet.as_view({'get': 'my_records'}), name='my-waste-records'),
     path('health/',
          lambda request: {'status': 'waste_tracker_ok'}, name='waste-health'),
 ]

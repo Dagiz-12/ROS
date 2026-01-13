@@ -1,4 +1,7 @@
 # waste_tracker/views.py
+from accounts.decorators import role_required
+from django.contrib.auth.decorators import login_required
+from django.shortcuts import render
 from rest_framework import viewsets, status, filters
 from rest_framework.decorators import action, api_view, permission_classes
 from rest_framework.response import Response
@@ -29,7 +32,13 @@ class WasteCategoryViewSet(viewsets.ModelViewSet):
     """
     queryset = WasteCategory.objects.all()
     serializer_class = WasteCategorySerializer
-    permission_classes = [IsAuthenticated, IsManagerOrAdmin]
+
+    def get_permissions(self):
+        if self.action in ['list', 'retrieve']:
+            permission_classes = [IsAuthenticated, IsWaiterOrHigher]
+        else:
+            permission_classes = [IsAuthenticated, IsManagerOrAdmin]
+        return [permission() for permission in permission_classes]
     filter_backends = [DjangoFilterBackend,
                        filters.SearchFilter, filters.OrderingFilter]
     filterset_fields = ['category_type', 'is_active', 'requires_approval']
@@ -106,7 +115,19 @@ class WasteReasonViewSet(viewsets.ModelViewSet):
     """
     queryset = WasteReason.objects.all()
     serializer_class = WasteReasonSerializer
-    permission_classes = [IsAuthenticated, IsManagerOrAdmin]
+
+    def get_permissions(self):
+        """
+        Instantiates and returns the list of permissions that this view requires.
+        """
+        if self.action in ['list', 'retrieve']:
+            # Allow waiters and above to view waste reasons
+            permission_classes = [IsAuthenticated, IsWaiterOrHigher]
+        else:
+            # Only managers and admins can create/edit/delete reasons
+            permission_classes = [IsAuthenticated, IsManagerOrAdmin]
+        return [permission() for permission in permission_classes]
+
     filter_backends = [DjangoFilterBackend, filters.SearchFilter]
     filterset_fields = ['category', 'controllability',
                         'is_active', 'requires_explanation', 'requires_photo']
@@ -195,7 +216,7 @@ class WasteRecordViewSet(viewsets.ModelViewSet):
     Access: Chefs and above can view, Managers and Admins can manage
     """
     queryset = WasteRecord.objects.all()
-    permission_classes = [IsAuthenticated, IsChefOrHigher]
+    permission_classes = [IsAuthenticated, IsWaiterOrHigher]
     filter_backends = [DjangoFilterBackend,
                        filters.SearchFilter, filters.OrderingFilter]
     filterset_fields = ['status', 'priority',
@@ -801,7 +822,7 @@ def waste_forecast(request):
 
 
 @api_view(['POST'])
-@permission_classes([IsAuthenticated])
+@permission_classes([IsAuthenticated, IsWaiterOrHigher])
 def quick_waste_entry(request):
     """
     Quick waste entry for kitchen staff (mobile interface)

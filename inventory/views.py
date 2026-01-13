@@ -32,7 +32,7 @@ from accounts.permissions import IsManagerOrAdmin, IsWaiterOrHigher
 class StockItemViewSet(viewsets.ModelViewSet):
     queryset = StockItem.objects.all()
     serializer_class = StockItemSerializer
-    permission_classes = [IsAuthenticated, IsManagerOrAdmin]
+    permission_classes = [IsAuthenticated, IsWaiterOrHigher]
 
     def get_queryset(self):
         user = self.request.user

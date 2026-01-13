@@ -41,6 +41,31 @@ class AuthManager {
         return headers;
     }
 
+    // NEW METHOD ADDED: Check if user is authenticated
+    isAuthenticated() {
+        // Method 1: Check JWT token
+        const token = localStorage.getItem('access_token');
+        if (token) {
+            // Basic validation - check if token has 3 parts (JWT structure)
+            const parts = token.split('.');
+            if (parts.length === 3) {
+                return true;
+            }
+        }
+        
+        // Method 2: Check session cookie
+        if (document.cookie.includes('sessionid')) {
+            return true;
+        }
+        
+        // Method 3: Check CSRF token (for Django session auth)
+        if (this.getCSRFToken()) {
+            return true;
+        }
+        
+        return false;
+    }
+
     async checkAuth() {
         const token = localStorage.getItem('access_token');
 
@@ -52,7 +77,7 @@ class AuthManager {
         if (serverValid) return true;
 
         // If still not authenticated, check protected pages and redirect
-        const protectedPages = ['/waiter/', '/chef/', '/cashier/', '/restaurant-admin/'];
+        const protectedPages = ['/waiter/', '/chef/', '/cashier/', '/restaurant-admin/', '/waste/', '/profit-dashboard/'];
         const currentPath = window.location.pathname;
         if (protectedPages.some(page => currentPath.startsWith(page))) {
             window.location.href = '/login/';
