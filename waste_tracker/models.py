@@ -269,6 +269,42 @@ class WasteRecord(models.Model):
             return self.stock_transaction.total_cost
         return 0
 
+    def _detect_recurring_issue(self):
+        """
+        Detect if this waste appears to be a recurring issue
+        """
+        if not self.stock_item or not self.waste_reason:
+            return False
+
+        from django.utils import timezone
+        from datetime import timedelta
+        import uuid
+
+        # Look for similar waste records in the last 7 days
+        seven_days_ago = timezone.now() - timedelta(days=7)
+
+        similar_records = WasteRecord.objects.filter(
+            stock_transaction__stock_item=self.stock_item,
+            waste_reason=self.waste_reason,
+            status__in=['approved', 'pending'],
+            recorded_at__gte=seven_days_ago
+        ).exclude(id=self.id)
+
+        if similar_records.exists():
+            # This is a recurring issue
+            self.is_recurring_issue = True
+
+            # Use the first similar record's recurrence_id or generate new one
+            first_similar = similar_records.first()
+            if first_similar and first_similar.recurrence_id:
+                self.recurrence_id = first_similar.recurrence_id
+            else:
+                self.recurrence_id = uuid.uuid4()
+
+            return True
+
+        return False
+
 
 class WasteTarget(models.Model):
     """Waste reduction targets"""

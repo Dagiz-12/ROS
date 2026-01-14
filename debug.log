@@ -4573,3 +4573,879 @@ Watching for file changes with StatReloader
 Not Found: /favicon.ico
 Not Found: /favicon.ico
 Watching for file changes with StatReloader
+Not Found: /admin_dashboard
+Not Found: /restaurant_dashboard
+Not Found: /restaurant_admin
+Not Found: /admin_panel
+Not Found: /restaurant-admin/
+Not Found: /admin-dashboard/
+Not Found: /admin_dashboard
+Forbidden: /api/auth/verify-token/
+Internal Server Error: /restaurant-admin/api/business-metrics/
+Traceback (most recent call last):
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django\contrib\auth\decorators.py", line 59, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+  File "C:\Users\USER\DAGIIIz\eco\res\res3\ROS\admin_panel\views.py", line 512, in api_business_metrics
+    best_seller = MenuItem.objects.filter(
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django\db\models\query.py", line 1645, in annotate
+    return self._annotate(args, kwargs, select=True)
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django\db\models\query.py", line 1690, in _annotate
+    raise ValueError(
+ValueError: The annotation 'sold_count' conflicts with a field on the model.
+Internal Server Error: /restaurant-admin/api/business-metrics/
+Traceback (most recent call last):
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django\contrib\auth\decorators.py", line 59, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+  File "C:\Users\USER\DAGIIIz\eco\res\res3\ROS\admin_panel\views.py", line 512, in api_business_metrics
+    best_seller = MenuItem.objects.filter(
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django\db\models\query.py", line 1645, in annotate
+    return self._annotate(args, kwargs, select=True)
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django\db\models\query.py", line 1690, in _annotate
+    raise ValueError(
+ValueError: The annotation 'sold_count' conflicts with a field on the model.
+Internal Server Error: /restaurant-admin/api/business-metrics/
+Traceback (most recent call last):
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django\contrib\auth\decorators.py", line 59, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+  File "C:\Users\USER\DAGIIIz\eco\res\res3\ROS\admin_panel\views.py", line 512, in api_business_metrics
+    best_seller = MenuItem.objects.filter(
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django\db\models\query.py", line 1645, in annotate
+    return self._annotate(args, kwargs, select=True)
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django\db\models\query.py", line 1690, in _annotate
+    raise ValueError(
+ValueError: The annotation 'sold_count' conflicts with a field on the model.
+Internal Server Error: /restaurant-admin/api/business-metrics/
+Traceback (most recent call last):
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django\contrib\auth\decorators.py", line 59, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+  File "C:\Users\USER\DAGIIIz\eco\res\res3\ROS\admin_panel\views.py", line 512, in api_business_metrics
+    best_seller = MenuItem.objects.filter(
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django\db\models\query.py", line 1645, in annotate
+    return self._annotate(args, kwargs, select=True)
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django\db\models\query.py", line 1690, in _annotate
+    raise ValueError(
+ValueError: The annotation 'sold_count' conflicts with a field on the model.
+Internal Server Error: /restaurant-admin/api/business-metrics/
+Traceback (most recent call last):
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django\contrib\auth\decorators.py", line 59, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+  File "C:\Users\USER\DAGIIIz\eco\res\res3\ROS\admin_panel\views.py", line 512, in api_business_metrics
+    best_seller = MenuItem.objects.filter(
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django\db\models\query.py", line 1645, in annotate
+    return self._annotate(args, kwargs, select=True)
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django\db\models\query.py", line 1690, in _annotate
+    raise ValueError(
+ValueError: The annotation 'sold_count' conflicts with a field on the model.
+Internal Server Error: /restaurant-admin/api/business-metrics/
+Traceback (most recent call last):
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django\contrib\auth\decorators.py", line 59, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+  File "C:\Users\USER\DAGIIIz\eco\res\res3\ROS\admin_panel\views.py", line 512, in api_business_metrics
+    best_seller = MenuItem.objects.filter(
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django\db\models\query.py", line 1645, in annotate
+    return self._annotate(args, kwargs, select=True)
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django\db\models\query.py", line 1690, in _annotate
+    raise ValueError(
+ValueError: The annotation 'sold_count' conflicts with a field on the model.
+Internal Server Error: /restaurant-admin/api/business-metrics/
+Traceback (most recent call last):
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django\contrib\auth\decorators.py", line 59, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+  File "C:\Users\USER\DAGIIIz\eco\res\res3\ROS\admin_panel\views.py", line 512, in api_business_metrics
+    best_seller = MenuItem.objects.filter(
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django\db\models\query.py", line 1645, in annotate
+    return self._annotate(args, kwargs, select=True)
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django\db\models\query.py", line 1690, in _annotate
+    raise ValueError(
+ValueError: The annotation 'sold_count' conflicts with a field on the model.
+Internal Server Error: /restaurant-admin/api/business-metrics/
+Traceback (most recent call last):
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django\contrib\auth\decorators.py", line 59, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+  File "C:\Users\USER\DAGIIIz\eco\res\res3\ROS\admin_panel\views.py", line 512, in api_business_metrics
+    best_seller = MenuItem.objects.filter(
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django\db\models\query.py", line 1645, in annotate
+    return self._annotate(args, kwargs, select=True)
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django\db\models\query.py", line 1690, in _annotate
+    raise ValueError(
+ValueError: The annotation 'sold_count' conflicts with a field on the model.
+Internal Server Error: /restaurant-admin/api/business-metrics/
+Traceback (most recent call last):
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django\contrib\auth\decorators.py", line 59, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+  File "C:\Users\USER\DAGIIIz\eco\res\res3\ROS\admin_panel\views.py", line 512, in api_business_metrics
+    best_seller = MenuItem.objects.filter(
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django\db\models\query.py", line 1645, in annotate
+    return self._annotate(args, kwargs, select=True)
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django\db\models\query.py", line 1690, in _annotate
+    raise ValueError(
+ValueError: The annotation 'sold_count' conflicts with a field on the model.
+Internal Server Error: /restaurant-admin/api/business-metrics/
+Traceback (most recent call last):
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django\contrib\auth\decorators.py", line 59, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+  File "C:\Users\USER\DAGIIIz\eco\res\res3\ROS\admin_panel\views.py", line 512, in api_business_metrics
+    best_seller = MenuItem.objects.filter(
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django\db\models\query.py", line 1645, in annotate
+    return self._annotate(args, kwargs, select=True)
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django\db\models\query.py", line 1690, in _annotate
+    raise ValueError(
+ValueError: The annotation 'sold_count' conflicts with a field on the model.
+Internal Server Error: /restaurant-admin/api/business-metrics/
+Traceback (most recent call last):
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django\contrib\auth\decorators.py", line 59, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+  File "C:\Users\USER\DAGIIIz\eco\res\res3\ROS\admin_panel\views.py", line 512, in api_business_metrics
+    best_seller = MenuItem.objects.filter(
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django\db\models\query.py", line 1645, in annotate
+    return self._annotate(args, kwargs, select=True)
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django\db\models\query.py", line 1690, in _annotate
+    raise ValueError(
+ValueError: The annotation 'sold_count' conflicts with a field on the model.
+Internal Server Error: /restaurant-admin/api/business-metrics/
+Traceback (most recent call last):
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django\contrib\auth\decorators.py", line 59, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+  File "C:\Users\USER\DAGIIIz\eco\res\res3\ROS\admin_panel\views.py", line 512, in api_business_metrics
+    best_seller = MenuItem.objects.filter(
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django\db\models\query.py", line 1645, in annotate
+    return self._annotate(args, kwargs, select=True)
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django\db\models\query.py", line 1690, in _annotate
+    raise ValueError(
+ValueError: The annotation 'sold_count' conflicts with a field on the model.
+Internal Server Error: /restaurant-admin/api/business-metrics/
+Traceback (most recent call last):
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django\contrib\auth\decorators.py", line 59, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+  File "C:\Users\USER\DAGIIIz\eco\res\res3\ROS\admin_panel\views.py", line 512, in api_business_metrics
+    best_seller = MenuItem.objects.filter(
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django\db\models\query.py", line 1645, in annotate
+    return self._annotate(args, kwargs, select=True)
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django\db\models\query.py", line 1690, in _annotate
+    raise ValueError(
+ValueError: The annotation 'sold_count' conflicts with a field on the model.
+Internal Server Error: /restaurant-admin/api/business-metrics/
+Traceback (most recent call last):
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django\contrib\auth\decorators.py", line 59, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+  File "C:\Users\USER\DAGIIIz\eco\res\res3\ROS\admin_panel\views.py", line 512, in api_business_metrics
+    best_seller = MenuItem.objects.filter(
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django\db\models\query.py", line 1645, in annotate
+    return self._annotate(args, kwargs, select=True)
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django\db\models\query.py", line 1690, in _annotate
+    raise ValueError(
+ValueError: The annotation 'sold_count' conflicts with a field on the model.
+Internal Server Error: /restaurant-admin/api/business-metrics/
+Traceback (most recent call last):
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django\contrib\auth\decorators.py", line 59, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+  File "C:\Users\USER\DAGIIIz\eco\res\res3\ROS\admin_panel\views.py", line 512, in api_business_metrics
+    best_seller = MenuItem.objects.filter(
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django\db\models\query.py", line 1645, in annotate
+    return self._annotate(args, kwargs, select=True)
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django\db\models\query.py", line 1690, in _annotate
+    raise ValueError(
+ValueError: The annotation 'sold_count' conflicts with a field on the model.
+Internal Server Error: /restaurant-admin/api/business-metrics/
+Traceback (most recent call last):
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django\contrib\auth\decorators.py", line 59, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+  File "C:\Users\USER\DAGIIIz\eco\res\res3\ROS\admin_panel\views.py", line 512, in api_business_metrics
+    best_seller = MenuItem.objects.filter(
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django\db\models\query.py", line 1645, in annotate
+    return self._annotate(args, kwargs, select=True)
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django\db\models\query.py", line 1690, in _annotate
+    raise ValueError(
+ValueError: The annotation 'sold_count' conflicts with a field on the model.
+Internal Server Error: /restaurant-admin/api/business-metrics/
+Traceback (most recent call last):
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django\contrib\auth\decorators.py", line 59, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+  File "C:\Users\USER\DAGIIIz\eco\res\res3\ROS\admin_panel\views.py", line 512, in api_business_metrics
+    best_seller = MenuItem.objects.filter(
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django\db\models\query.py", line 1645, in annotate
+    return self._annotate(args, kwargs, select=True)
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django\db\models\query.py", line 1690, in _annotate
+    raise ValueError(
+ValueError: The annotation 'sold_count' conflicts with a field on the model.
+Internal Server Error: /restaurant-admin/api/business-metrics/
+Traceback (most recent call last):
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django\contrib\auth\decorators.py", line 59, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+  File "C:\Users\USER\DAGIIIz\eco\res\res3\ROS\admin_panel\views.py", line 512, in api_business_metrics
+    best_seller = MenuItem.objects.filter(
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django\db\models\query.py", line 1645, in annotate
+    return self._annotate(args, kwargs, select=True)
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django\db\models\query.py", line 1690, in _annotate
+    raise ValueError(
+ValueError: The annotation 'sold_count' conflicts with a field on the model.
+Internal Server Error: /restaurant-admin/api/business-metrics/
+Traceback (most recent call last):
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django\contrib\auth\decorators.py", line 59, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+  File "C:\Users\USER\DAGIIIz\eco\res\res3\ROS\admin_panel\views.py", line 512, in api_business_metrics
+    best_seller = MenuItem.objects.filter(
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django\db\models\query.py", line 1645, in annotate
+    return self._annotate(args, kwargs, select=True)
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django\db\models\query.py", line 1690, in _annotate
+    raise ValueError(
+ValueError: The annotation 'sold_count' conflicts with a field on the model.
+Internal Server Error: /restaurant-admin/api/business-metrics/
+Traceback (most recent call last):
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django\contrib\auth\decorators.py", line 59, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+  File "C:\Users\USER\DAGIIIz\eco\res\res3\ROS\admin_panel\views.py", line 512, in api_business_metrics
+    best_seller = MenuItem.objects.filter(
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django\db\models\query.py", line 1645, in annotate
+    return self._annotate(args, kwargs, select=True)
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django\db\models\query.py", line 1690, in _annotate
+    raise ValueError(
+ValueError: The annotation 'sold_count' conflicts with a field on the model.
+Internal Server Error: /restaurant-admin/api/business-metrics/
+Traceback (most recent call last):
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django\contrib\auth\decorators.py", line 59, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+  File "C:\Users\USER\DAGIIIz\eco\res\res3\ROS\admin_panel\views.py", line 512, in api_business_metrics
+    best_seller = MenuItem.objects.filter(
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django\db\models\query.py", line 1645, in annotate
+    return self._annotate(args, kwargs, select=True)
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django\db\models\query.py", line 1690, in _annotate
+    raise ValueError(
+ValueError: The annotation 'sold_count' conflicts with a field on the model.
+Internal Server Error: /restaurant-admin/api/business-metrics/
+Traceback (most recent call last):
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django\contrib\auth\decorators.py", line 59, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+  File "C:\Users\USER\DAGIIIz\eco\res\res3\ROS\admin_panel\views.py", line 512, in api_business_metrics
+    best_seller = MenuItem.objects.filter(
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django\db\models\query.py", line 1645, in annotate
+    return self._annotate(args, kwargs, select=True)
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django\db\models\query.py", line 1690, in _annotate
+    raise ValueError(
+ValueError: The annotation 'sold_count' conflicts with a field on the model.
+Internal Server Error: /restaurant-admin/api/business-metrics/
+Traceback (most recent call last):
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django\contrib\auth\decorators.py", line 59, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+  File "C:\Users\USER\DAGIIIz\eco\res\res3\ROS\admin_panel\views.py", line 512, in api_business_metrics
+    best_seller = MenuItem.objects.filter(
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django\db\models\query.py", line 1645, in annotate
+    return self._annotate(args, kwargs, select=True)
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django\db\models\query.py", line 1690, in _annotate
+    raise ValueError(
+ValueError: The annotation 'sold_count' conflicts with a field on the model.
+Internal Server Error: /restaurant-admin/api/business-metrics/
+Traceback (most recent call last):
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django\contrib\auth\decorators.py", line 59, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+  File "C:\Users\USER\DAGIIIz\eco\res\res3\ROS\admin_panel\views.py", line 512, in api_business_metrics
+    best_seller = MenuItem.objects.filter(
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django\db\models\query.py", line 1645, in annotate
+    return self._annotate(args, kwargs, select=True)
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django\db\models\query.py", line 1690, in _annotate
+    raise ValueError(
+ValueError: The annotation 'sold_count' conflicts with a field on the model.
+Internal Server Error: /restaurant-admin/api/business-metrics/
+Traceback (most recent call last):
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django\contrib\auth\decorators.py", line 59, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+  File "C:\Users\USER\DAGIIIz\eco\res\res3\ROS\admin_panel\views.py", line 512, in api_business_metrics
+    best_seller = MenuItem.objects.filter(
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django\db\models\query.py", line 1645, in annotate
+    return self._annotate(args, kwargs, select=True)
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django\db\models\query.py", line 1690, in _annotate
+    raise ValueError(
+ValueError: The annotation 'sold_count' conflicts with a field on the model.
+Internal Server Error: /restaurant-admin/api/business-metrics/
+Traceback (most recent call last):
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django\contrib\auth\decorators.py", line 59, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+  File "C:\Users\USER\DAGIIIz\eco\res\res3\ROS\admin_panel\views.py", line 512, in api_business_metrics
+    best_seller = MenuItem.objects.filter(
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django\db\models\query.py", line 1645, in annotate
+    return self._annotate(args, kwargs, select=True)
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django\db\models\query.py", line 1690, in _annotate
+    raise ValueError(
+ValueError: The annotation 'sold_count' conflicts with a field on the model.
+Internal Server Error: /restaurant-admin/api/business-metrics/
+Traceback (most recent call last):
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django\contrib\auth\decorators.py", line 59, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+  File "C:\Users\USER\DAGIIIz\eco\res\res3\ROS\admin_panel\views.py", line 512, in api_business_metrics
+    best_seller = MenuItem.objects.filter(
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django\db\models\query.py", line 1645, in annotate
+    return self._annotate(args, kwargs, select=True)
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django\db\models\query.py", line 1690, in _annotate
+    raise ValueError(
+ValueError: The annotation 'sold_count' conflicts with a field on the model.
+Internal Server Error: /restaurant-admin/api/business-metrics/
+Traceback (most recent call last):
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django\contrib\auth\decorators.py", line 59, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+  File "C:\Users\USER\DAGIIIz\eco\res\res3\ROS\admin_panel\views.py", line 512, in api_business_metrics
+    best_seller = MenuItem.objects.filter(
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django\db\models\query.py", line 1645, in annotate
+    return self._annotate(args, kwargs, select=True)
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django\db\models\query.py", line 1690, in _annotate
+    raise ValueError(
+ValueError: The annotation 'sold_count' conflicts with a field on the model.
+Internal Server Error: /restaurant-admin/api/business-metrics/
+Traceback (most recent call last):
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django\contrib\auth\decorators.py", line 59, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+  File "C:\Users\USER\DAGIIIz\eco\res\res3\ROS\admin_panel\views.py", line 512, in api_business_metrics
+    best_seller = MenuItem.objects.filter(
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django\db\models\query.py", line 1645, in annotate
+    return self._annotate(args, kwargs, select=True)
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django\db\models\query.py", line 1690, in _annotate
+    raise ValueError(
+ValueError: The annotation 'sold_count' conflicts with a field on the model.
+Internal Server Error: /restaurant-admin/api/business-metrics/
+Traceback (most recent call last):
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django\contrib\auth\decorators.py", line 59, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+  File "C:\Users\USER\DAGIIIz\eco\res\res3\ROS\admin_panel\views.py", line 512, in api_business_metrics
+    best_seller = MenuItem.objects.filter(
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django\db\models\query.py", line 1645, in annotate
+    return self._annotate(args, kwargs, select=True)
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django\db\models\query.py", line 1690, in _annotate
+    raise ValueError(
+ValueError: The annotation 'sold_count' conflicts with a field on the model.
+Internal Server Error: /restaurant-admin/api/business-metrics/
+Traceback (most recent call last):
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django\contrib\auth\decorators.py", line 59, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+  File "C:\Users\USER\DAGIIIz\eco\res\res3\ROS\admin_panel\views.py", line 512, in api_business_metrics
+    best_seller = MenuItem.objects.filter(
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django\db\models\query.py", line 1645, in annotate
+    return self._annotate(args, kwargs, select=True)
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django\db\models\query.py", line 1690, in _annotate
+    raise ValueError(
+ValueError: The annotation 'sold_count' conflicts with a field on the model.
+Internal Server Error: /restaurant-admin/api/business-metrics/
+Traceback (most recent call last):
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django\contrib\auth\decorators.py", line 59, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+  File "C:\Users\USER\DAGIIIz\eco\res\res3\ROS\admin_panel\views.py", line 512, in api_business_metrics
+    best_seller = MenuItem.objects.filter(
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django\db\models\query.py", line 1645, in annotate
+    return self._annotate(args, kwargs, select=True)
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django\db\models\query.py", line 1690, in _annotate
+    raise ValueError(
+ValueError: The annotation 'sold_count' conflicts with a field on the model.
+Internal Server Error: /restaurant-admin/api/business-metrics/
+Traceback (most recent call last):
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django\contrib\auth\decorators.py", line 59, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+  File "C:\Users\USER\DAGIIIz\eco\res\res3\ROS\admin_panel\views.py", line 512, in api_business_metrics
+    best_seller = MenuItem.objects.filter(
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django\db\models\query.py", line 1645, in annotate
+    return self._annotate(args, kwargs, select=True)
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django\db\models\query.py", line 1690, in _annotate
+    raise ValueError(
+ValueError: The annotation 'sold_count' conflicts with a field on the model.
+Internal Server Error: /restaurant-admin/api/business-metrics/
+Traceback (most recent call last):
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django\contrib\auth\decorators.py", line 59, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+  File "C:\Users\USER\DAGIIIz\eco\res\res3\ROS\admin_panel\views.py", line 512, in api_business_metrics
+    best_seller = MenuItem.objects.filter(
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django\db\models\query.py", line 1645, in annotate
+    return self._annotate(args, kwargs, select=True)
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django\db\models\query.py", line 1690, in _annotate
+    raise ValueError(
+ValueError: The annotation 'sold_count' conflicts with a field on the model.
+Internal Server Error: /restaurant-admin/api/business-metrics/
+Traceback (most recent call last):
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django\contrib\auth\decorators.py", line 59, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+  File "C:\Users\USER\DAGIIIz\eco\res\res3\ROS\admin_panel\views.py", line 512, in api_business_metrics
+    best_seller = MenuItem.objects.filter(
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django\db\models\query.py", line 1645, in annotate
+    return self._annotate(args, kwargs, select=True)
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django\db\models\query.py", line 1690, in _annotate
+    raise ValueError(
+ValueError: The annotation 'sold_count' conflicts with a field on the model.
+Internal Server Error: /restaurant-admin/api/business-metrics/
+Traceback (most recent call last):
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django\contrib\auth\decorators.py", line 59, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+  File "C:\Users\USER\DAGIIIz\eco\res\res3\ROS\admin_panel\views.py", line 512, in api_business_metrics
+    best_seller = MenuItem.objects.filter(
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django\db\models\query.py", line 1645, in annotate
+    return self._annotate(args, kwargs, select=True)
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django\db\models\query.py", line 1690, in _annotate
+    raise ValueError(
+ValueError: The annotation 'sold_count' conflicts with a field on the model.
+Internal Server Error: /restaurant-admin/api/business-metrics/
+Traceback (most recent call last):
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django\contrib\auth\decorators.py", line 59, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+  File "C:\Users\USER\DAGIIIz\eco\res\res3\ROS\admin_panel\views.py", line 512, in api_business_metrics
+    best_seller = MenuItem.objects.filter(
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django\db\models\query.py", line 1645, in annotate
+    return self._annotate(args, kwargs, select=True)
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django\db\models\query.py", line 1690, in _annotate
+    raise ValueError(
+ValueError: The annotation 'sold_count' conflicts with a field on the model.
+Internal Server Error: /restaurant-admin/api/business-metrics/
+Traceback (most recent call last):
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django\contrib\auth\decorators.py", line 59, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+  File "C:\Users\USER\DAGIIIz\eco\res\res3\ROS\admin_panel\views.py", line 512, in api_business_metrics
+    best_seller = MenuItem.objects.filter(
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django\db\models\query.py", line 1645, in annotate
+    return self._annotate(args, kwargs, select=True)
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django\db\models\query.py", line 1690, in _annotate
+    raise ValueError(
+ValueError: The annotation 'sold_count' conflicts with a field on the model.
+Internal Server Error: /restaurant-admin/api/business-metrics/
+Traceback (most recent call last):
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django\contrib\auth\decorators.py", line 59, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+  File "C:\Users\USER\DAGIIIz\eco\res\res3\ROS\admin_panel\views.py", line 512, in api_business_metrics
+    best_seller = MenuItem.objects.filter(
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django\db\models\query.py", line 1645, in annotate
+    return self._annotate(args, kwargs, select=True)
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django\db\models\query.py", line 1690, in _annotate
+    raise ValueError(
+ValueError: The annotation 'sold_count' conflicts with a field on the model.
+Internal Server Error: /restaurant-admin/api/business-metrics/
+Traceback (most recent call last):
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django\contrib\auth\decorators.py", line 59, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+  File "C:\Users\USER\DAGIIIz\eco\res\res3\ROS\admin_panel\views.py", line 512, in api_business_metrics
+    best_seller = MenuItem.objects.filter(
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django\db\models\query.py", line 1645, in annotate
+    return self._annotate(args, kwargs, select=True)
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django\db\models\query.py", line 1690, in _annotate
+    raise ValueError(
+ValueError: The annotation 'sold_count' conflicts with a field on the model.
+Internal Server Error: /restaurant-admin/api/business-metrics/
+Traceback (most recent call last):
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django\contrib\auth\decorators.py", line 59, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+  File "C:\Users\USER\DAGIIIz\eco\res\res3\ROS\admin_panel\views.py", line 512, in api_business_metrics
+    best_seller = MenuItem.objects.filter(
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django\db\models\query.py", line 1645, in annotate
+    return self._annotate(args, kwargs, select=True)
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django\db\models\query.py", line 1690, in _annotate
+    raise ValueError(
+ValueError: The annotation 'sold_count' conflicts with a field on the model.
+Internal Server Error: /restaurant-admin/api/business-metrics/
+Traceback (most recent call last):
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django\contrib\auth\decorators.py", line 59, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+  File "C:\Users\USER\DAGIIIz\eco\res\res3\ROS\admin_panel\views.py", line 512, in api_business_metrics
+    best_seller = MenuItem.objects.filter(
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django\db\models\query.py", line 1645, in annotate
+    return self._annotate(args, kwargs, select=True)
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django\db\models\query.py", line 1690, in _annotate
+    raise ValueError(
+ValueError: The annotation 'sold_count' conflicts with a field on the model.
+Watching for file changes with StatReloader
+Internal Server Error: /restaurant-admin/api/business-metrics/
+Traceback (most recent call last):
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django\contrib\auth\decorators.py", line 59, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+  File "C:\Users\USER\DAGIIIz\eco\res\res3\ROS\admin_panel\views.py", line 512, in api_business_metrics
+    best_seller = MenuItem.objects.filter(
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django\db\models\query.py", line 1645, in annotate
+    return self._annotate(args, kwargs, select=True)
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django\db\models\query.py", line 1690, in _annotate
+    raise ValueError(
+ValueError: The annotation 'sold_count' conflicts with a field on the model.
+Forbidden: /api/auth/verify-token/
+Watching for file changes with StatReloader
+Not Found: /favicon.ico
+Not Found: /favicon.ico
+Not Found: /api/waste/reasons/
+Not Found: /api/waste/records/my_records/
+Not Found: /favicon.ico
+Not Found: /admin-dashboard/
+Not Found: /favicon.ico
+Not Found: /favicon.ico
+Not Found: /favicon.ico
+Forbidden: /api/auth/verify-token/
+Unauthorized: /api/auth/verify-token/
+Unauthorized: /api/auth/login/
+Not Found: /api/waste/reasons/
+Not Found: /api/waste/records/my_records/
+Watching for file changes with StatReloader
+Not Found: /favicon.ico
+Watching for file changes with StatReloader
+Forbidden: /api/auth/verify-token/
+Forbidden: /api/auth/verify-token/
+Unauthorized: /api/auth/login/
+Internal Server Error: /restaurant-admin/api/business-metrics/
+Traceback (most recent call last):
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django\contrib\auth\decorators.py", line 59, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+  File "C:\Users\USER\DAGIIIz\eco\res\res3\ROS\admin_panel\views.py", line 512, in api_business_metrics
+    best_seller = MenuItem.objects.filter(
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django\db\models\query.py", line 1645, in annotate
+    return self._annotate(args, kwargs, select=True)
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django\db\models\query.py", line 1690, in _annotate
+    raise ValueError(
+ValueError: The annotation 'sold_count' conflicts with a field on the model.
+Internal Server Error: /restaurant-admin/api/business-metrics/
+Traceback (most recent call last):
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django\contrib\auth\decorators.py", line 59, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+  File "C:\Users\USER\DAGIIIz\eco\res\res3\ROS\admin_panel\views.py", line 512, in api_business_metrics
+    best_seller = MenuItem.objects.filter(
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django\db\models\query.py", line 1645, in annotate
+    return self._annotate(args, kwargs, select=True)
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django\db\models\query.py", line 1690, in _annotate
+    raise ValueError(
+ValueError: The annotation 'sold_count' conflicts with a field on the model.
+Internal Server Error: /restaurant-admin/api/business-metrics/
+Traceback (most recent call last):
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django\contrib\auth\decorators.py", line 59, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+  File "C:\Users\USER\DAGIIIz\eco\res\res3\ROS\admin_panel\views.py", line 512, in api_business_metrics
+    best_seller = MenuItem.objects.filter(
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django\db\models\query.py", line 1645, in annotate
+    return self._annotate(args, kwargs, select=True)
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django\db\models\query.py", line 1690, in _annotate
+    raise ValueError(
+ValueError: The annotation 'sold_count' conflicts with a field on the model.
+Internal Server Error: /restaurant-admin/api/business-metrics/
+Traceback (most recent call last):
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django\contrib\auth\decorators.py", line 59, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+  File "C:\Users\USER\DAGIIIz\eco\res\res3\ROS\admin_panel\views.py", line 512, in api_business_metrics
+    best_seller = MenuItem.objects.filter(
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django\db\models\query.py", line 1645, in annotate
+    return self._annotate(args, kwargs, select=True)
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django\db\models\query.py", line 1690, in _annotate
+    raise ValueError(
+ValueError: The annotation 'sold_count' conflicts with a field on the model.
+Internal Server Error: /restaurant-admin/api/business-metrics/
+Traceback (most recent call last):
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django\contrib\auth\decorators.py", line 59, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+  File "C:\Users\USER\DAGIIIz\eco\res\res3\ROS\admin_panel\views.py", line 512, in api_business_metrics
+    best_seller = MenuItem.objects.filter(
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django\db\models\query.py", line 1645, in annotate
+    return self._annotate(args, kwargs, select=True)
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django\db\models\query.py", line 1690, in _annotate
+    raise ValueError(
+ValueError: The annotation 'sold_count' conflicts with a field on the model.
+Internal Server Error: /restaurant-admin/api/business-metrics/
+Traceback (most recent call last):
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django\contrib\auth\decorators.py", line 59, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+  File "C:\Users\USER\DAGIIIz\eco\res\res3\ROS\admin_panel\views.py", line 512, in api_business_metrics
+    best_seller = MenuItem.objects.filter(
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django\db\models\query.py", line 1645, in annotate
+    return self._annotate(args, kwargs, select=True)
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django\db\models\query.py", line 1690, in _annotate
+    raise ValueError(
+ValueError: The annotation 'sold_count' conflicts with a field on the model.
+Internal Server Error: /restaurant-admin/api/business-metrics/
+Traceback (most recent call last):
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django\contrib\auth\decorators.py", line 59, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+  File "C:\Users\USER\DAGIIIz\eco\res\res3\ROS\admin_panel\views.py", line 512, in api_business_metrics
+    best_seller = MenuItem.objects.filter(
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django\db\models\query.py", line 1645, in annotate
+    return self._annotate(args, kwargs, select=True)
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django\db\models\query.py", line 1690, in _annotate
+    raise ValueError(
+ValueError: The annotation 'sold_count' conflicts with a field on the model.
+Internal Server Error: /restaurant-admin/api/business-metrics/
+Traceback (most recent call last):
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django\contrib\auth\decorators.py", line 59, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+  File "C:\Users\USER\DAGIIIz\eco\res\res3\ROS\admin_panel\views.py", line 512, in api_business_metrics
+    best_seller = MenuItem.objects.filter(
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django\db\models\query.py", line 1645, in annotate
+    return self._annotate(args, kwargs, select=True)
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django\db\models\query.py", line 1690, in _annotate
+    raise ValueError(
+ValueError: The annotation 'sold_count' conflicts with a field on the model.
+Internal Server Error: /restaurant-admin/api/business-metrics/
+Traceback (most recent call last):
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django\contrib\auth\decorators.py", line 59, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+  File "C:\Users\USER\DAGIIIz\eco\res\res3\ROS\admin_panel\views.py", line 512, in api_business_metrics
+    best_seller = MenuItem.objects.filter(
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django\db\models\query.py", line 1645, in annotate
+    return self._annotate(args, kwargs, select=True)
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django\db\models\query.py", line 1690, in _annotate
+    raise ValueError(
+ValueError: The annotation 'sold_count' conflicts with a field on the model.
+Internal Server Error: /restaurant-admin/api/business-metrics/
+Traceback (most recent call last):
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django\contrib\auth\decorators.py", line 59, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+  File "C:\Users\USER\DAGIIIz\eco\res\res3\ROS\admin_panel\views.py", line 512, in api_business_metrics
+    best_seller = MenuItem.objects.filter(
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django\db\models\query.py", line 1645, in annotate
+    return self._annotate(args, kwargs, select=True)
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django\db\models\query.py", line 1690, in _annotate
+    raise ValueError(
+ValueError: The annotation 'sold_count' conflicts with a field on the model.
+Internal Server Error: /restaurant-admin/api/business-metrics/
+Traceback (most recent call last):
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django\contrib\auth\decorators.py", line 59, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+  File "C:\Users\USER\DAGIIIz\eco\res\res3\ROS\admin_panel\views.py", line 512, in api_business_metrics
+    best_seller = MenuItem.objects.filter(
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django\db\models\query.py", line 1645, in annotate
+    return self._annotate(args, kwargs, select=True)
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django\db\models\query.py", line 1690, in _annotate
+    raise ValueError(
+ValueError: The annotation 'sold_count' conflicts with a field on the model.
+C:\Users\USER\DAGIIIz\eco\res\res3\ROS\admin_panel\views.py changed, reloading.
+Watching for file changes with StatReloader
+C:\Users\USER\DAGIIIz\eco\res\res3\ROS\admin_panel\views.py changed, reloading.
+Watching for file changes with StatReloader
+C:\Users\USER\DAGIIIz\eco\res\res3\ROS\admin_panel\views.py changed, reloading.
+Watching for file changes with StatReloader
+C:\Users\USER\DAGIIIz\eco\res\res3\ROS\admin_panel\views.py changed, reloading.
+Watching for file changes with StatReloader
+C:\Users\USER\DAGIIIz\eco\res\res3\ROS\admin_panel\views.py changed, reloading.
+Watching for file changes with StatReloader
+C:\Users\USER\DAGIIIz\eco\res\res3\ROS\ROS\settings.py changed, reloading.
+Watching for file changes with StatReloader
+C:\Users\USER\DAGIIIz\eco\res\res3\ROS\ROS\settings.py changed, reloading.
+Watching for file changes with StatReloader
+C:\Users\USER\DAGIIIz\eco\res\res3\ROS\ROS\settings.py changed, reloading.
+Watching for file changes with StatReloader
+Watching for file changes with StatReloader
+C:\Users\USER\DAGIIIz\eco\res\res3\ROS\admin_panel\views.py changed, reloading.
+Watching for file changes with StatReloader
+C:\Users\USER\DAGIIIz\eco\res\res3\ROS\admin_panel\views.py changed, reloading.
+Watching for file changes with StatReloader
+Not Found: /favicon.ico
+Watching for file changes with StatReloader
+Internal Server Error: /api/inventory/profit/dashboard/
+Watching for file changes with StatReloader
+Forbidden: /api/auth/verify-token/
+Forbidden: /api/auth/verify-token/
+Internal Server Error: /waste/api/quick-entry/
+Forbidden: /api/auth/verify-token/
+Internal Server Error: /waste/api/quick-entry/
+Forbidden: /api/auth/verify-token/
+Unauthorized: /api/auth/login/
+Internal Server Error: /api/inventory/profit/dashboard/
+Internal Server Error: /api/inventory/profit/dashboard/
+Internal Server Error: /api/inventory/profit/dashboard/

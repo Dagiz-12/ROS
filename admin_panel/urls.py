@@ -18,6 +18,12 @@ urlpatterns = [
     path('api/business-metrics/', views.api_business_metrics,
          name='api-business-metrics'),
     path('api/profit-table/', views.api_profit_table, name='api-profit-table'),
+    path('api/popular-items/', views.api_popular_items, name='api-popular-items'),
+    path('api/recent-activity/', views.api_recent_activity,
+         name='api-recent-activity'),
+    path('api/waste-alerts/', views.api_waste_alerts, name='api-waste-alerts'),
+    path('api/inventory-alerts/', views.api_inventory_alerts,
+         name='api-inventory-alerts'),
 
     # Menu API endpoints
     path('api/menu/categories/', views.api_menu_categories,

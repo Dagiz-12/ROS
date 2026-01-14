@@ -3,6 +3,7 @@ class RestaurantDashboard {
     constructor() {
         this.apiBase = '/restaurant-admin/api/';
         this.currentPeriod = 'today';
+        this.revenueChart = null;
         this.init();
     }
 
@@ -10,6 +11,7 @@ class RestaurantDashboard {
         this.checkAuth();
         this.loadDashboard();
         this.setupPeriodSelector();
+        this.setupEventListeners();
         this.setupAutoRefresh();
         this.setupEventListeners();
     }
@@ -237,7 +239,177 @@ class RestaurantDashboard {
         });
     }
 
-    // Other methods (loadRevenueChart, loadPopularItems, etc.) remain similar
+    async loadRevenueChart() {
+        try {
+            const response = await fetch(`${this.apiBase}sales-data/?days=7`);
+            const data = await response.json();
+            
+            if (data.success) {
+                if (this.revenueChart) {
+                    this.updateRevenueChart(data.data);
+                } else {
+                    this.createRevenueChart(data.data);
+                }
+            }
+        } catch (error) {
+            console.error('Error loading revenue chart:', error);
+        }
+    }
+
+    createRevenueChart(chartData) {
+        const ctx = document.getElementById('salesChart')?.getContext('2d');
+        if (!ctx) return;
+
+        this.revenueChart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: chartData.map(d => d.day_name),
+                datasets: [{
+                    label: 'Revenue ($)',
+                    data: chartData.map(d => d.total),
+                    borderColor: '#dc2626',
+                    backgroundColor: 'rgba(220, 38, 38, 0.1)',
+                    tension: 0.4,
+                    fill: true
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: { display: false },
+                    tooltip: {
+                        callbacks: {
+                            label: (context) => `$${context.parsed.y.toFixed(2)}`
+                        }
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: {
+                            callback: (value) => `$${value}`
+                        }
+                    }
+                }
+            }
+        });
+    }
+
+    updateRevenueChart(chartData) {
+        if (!this.revenueChart) return;
+        
+        this.revenueChart.data.labels = chartData.map(d => d.day_name);
+        this.revenueChart.data.datasets[0].data = chartData.map(d => d.total);
+        this.revenueChart.update();
+    }
+
+    async loadPopularItems() {
+        try {
+            const response = await fetch(`${this.apiBase}popular-items/`);
+            const data = await response.json();
+            
+            if (data.success) {
+                this.renderPopularItems(data.items);
+            }
+        } catch (error) {
+            console.error('Error loading popular items:', error);
+        }
+    }
+
+    renderPopularItems(items) {
+        const container = document.getElementById('popular-items-container');
+        if (!container || !items) return;
+
+        if (items.length === 0) {
+            container.innerHTML = `
+                <div class="text-center py-8 text-gray-500">
+                    <i class="fas fa-utensils text-3xl mb-3"></i>
+                    <p>No popular items yet</p>
+                </div>
+            `;
+            return;
+        }
+
+        const itemsHtml = items.map(item => `
+            <div class="flex items-center justify-between p-3 hover:bg-gray-50 rounded-lg transition-colors">
+                <div class="flex items-center flex-1 min-w-0">
+                    ${item.image ? 
+                        `<img src="${item.image}" alt="${item.name}" class="w-10 h-10 rounded mr-3 object-cover">` :
+                        `<div class="w-10 h-10 bg-gray-200 rounded mr-3 flex items-center justify-center">
+                            <i class="fas fa-utensils text-gray-400"></i>
+                        </div>`
+                    }
+                    <div class="min-w-0">
+                        <div class="font-medium text-gray-900 truncate">${item.name}</div>
+                        <div class="text-sm text-gray-500">${item.category}</div>
+                    </div>
+                </div>
+                <div class="text-right">
+                    <div class="font-bold text-gray-900">$${item.price.toFixed(2)}</div>
+                    <div class="text-sm text-gray-500">${item.sold} orders</div>
+                </div>
+            </div>
+        `).join('');
+
+        container.innerHTML = itemsHtml;
+    }
+
+    async loadRecentActivity() {
+        try {
+            const response = await fetch(`${this.apiBase}recent-activity/`);
+            const data = await response.json();
+            
+            if (data.success) {
+                this.renderRecentActivity(data.activities);
+            }
+        } catch (error) {
+            console.error('Error loading recent activity:', error);
+        }
+    }
+
+    renderRecentActivity(activities) {
+        const container = document.getElementById('activity-container');
+        if (!container) return;
+
+        if (!activities || activities.length === 0) {
+            container.innerHTML = `
+                <div class="text-center py-8 text-gray-500">
+                    <i class="fas fa-history text-3xl mb-3"></i>
+                    <p>No recent activity</p>
+                </div>
+            `;
+            return;
+        }
+
+        const activitiesHtml = activities.map(activity => `
+            <div class="flex items-start p-3 hover:bg-gray-50 rounded-lg transition-colors">
+                <div class="w-8 h-8 rounded-full flex items-center justify-center mr-3 mt-1 
+                    ${activity.type === 'order' ? 'bg-green-100 text-green-600' :
+                      activity.type === 'staff' ? 'bg-blue-100 text-blue-600' :
+                      activity.type === 'menu' ? 'bg-yellow-100 text-yellow-600' :
+                      'bg-gray-100 text-gray-600'}">
+                    <i class="fas fa-${activity.icon || 'circle'} text-sm"></i>
+                </div>
+                <div class="flex-1 min-w-0">
+                    <div class="font-medium text-gray-900">${activity.title}</div>
+                    <div class="text-sm text-gray-500">${activity.description}</div>
+                    <div class="text-xs text-gray-400 mt-1">${activity.time}</div>
+                </div>
+                ${activity.amount ? `
+                    <div class="ml-2">
+                        <span class="font-medium ${activity.amount >= 0 ? 'text-green-600' : 'text-red-600'}">
+                            $${Math.abs(activity.amount).toFixed(2)}
+                        </span>
+                    </div>
+                ` : ''}
+            </div>
+        `).join('');
+
+        container.innerHTML = activitiesHtml;
+    }
+
+    
 }
 
 // Initialize on page load

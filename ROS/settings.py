@@ -36,11 +36,13 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django.contrib.humanize',
 
     # third-party apps
     'corsheaders',
     'rest_framework',
     'django_filters',
+
 
     # local apps
     'accounts',

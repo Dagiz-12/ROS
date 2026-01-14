@@ -1,0 +1,163 @@
+<!-- templates/waste_tracker/waste_alerts.html -->
+{% extends "admin_panel/admin_base.html" %}
+{% load static %}
+
+{% block title %}Waste Alerts{% endblock %}
+
+{% block page_title %}Waste Alerts{% endblock %}
+{% block page_subtitle %}Monitor and resolve waste-related notifications{% endblock %}
+
+{% block page_actions %}
+<button onclick="runAlertChecks()" class="btn btn-primary">
+    <i class="fas fa-bell mr-2"></i>Run Checks
+</button>
+<button onclick="markAllRead()" class="btn btn-secondary ml-2">
+    <i class="fas fa-check-double mr-2"></i>Mark All Read
+</button>
+{% endblock %}
+
+{% block content %}
+<div class="waste-alerts-container">
+    <!-- Alerts Filter -->
+    <div class="alerts-filter mb-6">
+        <div class="flex space-x-4">
+            <button class="filter-btn active" data-filter="all">All Alerts</button>
+            <button class="filter-btn" data-filter="unread">Unread</button>
+            <button class="filter-btn" data-filter="unresolved">Unresolved</button>
+            <button class="filter-btn" data-filter="critical">Critical</button>
+        </div>
+    </div>
+
+    <!-- Alerts Summary -->
+    <div class="alerts-summary mb-6">
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+            <div class="summary-card">
+                <div class="card-icon bg-red-100">
+                    <i class="fas fa-exclamation-triangle text-red-600"></i>
+                </div>
+                <div class="card-content">
+                    <h3>Active Alerts</h3>
+                    <div class="card-value" id="active-alerts-count">0</div>
+                </div>
+            </div>
+            
+            <div class="summary-card">
+                <div class="card-icon bg-blue-100">
+                    <i class="fas fa-clock text-blue-600"></i>
+                </div>
+                <div class="card-content">
+                    <h3>Pending Review</h3>
+                    <div class="card-value" id="pending-reviews-count">0</div>
+                </div>
+            </div>
+            
+            <div class="summary-card">
+                <div class="card-icon bg-yellow-100">
+                    <i class="fas fa-redo text-yellow-600"></i>
+                </div>
+                <div class="card-content">
+                    <h3>Recurring Issues</h3>
+                    <div class="card-value" id="recurring-issues-count">0</div>
+                </div>
+            </div>
+            
+            <div class="summary-card">
+                <div class="card-icon bg-green-100">
+                    <i class="fas fa-chart-line text-green-600"></i>
+                </div>
+                <div class="card-content">
+                    <h3>Trend (7d)</h3>
+                    <div class="card-value" id="trend-count">0</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Alerts Table -->
+    <div class="alerts-table-container">
+        <div class="table-responsive">
+            <table class="alerts-table">
+                <thead>
+                    <tr>
+                        <th>
+                            <input type="checkbox" id="select-all-alerts">
+                        </th>
+                        <th>Alert Type</th>
+                        <th>Title</th>
+                        <th>Waste Item</th>
+                        <th>Cost Impact</th>
+                        <th>Status</th>
+                        <th>Created</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="alerts-table-body">
+                    <!-- Will be populated by JavaScript -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Empty State -->
+    <div id="empty-alerts-state" class="text-center py-12 hidden">
+        <div class="empty-icon">
+            <i class="fas fa-bell-slash text-4xl text-gray-300"></i>
+        </div>
+        <h3 class="text-lg font-medium text-gray-700 mt-4">No alerts found</h3>
+        <p class="text-gray-500 mt-1">All waste alerts are resolved or no alerts have been generated yet.</p>
+        <button onclick="runAlertChecks()" class="mt-4 btn btn-primary">
+            <i class="fas fa-bell mr-2"></i>Run Alert Checks
+        </button>
+    </div>
+
+    <!-- Bulk Actions -->
+    <div class="bulk-actions mt-6 p-4 bg-gray-50 rounded-lg border border-gray-200 hidden" id="bulk-actions">
+        <div class="flex items-center justify-between">
+            <div class="selected-count">
+                <span id="selected-count">0</span> alerts selected
+            </div>
+            <div class="flex space-x-2">
+                <button onclick="markSelectedRead()" class="btn btn-sm btn-secondary">
+                    <i class="fas fa-check mr-1"></i>Mark Read
+                </button>
+                <button onclick="resolveSelected()" class="btn btn-sm btn-success">
+                    <i class="fas fa-check-circle mr-1"></i>Resolve
+                </button>
+                <button onclick="clearSelection()" class="btn btn-sm btn-outline">
+                    <i class="fas fa-times mr-1"></i>Clear
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Resolve Modal (Hidden) -->
+    <div id="resolve-modal" class="modal hidden">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Resolve Alert</h3>
+                <button onclick="closeResolveModal()" class="modal-close">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label>Resolution Notes</label>
+                    <textarea id="resolve-notes" rows="4" 
+                              placeholder="Describe how this alert was resolved..."
+                              class="w-full p-3 border border-gray-300 rounded-lg"></textarea>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button onclick="closeResolveModal()" class="btn btn-secondary">Cancel</button>
+                <button onclick="confirmResolve()" class="btn btn-success">
+                    <i class="fas fa-check-circle mr-2"></i>Confirm Resolution
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script src="{% static 'js/waste_tracker/waste-alerts.js' %}"></script>
+{% endblock %}

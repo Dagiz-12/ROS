@@ -1,0 +1,114 @@
+<!-- templates/waste_tracker/waste_reports.html -->
+{% extends "admin_panel/admin_base.html" %}
+{% load static %}
+
+{% block title %}Waste Reports{% endblock %}
+
+{% block page_title %}Waste Reports{% endblock %}
+{% block page_subtitle %}Generate and download waste analysis reports{% endblock %}
+
+{% block page_actions %}
+<button onclick="window.wasteReportsManager?.generateReport()" class="btn btn-primary">
+    <i class="fas fa-chart-bar mr-2"></i>Generate Report
+</button>
+{% endblock %}
+
+{% block content %}
+<div class="waste-reports-container">
+    <!-- Report Generation Form -->
+    <div class="report-form mb-6">
+        <div class="bg-white p-6 rounded-lg shadow">
+            <h3 class="text-lg font-bold mb-4">Generate New Report</h3>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                <div class="form-group">
+                    <label for="report-type" class="block text-sm font-medium text-gray-700 mb-1">
+                        Report Type *
+                    </label>
+                    <select id="report-type" class="w-full p-2 border border-gray-300 rounded-lg">
+                        <option value="">Select Report Type</option>
+                        <option value="daily_summary">Daily Waste Summary</option>
+                        <option value="category_analysis">Category Analysis</option>
+                        <option value="station_performance">Station Performance</option>
+                        <option value="staff_performance">Staff Performance</option>
+                        <option value="cost_analysis">Cost Analysis</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label class="block text-sm font-medium text-gray-700 mb-1">
+                        Date Range *
+                    </label>
+                    <div class="flex space-x-2">
+                        <input type="date" id="start-date" class="flex-1 p-2 border border-gray-300 rounded-lg">
+                        <span class="self-center">to</span>
+                        <input type="date" id="end-date" class="flex-1 p-2 border border-gray-300 rounded-lg">
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Custom Fields (Dynamic) -->
+            <div id="custom-fields" class="hidden mb-4">
+                <h4 class="font-semibold mb-2">Report Options</h4>
+                <!-- Will be populated by JavaScript -->
+            </div>
+            
+            <button id="generate-report" class="btn btn-primary">
+                <i class="fas fa-magic mr-2"></i>Generate Report
+            </button>
+        </div>
+    </div>
+
+    <!-- Report Preview -->
+    <div class="report-preview mb-6">
+        <h3 class="text-lg font-bold mb-4">Report Preview</h3>
+        <div id="report-preview" class="bg-gray-50 p-4 rounded-lg border border-gray-200 min-h-[200px]">
+            <p class="text-gray-500 text-center py-8">No report generated yet</p>
+        </div>
+        
+        <div class="mt-4 flex space-x-2 hidden" id="export-buttons">
+            <button id="export-csv" class="btn btn-secondary">
+                <i class="fas fa-file-csv mr-2"></i>Export CSV
+            </button>
+            <button id="export-pdf" class="btn btn-secondary">
+                <i class="fas fa-file-pdf mr-2"></i>Export PDF
+            </button>
+        </div>
+    </div>
+
+    <!-- Recent Reports -->
+    <div class="recent-reports">
+        <div class="flex justify-between items-center mb-4">
+            <h3 class="text-lg font-bold">Recent Reports</h3>
+            <div class="period-selector">
+                <button class="period-btn active" data-period="month">Month</button>
+                <button class="period-btn" data-period="quarter">Quarter</button>
+                <button class="period-btn" data-period="year">Year</button>
+            </div>
+        </div>
+        
+        <div id="recent-reports" class="bg-white rounded-lg shadow">
+            <!-- Will be populated by JavaScript -->
+        </div>
+    </div>
+</div>
+
+<!-- Modal for Detailed Report View -->
+<div id="report-detail-modal" class="modal hidden">
+    <div class="modal-content max-w-4xl">
+        <div class="modal-header">
+            <h3>Report Details</h3>
+            <button onclick="closeReportModal()" class="modal-close">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <div class="modal-body" id="report-detail-content">
+            <!-- Report details will be loaded here -->
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script src="{% static 'js/waste_tracker/waste-reports.js' %}"></script>
+{% endblock %}

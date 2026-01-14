@@ -67,12 +67,12 @@
         </span>
     </a>
 
-    <!-- Waste Analytics -->
-
-    <a href="{% url 'waste-dashboard' %}" class="sidebar-link">
-    <i class="fas fa-trash-alt"></i> Waste Analytics
-    </a>
-    
+    <!-- Waste Analytics (Fixed structure) -->
+<a href="{% url 'waste-dashboard' %}" 
+   class="sidebar-link flex items-center space-x-3 p-3 {% if 'waste' in request.path %}active{% endif %}">
+    <i class="fas fa-trash-alt text-gray-500 w-6"></i>
+    <span>Waste Analytics</span>
+</a>
     <!-- Analytics -->
     <a href="{% url 'admin-analytics' %}" 
        class="sidebar-link flex items-center space-x-3 p-3 {% if 'analytics' in request.path %}active{% endif %}">

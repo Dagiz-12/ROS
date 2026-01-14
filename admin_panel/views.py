@@ -25,6 +25,7 @@ from rest_framework.permissions import IsAuthenticated
 from accounts.permissions import IsManagerOrAdmin  # Use your existing permissions
 from rest_framework.response import Response
 from rest_framework import status
+from django.contrib.humanize.templatetags.humanize import naturaltime
 
 
 @login_required
@@ -513,7 +514,7 @@ def api_business_metrics(request):
         category__restaurant=restaurant,
         orderitem__order__in=orders
     ).annotate(
-        sold_count=Count('orderitem')
+        sold_items=Count('orderitem')
     ).order_by('-sold_count').first()
 
     # Get comparison data (vs previous period)
@@ -561,8 +562,8 @@ def api_business_metrics(request):
             'profit_margin': float(profit_margin),
             'best_seller': {
                 'name': best_seller.name if best_seller else 'No sales',
-                'sold': best_seller.sold_count if best_seller else 0,
-                'revenue': float(best_seller.sold_count * best_seller.price) if best_seller else 0,
+                'sold': best_seller.sold_items if best_seller else 0,
+                'revenue': float(best_seller.sold_items * best_seller.price) if best_seller else 0,
                 'image': best_seller.image.url if best_seller and best_seller.image else None
             } if best_seller else None
         },
@@ -1086,3 +1087,213 @@ def api_menu_bulk_update(request):
             return JsonResponse({'success': False, 'error': str(e)}, status=400)
 
     return JsonResponse({'error': 'Method not allowed'}, status=405)
+
+
+@login_required
+def api_popular_items(request):
+    """API endpoint for popular items"""
+    user = request.user
+
+    if user.role not in ['admin', 'manager']:
+        return JsonResponse({'error': 'Permission denied'}, status=403)
+
+    restaurant = user.restaurant
+    if not restaurant:
+        return JsonResponse({'error': 'No restaurant found'}, status=404)
+
+    today = timezone.now().date()
+    last_week = today - timedelta(days=7)
+
+    popular_items = MenuItem.objects.filter(
+        category__restaurant=restaurant,
+        orderitem__order__placed_at__date__gte=last_week
+    ).annotate(
+        sold=Count('orderitem')
+    ).order_by('-sold')[:10]
+
+    items_data = [
+        {
+            'id': item.id,
+            'name': item.name,
+            'category': item.category.name if item.category else '',
+            'price': float(item.price),
+            'sold': item.sold,
+            'image': item.image.url if item.image else None
+        }
+        for item in popular_items
+    ]
+
+    return JsonResponse({
+        'success': True,
+        'items': items_data
+    })
+
+
+@login_required
+def api_recent_activity(request):
+    """API endpoint for recent activity"""
+    user = request.user
+
+    if user.role not in ['admin', 'manager']:
+        return JsonResponse({'error': 'Permission denied'}, status=403)
+
+    restaurant = user.restaurant
+    if not restaurant:
+        return JsonResponse({'error': 'No restaurant found'}, status=404)
+
+    # Get recent orders
+    recent_orders = Order.objects.filter(
+        table__branch__restaurant=restaurant
+    ).order_by('-placed_at')[:5]
+
+    # Get recent waste records (if waste tracker is installed)
+    waste_records = []
+    try:
+        from waste_tracker.models import WasteRecord
+        waste_records = WasteRecord.objects.filter(
+            branch__restaurant=restaurant
+        ).order_by('-created_at')[:3]
+    except ImportError:
+        pass
+
+    # Get recent staff activity
+    recent_users = CustomUser.objects.filter(
+        restaurant=restaurant,
+        last_login__isnull=False
+    ).order_by('-last_login')[:3]
+
+    activities = []
+
+    # Add orders
+    for order in recent_orders:
+        activities.append({
+            'type': 'order',
+            'icon': 'receipt',
+            'title': f'New order #{order.order_number}',
+            'description': f'Table {order.table.table_number if order.table else "N/A"}',
+            'time': naturaltime(order.placed_at),
+            'amount': float(order.total_amount) if order.total_amount else 0
+        })
+
+    # Add waste records
+    for waste in waste_records:
+        activities.append({
+            'type': 'waste',
+            'icon': 'trash',
+            'title': 'Waste recorded',
+            'description': f'{waste.quantity} {waste.stock_item.unit} of {waste.stock_item.name}',
+            'time': naturaltime(waste.created_at),
+            'amount': -float(waste.total_cost) if waste.total_cost else 0
+        })
+
+    # Add staff logins
+    for user in recent_users:
+        activities.append({
+            'type': 'staff',
+            'icon': 'user-clock',
+            'title': f'{user.get_full_name()} logged in',
+            'description': f'Role: {user.get_role_display()}',
+            'time': naturaltime(user.last_login),
+            'amount': None
+        })
+
+    # Sort by time (most recent first)
+    activities.sort(key=lambda x: x['time'], reverse=True)
+
+    return JsonResponse({
+        'success': True,
+        'activities': activities[:8]  # Return top 8
+    })
+
+
+# Add inventory and waste endpoints
+@login_required
+def api_waste_alerts(request):
+    """API endpoint for waste alerts"""
+    user = request.user
+
+    if user.role not in ['admin', 'manager']:
+        return JsonResponse({'error': 'Permission denied'}, status=403)
+
+    try:
+        from waste_tracker.models import WasteAlert
+        from waste_tracker.business_logic import WasteAlertManager
+
+        alerts = WasteAlert.objects.filter(
+            is_resolved=False
+        ).order_by('-created_at')[:10]
+
+        alerts_data = [
+            {
+                'id': alert.id,
+                'title': alert.title,
+                'message': alert.message,
+                'alert_type': alert.alert_type,
+                'created_at': alert.created_at.isoformat(),
+                'is_read': alert.is_read,
+                'is_resolved': alert.is_resolved
+            }
+            for alert in alerts
+        ]
+
+        return JsonResponse({
+            'success': True,
+            'alerts': alerts_data,
+            'count': len(alerts_data)
+        })
+
+    except ImportError:
+        return JsonResponse({
+            'success': True,
+            'alerts': [],
+            'count': 0,
+            'message': 'Waste tracker not installed'
+        })
+
+
+@login_required
+def api_inventory_alerts(request):
+    """API endpoint for inventory alerts"""
+    user = request.user
+
+    if user.role not in ['admin', 'manager']:
+        return JsonResponse({'error': 'Permission denied'}, status=403)
+
+    try:
+        from inventory.models import StockAlert
+
+        alerts = StockAlert.objects.filter(
+            is_resolved=False
+        ).order_by('-created_at')[:10]
+
+        alerts_data = [
+            {
+                'id': alert.id,
+                'title': f'Low stock: {alert.stock_item.name}',
+                'message': f'Current: {alert.stock_item.current_quantity} {alert.stock_item.unit}, Minimum: {alert.stock_item.minimum_quantity}',
+                'alert_type': 'low_stock',
+                'created_at': alert.created_at.isoformat(),
+                'is_resolved': alert.is_resolved,
+                'stock_item': {
+                    'name': alert.stock_item.name,
+                    'current': alert.stock_item.current_quantity,
+                    'minimum': alert.stock_item.minimum_quantity,
+                    'unit': alert.stock_item.unit
+                }
+            }
+            for alert in alerts
+        ]
+
+        return JsonResponse({
+            'success': True,
+            'alerts': alerts_data,
+            'count': len(alerts_data)
+        })
+
+    except ImportError:
+        return JsonResponse({
+            'success': True,
+            'alerts': [],
+            'count': 0,
+            'message': 'Inventory system not installed'
+        })
