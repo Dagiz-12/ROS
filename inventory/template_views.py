@@ -1,3 +1,4 @@
+# inventory/template_views.py - UPDATE THIS FILE
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseForbidden
@@ -5,16 +6,16 @@ from accounts.decorators import role_required
 
 
 @login_required
+@role_required(['manager', 'admin'])
 def profit_dashboard_view(request):
     """Render the profit dashboard HTML template"""
     user = request.user
 
-    if user.role not in ['admin', 'manager']:
-        return HttpResponseForbidden("Permission denied")
-
     return render(request, 'profit/dashboard.html', {
-        'user': request.user,
-        'restaurant': request.user.restaurant if hasattr(request.user, 'restaurant') else None,
+        'user': user,
+        'restaurant': user.restaurant,
+        'user_role': user.role,
+        'manager_scope': user.manager_scope if user.role == 'manager' else 'branch',
         'page_title': 'Profit Dashboard',
         'page_subtitle': 'Business intelligence and profit analytics'
     })

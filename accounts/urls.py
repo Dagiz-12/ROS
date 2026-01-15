@@ -26,6 +26,7 @@ urlpatterns = [
     path('assign-role/', views.assign_role_view, name='assign_role'),
     path('toggle-user/<int:user_id>/',
          views.toggle_user_status, name='toggle_user_status'),
+    path('user-branches/', views.get_user_branches, name='user-branches'),
 
     # JWT Verification
     path('verify-token/', views.JWTAuthenticationView.as_view(), name='verify_token'),

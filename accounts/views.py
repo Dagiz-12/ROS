@@ -1,3 +1,6 @@
+from .permissions import IsManagerOrAdmin
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.decorators import api_view, permission_classes
 from rest_framework import status, generics
 from rest_framework.response import Response
 from rest_framework.decorators import api_view, permission_classes, authentication_classes
@@ -303,3 +306,38 @@ class JWTAuthenticationView(APIView):
             'valid': False,
             'message': 'Invalid token'
         }, status=status.HTTP_401_UNAUTHORIZED)
+
+
+# new api
+
+# accounts/views.py - Add this view
+
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated, IsManagerOrAdmin])
+def get_user_branches(request):
+    """
+    Get list of branches accessible to the current user
+    """
+    user = request.user
+    accessible_branches = user.get_accessible_branches()
+
+    branches_data = []
+    for branch in accessible_branches:
+        branches_data.append({
+            'id': branch.id,
+            'name': branch.name,
+            'location': branch.location,
+            'is_user_branch': branch == user.branch
+        })
+
+    return Response({
+        'success': True,
+        'branches': branches_data,
+        'user_info': {
+            'role': user.role,
+            'scope': user.manager_scope if user.role == 'manager' else 'n/a',
+            'restaurant': user.restaurant.name if user.restaurant else None,
+            'branch': user.branch.name if user.branch else None
+        }
+    })

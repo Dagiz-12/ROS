@@ -1,25 +1,105 @@
-// static/js/profit/profit-dashboard.js
+// static/js/profit/profit-dashboard.js - COMPLETE FIXED VERSION
 class ProfitDashboard {
     constructor() {
         this.apiBase = '/api/inventory/profit/';
-        this.currentPeriod = 30;
+        this.currentScope = 'branch'; // 'branch' | 'restaurant'
+        this.selectedBranchId = null;
+        this.accessibleBranches = [];
         this.profitTrendChart = null;
         this.topItemsChart = null;
+        this.userRole = null;
+        this.managerScope = null;
+        
         this.init();
     }
 
     init() {
+        this.loadUserInfo();
         this.checkAuth();
         this.setupDatePicker();
+        this.setupScopeSelector();
+        this.loadAccessibleBranches();
         this.loadDashboard();
         this.setupEventListeners();
         this.setupAutoRefresh();
+    }
+
+    loadUserInfo() {
+        // Get user info from HTML data attributes
+        this.userRole = document.body.dataset.userRole || 'manager';
+        this.managerScope = document.body.dataset.managerScope || 'branch';
+        this.restaurantId = document.body.dataset.restaurantId || '';
+        this.branchId = document.body.dataset.branchId || '';
+        
+        console.log('User Info:', {
+            role: this.userRole,
+            scope: this.managerScope,
+            restaurantId: this.restaurantId,
+            branchId: this.branchId
+        });
+        
+        // Set initial scope based on user permissions
+        if (this.managerScope === 'restaurant') {
+            this.currentScope = 'restaurant';
+        } else {
+            this.currentScope = 'branch';
+            this.selectedBranchId = this.branchId || null;
+        }
     }
 
     checkAuth() {
         if (typeof authManager !== 'undefined' && !authManager.isAuthenticated()) {
             window.location.href = '/login/';
         }
+    }
+
+    async loadAccessibleBranches() {
+        if (this.userRole !== 'manager' && this.userRole !== 'admin') {
+            return;
+        }
+        
+        try {
+            const response = await fetch('/api/accounts/user-branches/', {
+                headers: this.getAuthHeaders()
+            });
+            
+            if (response.ok) {
+                const data = await response.json();
+                if (data.success) {
+                    this.accessibleBranches = data.branches || [];
+                    this.updateBranchSelector();
+                }
+            }
+        } catch (error) {
+            console.warn('Could not load accessible branches:', error);
+        }
+    }
+
+    updateBranchSelector() {
+        const selector = document.getElementById('branch-selector');
+        if (!selector || this.accessibleBranches.length <= 1) return;
+        
+        selector.innerHTML = '';
+        
+        // Add "All Branches" option for multi-branch managers
+        if (this.managerScope === 'restaurant') {
+            const allOption = document.createElement('option');
+            allOption.value = '';
+            allOption.textContent = 'All Accessible Branches';
+            allOption.selected = !this.selectedBranchId;
+            selector.appendChild(allOption);
+        }
+        
+        // Add individual branch options
+        this.accessibleBranches.forEach(branch => {
+            const option = document.createElement('option');
+            option.value = branch.id;
+            option.textContent = branch.name;
+            option.selected = this.selectedBranchId == branch.id;
+            selector.appendChild(option);
+        });
+        
+        selector.classList.remove('hidden');
     }
 
     setupDatePicker() {
@@ -35,6 +115,87 @@ class ProfitDashboard {
                 }
             });
         }
+    }
+
+    setupScopeSelector() {
+        const toggleBtn = document.getElementById('view-toggle-btn');
+        const viewIndicator = document.getElementById('view-indicator');
+        const branchSelector = document.getElementById('branch-selector');
+        
+        if (!toggleBtn) return;
+        
+        // Set initial button text based on scope
+        this.updateScopeButton(toggleBtn, viewIndicator);
+        
+        // Handle scope toggle
+        toggleBtn.addEventListener('click', () => {
+            const currentView = this.currentScope || 'branch';
+            const newScope = currentView === 'branch' ? 'restaurant' : 'branch';
+            
+            this.currentScope = newScope;
+            
+            // Update UI
+            this.updateScopeButton(toggleBtn, viewIndicator);
+            
+            // Show/hide branch selector
+            if (branchSelector) {
+                if (newScope === 'branch' && this.accessibleBranches.length > 1) {
+                    branchSelector.classList.remove('hidden');
+                } else {
+                    branchSelector.classList.add('hidden');
+                }
+            }
+            
+            // Reload dashboard with new scope
+            this.loadDashboard();
+            
+            // Show notification
+            showToast(`Switched to ${newScope} view`, 'info');
+        });
+        
+        // Handle branch selection
+        if (branchSelector) {
+            branchSelector.addEventListener('change', (e) => {
+                this.selectedBranchId = e.target.value || null;
+                this.loadDashboard();
+            });
+        }
+    }
+
+    updateScopeButton(button, indicator) {
+        if (!button) return;
+        
+        const scope = this.currentScope;
+        const isRestaurantView = scope === 'restaurant';
+        
+        // Update button
+        if (isRestaurantView) {
+            button.innerHTML = '<i class="fas fa-building mr-2"></i>Switch to Branch View';
+            button.className = 'px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors flex items-center';
+        } else {
+            button.innerHTML = '<i class="fas fa-store mr-2"></i>Switch to Restaurant View';
+            button.className = 'px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors flex items-center';
+        }
+        
+        // Update indicator
+        if (indicator) {
+            const branchCount = this.accessibleBranches.length;
+            if (isRestaurantView) {
+                indicator.textContent = `Viewing All Restaurant Branches (${branchCount} branches)`;
+            } else {
+                const branchName = this.getSelectedBranchName();
+                indicator.textContent = `Viewing: ${branchName}`;
+            }
+        }
+    }
+
+    getSelectedBranchName() {
+        if (!this.selectedBranchId && this.accessibleBranches.length > 0) {
+            return this.accessibleBranches[0].name;
+        }
+        
+        const branch = this.accessibleBranches.find(b => b.id == this.selectedBranchId);
+        return branch ? branch.name : 'Branch Data';
     }
 
     setupEventListeners() {
@@ -62,13 +223,26 @@ class ProfitDashboard {
 
     async loadDashboard() {
         const loading = showLoading('Loading profit dashboard...');
+        
         try {
-            const response = await fetch(`${this.apiBase}dashboard/`, {
+            // Build query parameters
+            const params = new URLSearchParams({
+                view_level: this.currentScope
+            });
+            
+            if (this.currentScope === 'branch' && this.selectedBranchId) {
+                params.append('branch_id', this.selectedBranchId);
+            }
+            
+            const url = `${this.apiBase}dashboard/?${params.toString()}`;
+            const response = await fetch(url, {
                 headers: this.getAuthHeaders()
             });
-
-            if (!response.ok) throw new Error('Failed to load dashboard');
-
+            
+            if (!response.ok) {
+                throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+            }
+            
             const data = await response.json();
             
             if (data.success) {
@@ -76,12 +250,15 @@ class ProfitDashboard {
                 this.updateCharts(data);
                 this.updateTables(data);
                 this.updateSuggestions(data);
+                hideLoading();
+            } else {
+                throw new Error(data.error || 'Failed to load dashboard');
             }
+            
         } catch (error) {
-            console.error('Error loading dashboard:', error);
-            showError('Failed to load dashboard data');
-        } finally {
             hideLoading();
+            showError('Failed to load dashboard data: ' + error.message);
+            console.error('Dashboard load error:', error);
         }
     }
 
@@ -116,13 +293,13 @@ class ProfitDashboard {
 
     updateDashboard(data) {
         // Update KPI cards
-        this.updateElement('today-profit', `$${data.today.summary.gross_profit.toFixed(2)}`);
-        this.updateElement('profit-margin', `${data.today.summary.profit_margin.toFixed(1)}%`);
-        this.updateElement('waste-cost', `$${data.waste.summary.total_waste_cost.toFixed(2)}`);
-        this.updateElement('issues-count', data.kpis.items_with_issues);
+        this.updateElement('today-profit', `$${data.today?.summary?.gross_profit?.toFixed(2) || '0.00'}`);
+        this.updateElement('profit-margin', `${data.today?.summary?.profit_margin?.toFixed(1) || '0.0'}%`);
+        this.updateElement('waste-cost', `$${data.waste?.summary?.total_waste_cost?.toFixed(2) || '0.00'}`);
+        this.updateElement('issues-count', data.kpis?.items_with_issues || 0);
 
         // Update change indicators
-        const change = data.daily_change;
+        const change = data.daily_change || { profit: 0, revenue: 0 };
         const profitChangeElem = document.getElementById('profit-change');
         if (profitChangeElem) {
             if (change.profit > 0) {
@@ -138,18 +315,16 @@ class ProfitDashboard {
         }
 
         // Update today's details
-        this.updateElement('today-orders', `${data.today.summary.order_count} orders`);
-        this.updateElement('today-margin', `${data.today.summary.profit_margin.toFixed(1)}% margin`);
+        this.updateElement('today-orders', `${data.today?.summary?.order_count || 0} orders`);
+        this.updateElement('today-margin', `${data.today?.summary?.profit_margin?.toFixed(1) || '0.0'}% margin`);
 
         // Update margin bar
         const marginBar = document.getElementById('margin-bar');
         const marginStatus = document.getElementById('margin-status');
         if (marginBar && marginStatus) {
-            const margin = data.today.summary.profit_margin;
-            let width = Math.min(margin, 50); // Cap at 50% for display
-            width = Math.max(width, 0); // Ensure not negative
-            
-            marginBar.style.width = `${width * 2}%`; // Multiply by 2 because max is 50%
+            const margin = data.today?.summary?.profit_margin || 0;
+            let width = Math.min(Math.max(margin, 0), 50);
+            marginBar.style.width = `${width * 2}%`;
             
             if (margin >= 30) {
                 marginBar.className = 'bg-green-600 h-2 rounded-full';
@@ -159,43 +334,51 @@ class ProfitDashboard {
                 marginBar.className = 'bg-yellow-600 h-2 rounded-full';
                 marginStatus.textContent = 'Good';
                 marginStatus.className = 'ml-2 text-sm text-yellow-600';
-            } else {
+            } else if (margin > 0) {
                 marginBar.className = 'bg-red-600 h-2 rounded-full';
                 marginStatus.textContent = 'Low';
                 marginStatus.className = 'ml-2 text-sm text-red-600';
+            } else {
+                marginBar.className = 'bg-gray-300 h-2 rounded-full';
+                marginStatus.textContent = 'No Data';
+                marginStatus.className = 'ml-2 text-sm text-gray-600';
             }
         }
 
         // Update waste info
-        this.updateElement('waste-percentage', `${data.waste.summary.waste_percentage.toFixed(1)}%`);
-        this.updateElement('waste-savings', `$${data.waste.reduction_target.savings_potential.toFixed(2)} savings possible`);
+        this.updateElement('waste-percentage', `${data.waste?.summary?.waste_percentage?.toFixed(1) || '0.0'}%`);
+        this.updateElement('waste-savings', `$${data.waste?.reduction_target?.savings_potential?.toFixed(2) || '0.00'} savings possible`);
 
         // Update issues info
-        this.updateElement('loss-makers', `${data.issues.summary.loss_makers_count} loss makers`);
-        this.updateElement('low-margin', `${data.issues.summary.low_margin_count} low margin`);
+        this.updateElement('loss-makers', `${data.issues?.summary?.loss_makers_count || 0} loss makers`);
+        this.updateElement('low-margin', `${data.issues?.summary?.low_margin_count || 0} low margin`);
     }
 
     updateCharts(data) {
-        this.createProfitTrendChart(data.trend);
-        this.createTopItemsChart(data.menu_analysis.top_profitable);
+        if (data.trend) {
+            this.createProfitTrendChart(data.trend);
+        }
+        if (data.menu_analysis?.top_profitable) {
+            this.createTopItemsChart(data.menu_analysis.top_profitable);
+        }
     }
 
     createProfitTrendChart(trendData) {
         const ctx = document.getElementById('profitTrendChart')?.getContext('2d');
         if (!ctx) return;
 
-        // Destroy existing chart if it exists
+        // Destroy existing chart
         if (this.profitTrendChart) {
             this.profitTrendChart.destroy();
         }
 
-        const labels = trendData.daily_data.map(d => {
+        const labels = trendData.daily_data?.map(d => {
             const date = new Date(d.date);
             return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
-        });
+        }) || [];
 
-        const profitData = trendData.daily_data.map(d => d.profit);
-        const revenueData = trendData.daily_data.map(d => d.revenue);
+        const profitData = trendData.daily_data?.map(d => d.profit) || [];
+        const revenueData = trendData.daily_data?.map(d => d.revenue) || [];
 
         this.profitTrendChart = new Chart(ctx, {
             type: 'line',
@@ -208,8 +391,7 @@ class ProfitDashboard {
                         borderColor: '#10b981',
                         backgroundColor: 'rgba(16, 185, 129, 0.1)',
                         tension: 0.4,
-                        fill: true,
-                        yAxisID: 'y'
+                        fill: true
                     },
                     {
                         label: 'Daily Revenue',
@@ -218,71 +400,28 @@ class ProfitDashboard {
                         backgroundColor: 'rgba(59, 130, 246, 0.1)',
                         tension: 0.4,
                         fill: true,
-                        yAxisID: 'y1'
+                        hidden: true // Hide by default to avoid clutter
                     }
                 ]
             },
             options: {
                 responsive: true,
                 maintainAspectRatio: false,
-                interaction: {
-                    mode: 'index',
-                    intersect: false,
-                },
                 plugins: {
                     legend: {
                         position: 'top',
-                    },
-                    tooltip: {
-                        callbacks: {
-                            label: (context) => {
-                                let label = context.dataset.label || '';
-                                if (label) {
-                                    label += ': ';
-                                }
-                                if (context.datasetIndex === 0) {
-                                    label += '$' + context.parsed.y.toFixed(2);
-                                } else {
-                                    label += '$' + context.parsed.y.toFixed(2);
-                                }
-                                return label;
-                            }
-                        }
                     }
                 },
                 scales: {
                     x: {
-                        grid: {
-                            display: false
-                        }
+                        grid: { display: false }
                     },
                     y: {
-                        type: 'linear',
-                        display: true,
-                        position: 'left',
-                        title: {
-                            display: true,
-                            text: 'Profit ($)'
-                        },
+                        beginAtZero: true,
                         ticks: {
                             callback: (value) => '$' + value
                         }
-                    },
-                    y1: {
-                        type: 'linear',
-                        display: true,
-                        position: 'right',
-                        title: {
-                            display: true,
-                            text: 'Revenue ($)'
-                        },
-                        ticks: {
-                            callback: (value) => '$' + value
-                        },
-                        grid: {
-                            drawOnChartArea: false,
-                        },
-                    },
+                    }
                 }
             }
         });
@@ -292,96 +431,52 @@ class ProfitDashboard {
         const ctx = document.getElementById('topItemsChart')?.getContext('2d');
         if (!ctx) return;
 
-        // Destroy existing chart if it exists
+        // Destroy existing chart
         if (this.topItemsChart) {
             this.topItemsChart.destroy();
         }
 
-        const labels = topItems.map(item => item.name.length > 15 ? item.name.substring(0, 15) + '...' : item.name);
+        const labels = topItems.map(item => 
+            item.name.length > 15 ? item.name.substring(0, 15) + '...' : item.name
+        );
         const profitData = topItems.map(item => item.gross_profit);
         const marginData = topItems.map(item => item.profit_margin);
-
-        // Create gradient
-        const gradient = ctx.createLinearGradient(0, 0, 0, 400);
-        gradient.addColorStop(0, 'rgba(220, 38, 38, 0.8)');
-        gradient.addColorStop(1, 'rgba(220, 38, 38, 0.1)');
 
         this.topItemsChart = new Chart(ctx, {
             type: 'bar',
             data: {
                 labels: labels,
-                datasets: [
-                    {
-                        label: 'Total Profit ($)',
-                        data: profitData,
-                        backgroundColor: gradient,
-                        borderColor: '#dc2626',
-                        borderWidth: 1,
-                        yAxisID: 'y'
-                    },
-                    {
-                        label: 'Margin (%)',
-                        data: marginData,
-                        type: 'line',
-                        borderColor: '#3b82f6',
-                        backgroundColor: 'rgba(59, 130, 246, 0.1)',
-                        tension: 0.4,
-                        fill: true,
-                        yAxisID: 'y1'
-                    }
-                ]
+                datasets: [{
+                    label: 'Total Profit ($)',
+                    data: profitData,
+                    backgroundColor: 'rgba(220, 38, 38, 0.7)',
+                    borderColor: '#dc2626',
+                    borderWidth: 1
+                }]
             },
             options: {
                 responsive: true,
                 maintainAspectRatio: false,
                 plugins: {
                     legend: {
-                        position: 'top',
+                        display: false
                     },
                     tooltip: {
                         callbacks: {
-                            label: (context) => {
-                                let label = context.dataset.label || '';
-                                if (label.includes('Profit')) {
-                                    label += ': $' + context.parsed.y.toFixed(2);
-                                } else {
-                                    label += ': ' + context.parsed.y.toFixed(1) + '%';
-                                }
-                                return label;
-                            }
+                            label: (context) => `$${context.parsed.y.toFixed(2)} profit`
                         }
                     }
                 },
                 scales: {
                     x: {
-                        grid: {
-                            display: false
-                        }
+                        grid: { display: false }
                     },
                     y: {
                         beginAtZero: true,
-                        title: {
-                            display: true,
-                            text: 'Profit ($)'
-                        },
                         ticks: {
                             callback: (value) => '$' + value
                         }
-                    },
-                    y1: {
-                        beginAtZero: true,
-                        position: 'right',
-                        title: {
-                            display: true,
-                            text: 'Margin (%)'
-                        },
-                        ticks: {
-                            callback: (value) => value + '%'
-                        },
-                        grid: {
-                            drawOnChartArea: false,
-                        },
-                    },
+                    }
                 }
             }
         });
@@ -398,7 +493,10 @@ class ProfitDashboard {
         
         if (!container) return;
 
-        if (issues.issues.loss_makers.length === 0 && issues.issues.low_margin.length === 0) {
+        const lossMakers = issues?.issues?.loss_makers || [];
+        const lowMargin = issues?.issues?.low_margin || [];
+        
+        if (lossMakers.length === 0 && lowMargin.length === 0) {
             container.innerHTML = `
                 <tr>
                     <td colspan="4" class="px-6 py-8 text-center text-gray-500">
@@ -412,22 +510,22 @@ class ProfitDashboard {
             return;
         }
 
-        // Combine loss makers and low margin items
-        const allIssues = [...issues.issues.loss_makers, ...issues.issues.low_margin];
+        // Combine issues
+        const allIssues = [...lossMakers, ...lowMargin];
         
         const rows = allIssues.slice(0, 5).map(item => `
             <tr class="hover:bg-gray-50">
                 <td class="px-6 py-4 whitespace-nowrap">
                     <div class="flex items-center">
                         <div class="ml-4">
-                            <div class="text-sm font-medium text-gray-900">${item.name}</div>
-                            <div class="text-sm text-gray-500">${item.category}</div>
+                            <div class="text-sm font-medium text-gray-900">${item.name || 'Unknown Item'}</div>
+                            <div class="text-sm text-gray-500">${item.category || 'Uncategorized'}</div>
                         </div>
                     </div>
                 </td>
                 <td class="px-6 py-4 whitespace-nowrap">
                     <span class="px-2 py-1 text-xs font-medium rounded-full ${item.profit_margin <= 0 ? 'bg-red-100 text-red-800' : 'bg-yellow-100 text-yellow-800'}">
-                        ${item.profit_margin.toFixed(1)}%
+                        ${item.profit_margin?.toFixed(1) || '0.0'}%
                     </span>
                 </td>
                 <td class="px-6 py-4 whitespace-nowrap">
@@ -449,36 +547,38 @@ class ProfitDashboard {
 
     updateWasteTable(wasteData) {
         const container = document.getElementById('waste-table-body');
-        if (!container || !wasteData.by_category || wasteData.by_category.length === 0) {
-            if (container) {
-                container.innerHTML = `
-                    <tr>
-                        <td colspan="4" class="px-6 py-8 text-center text-gray-500">
-                            <i class="fas fa-check-circle text-3xl text-green-500 mb-3"></i>
-                            <p class="font-medium">No waste recorded</p>
-                            <p class="text-sm mt-1">Great job minimizing waste!</p>
-                        </td>
-                    </tr>
-                `;
-            }
+        if (!container) return;
+
+        const wasteByCategory = wasteData?.by_category || [];
+        
+        if (wasteByCategory.length === 0) {
+            container.innerHTML = `
+                <tr>
+                    <td colspan="4" class="px-6 py-8 text-center text-gray-500">
+                        <i class="fas fa-check-circle text-3xl text-green-500 mb-3"></i>
+                        <p class="font-medium">No waste recorded</p>
+                        <p class="text-sm mt-1">Great job minimizing waste!</p>
+                    </td>
+                </tr>
+            `;
             return;
         }
 
-        const rows = wasteData.by_category.slice(0, 5).map(item => `
+        const rows = wasteByCategory.slice(0, 5).map(item => `
             <tr class="hover:bg-gray-50">
                 <td class="px-6 py-4 whitespace-nowrap">
                     <div class="text-sm font-medium text-gray-900">
-                        ${item.stock_item__category.replace('_', ' ').replace(/\b\w/g, l => l.toUpperCase())}
+                        ${(item.stock_item__category || 'Unknown').replace('_', ' ').replace(/\b\w/g, l => l.toUpperCase())}
                     </div>
                 </td>
                 <td class="px-6 py-4 whitespace-nowrap">
-                    <span class="text-sm text-gray-900">${parseFloat(item.total_quantity).toFixed(2)}</span>
+                    <span class="text-sm text-gray-900">${parseFloat(item.total_quantity || 0).toFixed(2)}</span>
                 </td>
                 <td class="px-6 py-4 whitespace-nowrap">
-                    <span class="text-sm font-medium text-gray-900">$${parseFloat(item.total_cost).toFixed(2)}</span>
+                    <span class="text-sm font-medium text-gray-900">$${parseFloat(item.total_cost || 0).toFixed(2)}</span>
                 </td>
                 <td class="px-6 py-4 whitespace-nowrap">
-                    <span class="text-sm text-gray-500">${item.transaction_count} incidents</span>
+                    <span class="text-sm text-gray-500">${item.transaction_count || 0} incidents</span>
                 </td>
             </tr>
         `).join('');
@@ -490,7 +590,7 @@ class ProfitDashboard {
         const container = document.getElementById('suggestions-container');
         if (!container) return;
 
-        const suggestions = data.issues.suggestions || [];
+        const suggestions = data.issues?.suggestions || [];
         
         if (suggestions.length === 0) {
             container.innerHTML = `
@@ -503,7 +603,8 @@ class ProfitDashboard {
             return;
         }
 
-        const suggestionsHtml = suggestions.slice(0, 3).map(suggestion => `
+        // FIX: Use let instead of const for reassignment
+        let suggestionsHtml = suggestions.slice(0, 3).map(suggestion => `
             <div class="mb-4 p-4 bg-yellow-50 border border-yellow-200 rounded-lg">
                 <div class="flex items-start">
                     <div class="flex-shrink-0">
@@ -512,9 +613,9 @@ class ProfitDashboard {
                     <div class="ml-3 flex-1">
                         <h4 class="text-sm font-medium text-yellow-800">Price Adjustment Suggested</h4>
                         <div class="mt-2 text-sm text-yellow-700">
-                            <p><strong>${suggestion.item_name}</strong>: Current price $${suggestion.current_price.toFixed(2)} (${suggestion.current_margin.toFixed(1)}% margin)</p>
-                            <p class="mt-1">Suggested price: <span class="font-bold">$${suggestion.suggested_price.toFixed(2)}</span> (${suggestion.projected_margin.toFixed(1)}% margin)</p>
-                            <p class="mt-1 text-xs">${suggestion.reason}</p>
+                            <p><strong>${suggestion.item_name}</strong>: Current price $${suggestion.current_price?.toFixed(2) || '0.00'} (${suggestion.current_margin?.toFixed(1) || '0.0'}% margin)</p>
+                            <p class="mt-1">Suggested price: <span class="font-bold">$${suggestion.suggested_price?.toFixed(2) || '0.00'}</span> (${suggestion.projected_margin?.toFixed(1) || '0.0'}% margin)</p>
+                            <p class="mt-1 text-xs">${suggestion.reason || 'Low profit margin'}</p>
                         </div>
                         <div class="mt-3">
                             <button onclick="ProfitDashboard.applySuggestion(${suggestion.item_id}, ${suggestion.suggested_price})" class="px-3 py-1 text-xs bg-yellow-100 text-yellow-800 rounded hover:bg-yellow-200 font-medium mr-2">
@@ -568,7 +669,6 @@ class ProfitDashboard {
     }
 
     getCsrfToken() {
-        // Try to get CSRF token from cookie
         const name = 'csrftoken';
         let cookieValue = null;
         if (document.cookie && document.cookie !== '') {
@@ -584,7 +684,7 @@ class ProfitDashboard {
         return cookieValue;
     }
 
-    // Public methods for button clicks
+    // Public static methods for button clicks
     static refreshDashboard() {
         window.profitDashboard?.loadDashboard();
     }
@@ -618,8 +718,7 @@ class ProfitDashboard {
     }
 
     static viewWasteAnalysis() {
-        // Implement navigation to waste analysis page
-        console.log('Navigate to waste analysis page');
+        window.location.href = '/inventory/profit-dashboard/waste-analysis/';
     }
 
     static recordWaste() {
@@ -628,22 +727,18 @@ class ProfitDashboard {
     }
 
     static viewItemDetail(itemId) {
-        // Implement item detail view
         console.log('View item detail:', itemId);
     }
 
     static applySuggestion(itemId, suggestedPrice) {
-        // Implement price update
         console.log('Apply price suggestion for item:', itemId, 'Price:', suggestedPrice);
     }
 
     static ignoreSuggestion(itemId) {
-        // Implement ignore suggestion
         console.log('Ignore suggestion for item:', itemId);
     }
 
     static viewAllSuggestions() {
-        // Implement view all suggestions
         console.log('View all suggestions');
     }
 
@@ -668,7 +763,6 @@ class ProfitDashboard {
     updateDateRangeData(data) {
         // Update relevant parts of the dashboard with date range data
         console.log('Update dashboard with date range data:', data);
-        // This would update specific sections with the date range data
     }
 }
 

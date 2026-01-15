@@ -15,22 +15,25 @@
 {% block content %}
 <div class="max-w-7xl mx-auto">
     <!-- Header -->
-    <div class="mb-8">
-        <div class="flex justify-between items-center">
-            <div>
-                <h1 class="text-2xl font-bold text-gray-900">Profit Dashboard</h1>
-                <p class="text-gray-600">Real-time business intelligence and profit analytics</p>
-            </div>
-            <div class="flex items-center space-x-3">
-                <div>
-                    <input type="text" id="date-range-picker" class="px-4 py-2 border rounded-lg" placeholder="Select date range">
-                </div>
-                <button onclick="ProfitDashboard.refreshDashboard()" class="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700">
-                    <i class="fas fa-sync-alt mr-2"></i>Refresh
-                </button>
-            </div>
-        </div>
+    <!-- Add this near the top of your dashboard -->
+<div class="flex items-center justify-between mb-6">
+    <div>
+        <h1 class="text-2xl font-bold text-gray-900">Profit Dashboard</h1>
+        <p id="view-indicator" class="text-sm text-gray-600">Viewing Branch Data</p>
     </div>
+    
+    <div class="flex items-center space-x-3">
+        <button id="view-toggle-btn" 
+                class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors flex items-center">
+            <i class="fas fa-store mr-2"></i>Switch to Restaurant View
+        </button>
+        
+        <button id="refresh-btn" 
+                class="px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors flex items-center">
+            <i class="fas fa-sync-alt mr-2"></i>Refresh
+        </button>
+    </div>
+</div>
 
     <!-- KPI Cards -->
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">

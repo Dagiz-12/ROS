@@ -154,7 +154,11 @@
     <!-- Extra head content for child templates -->
     {% block extra_head %}{% endblock %}
 </head>
-<body class="bg-gray-50 h-full">
+<body class="bg-gray-50 h-full"
+      data-user-role="{{ user.role }}"
+      data-manager-scope="{{ user.manager_scope|default:'branch' }}"
+      data-restaurant-id="{{ user.restaurant.id|default:'' }}"
+      data-branch-id="{{ user.branch.id|default:'' }}">
     <!-- Top Navigation Bar -->
     <nav class="bg-white shadow-lg border-b border-gray-200 fixed top-0 left-0 right-0 z-30">
         <div class="px-4 sm:px-6 lg:px-8">

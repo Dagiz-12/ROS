@@ -16,14 +16,52 @@ from rest_framework.permissions import IsAuthenticated
 def profit_dashboard(request):
     """
     Get comprehensive profit dashboard data
+    Accepts ?view_level=branch (default) or ?view_level=restaurant
     """
     try:
-        data = BusinessIntelligenceAPI.get_profit_dashboard()
+        user = request.user
+
+        # Check if user has restaurant
+        if not hasattr(user, 'restaurant') or not user.restaurant:
+            return Response({
+                'success': False,
+                'error': 'User not assigned to a restaurant',
+                'details': f'User: {user.username}, Role: {user.role}'
+            }, status=status.HTTP_400_BAD_REQUEST)
+
+        # Get parameters
+        view_level = request.query_params.get('view_level', 'branch')
+        branch_id = request.query_params.get('branch_id')
+
+        # Validate view level
+        if view_level not in ['branch', 'restaurant']:
+            view_level = 'branch'
+
+        # Get data with scope awareness
+        data = BusinessIntelligenceAPI.get_profit_dashboard(
+            user=user,
+            view_level=view_level,
+            branch_id=branch_id
+        )
+
         return Response(data)
+
     except Exception as e:
+        import traceback
+        error_details = traceback.format_exc()
+        print(f"Profit Dashboard Error: {str(e)}")
+        print(f"Error details: {error_details}")
+
         return Response({
             'success': False,
-            'error': str(e)
+            'error': 'Failed to load profit dashboard',
+            'details': str(e),
+            'user_info': {
+                'username': request.user.username if request.user else None,
+                'restaurant': request.user.restaurant.name if hasattr(request.user, 'restaurant') and request.user.restaurant else None,
+                'branch': request.user.branch.name if hasattr(request.user, 'branch') and request.user.branch else None,
+                'manager_scope': request.user.manager_scope if hasattr(request.user, 'manager_scope') else None
+            }
         }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 
