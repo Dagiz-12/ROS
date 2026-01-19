@@ -58,18 +58,19 @@
     </a>
     
     <!-- Profit Analytics (NEW) -->
-    <a href="{% url 'profit-dashboard' %}" 
-       class="sidebar-link flex items-center space-x-3 p-3 {% if 'profit-dashboard' in request.path %}active{% endif %}">
-        <i class="fas fa-chart-line text-green-500 w-6"></i>
-        <span>Profit Analytics</span>
-        <span class="ml-auto">
-            <i class="fas fa-chart-bar text-xs text-green-400"></i>
-        </span>
-    </a>
+   <!-- Find the Profit Analytics link and update it -->
+<a href="{% url 'profit_intelligence:dashboard' %}" 
+   class="sidebar-link flex items-center space-x-3 p-3 {% if 'profit-intelligence' in request.path %}active{% endif %}">
+    <i class="fas fa-chart-line text-green-500 w-6"></i>
+    <span>Profit Intelligence</span>
+    <span class="ml-auto">
+        <i class="fas fa-brain text-xs text-green-400"></i>
+    </span>
+</a>
 
-    <!-- Waste Analytics (Fixed structure) -->
+<!-- Update Waste Analytics link if needed -->
 <a href="{% url 'waste-dashboard' %}" 
-   class="sidebar-link flex items-center space-x-3 p-3 {% if 'waste' in request.path %}active{% endif %}">
+   class="sidebar-link flex items-center space-x-3 p-3 {% if 'waste' in request.path and 'profit-intelligence' not in request.path %}active{% endif %}">
     <i class="fas fa-trash-alt text-gray-500 w-6"></i>
     <span>Waste Analytics</span>
 </a>

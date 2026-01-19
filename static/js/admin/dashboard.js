@@ -1,7 +1,7 @@
 // static/js/admin/dashboard.js
 class RestaurantDashboard {
     constructor() {
-        this.apiBase = '/restaurant-admin/api/';
+        this.apiBase = '/profit-intelligence/api/';  
         this.currentPeriod = 'today';
         this.revenueChart = null;
         this.init();

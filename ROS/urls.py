@@ -4,6 +4,7 @@ from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
 from django.views.generic import TemplateView
+from django.views.generic.base import RedirectView
 
 from core.views import landing_page, login_page
 from tables.views import (
@@ -11,8 +12,7 @@ from tables.views import (
     waiter_dashboard, waiter_tables, waiter_orders, waiter_new_order,
     chef_dashboard, cashier_dashboard
 )
-# ADD THIS IMPORT:
-from inventory.template_views import profit_dashboard_view
+
 
 urlpatterns = [
     # Django Admin
@@ -36,14 +36,40 @@ urlpatterns = [
     # ============ ADMIN PANELS ============
     path('restaurant-admin/', include('admin_panel.urls')),
 
-    # ============ PROFIT DASHBOARD ============
-    # DIRECT TEMPLATE VIEW
-    path('profit-dashboard/', profit_dashboard_view, name='profit-dashboard'),
+    # ============ PROFIT INTELLIGENCE ============
+    path('profit-intelligence/', include('profit_intelligence.urls')),
 
+
+
+    # Redirect old profit-dashboard to new profit intelligence
+    # Redirect old admin panel endpoints to profit intelligence
+    path('profit-intelligence/api/profit-table/', RedirectView.as_view(
+        url='/profit-intelligence/api/profit-table/', permanent=True
+    )),
+    path('profit-intelligence/api/business-metrics/', RedirectView.as_view(
+        url='/profit-intelligence/api/business-metrics/', permanent=True
+    )),
+    path('profit-intelligence/api/sales-data/', RedirectView.as_view(
+        url='/profit-intelligence/api/sales-data/', permanent=True
+    )),
+    path('profit-intelligence/api/popular-items/', RedirectView.as_view(
+        url='/profit-intelligence/api/popular-items/', permanent=True
+    )),
+    path('profit-intelligence/api/recent-activity/', RedirectView.as_view(
+        url='/profit-intelligence/api/recent-activity/', permanent=True
+    )),
 
     # ============ INVENTORY MANAGEMENT ============
     # ============ Waste MANAGEMENT ============
-    path('waste/', include('waste_tracker.urls')),
+    path('waste/', include('waste_tracker.urls')),  # Template views only
+
+    path('api/inventory/profit/dashboard/', RedirectView.as_view(
+        url='/profit-intelligence/api/dashboard/', permanent=False
+    )),
+    path('api/inventory/profit/menu-items/', RedirectView.as_view(
+        url='/profit-intelligence/api/menu-items/', permanent=False
+    )),
+
 
     # ============ API ENDPOINTS ============
     path('api/auth/', include('accounts.urls')),

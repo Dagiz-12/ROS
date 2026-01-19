@@ -829,74 +829,63 @@ def quick_waste_entry(request):
     """
     user = request.user
 
-    # Validate required fields
-    required_fields = ['stock_item_id', 'quantity', 'waste_reason_id']
-    for field in required_fields:
-        if field not in request.data:
+    # Try to get data from serializer first
+    try:
+        # Use the WasteRecordCreateSerializer to validate and create the record
+        serializer = WasteRecordCreateSerializer(
+            data=request.data,
+            context={'request': request}
+        )
+
+        if serializer.is_valid():
+            # Create the waste record using serializer
+            waste_record = serializer.save()
+
+            # Set additional fields
+            waste_record.recorded_by = user
+            waste_record.branch = user.branch
+            waste_record.recorded_at = timezone.now()
+            waste_record.waste_occurred_at = timezone.now()
+            waste_record.save()
+
+            # Check if approval is required
+            if waste_record.waste_reason.category.requires_approval:
+                waste_record.status = 'pending'
+                waste_record.save()
+
+            # Check for recurring issues
+            if waste_record.is_recurring_issue:
+                # Create recurring issue alert
+                WasteAlert.objects.create(
+                    alert_type='recurring_issue',
+                    title=f'Recurring Waste Issue: {waste_record.stock_item.name if waste_record.stock_item else "Unknown Item"}',
+                    message=f'This appears to be a recurring issue. {waste_record.waste_reason.name} '
+                    f'has occurred multiple times recently.',
+                    waste_record=waste_record,
+                    branch=waste_record.branch
+                )
+
+            return Response({
+                'success': True,
+                'waste_record_id': waste_record.id,
+                'message': 'Waste recorded successfully',
+                'details': {
+                    'item_name': waste_record.stock_item.name if waste_record.stock_item else 'Unknown',
+                    'quantity': float(waste_record.quantity) if waste_record.quantity else 0,
+                    'unit': waste_record.stock_item.unit if waste_record.stock_item else '',
+                    'cost_per_unit': float(waste_record.stock_item.cost_per_unit) if waste_record.stock_item else 0,
+                    'total_cost': float(waste_record.total_cost) if waste_record.total_cost else 0,
+                    'reason': waste_record.waste_reason.name,
+                    'status': waste_record.status,
+                    'requires_approval': waste_record.waste_reason.category.requires_approval
+                }
+            })
+        else:
             return Response(
-                {'error': f'Missing required field: {field}'},
+                {'error': 'Invalid data', 'details': serializer.errors},
                 status=status.HTTP_400_BAD_REQUEST
             )
 
-    try:
-        stock_item = StockItem.objects.get(id=request.data['stock_item_id'])
-        waste_reason = WasteReason.objects.get(
-            id=request.data['waste_reason_id'])
-        quantity = Decimal(str(request.data['quantity']))
-
-        # Check if user has access to this stock item
-        if user.restaurant and stock_item.restaurant != user.restaurant:
-            return Response(
-                {'error': 'Unauthorized access to this stock item'},
-                status=status.HTTP_403_FORBIDDEN
-            )
-
-        # Create waste record
-        waste_record = WasteRecord.objects.create(
-            _stock_item=stock_item,
-            _quantity=quantity,
-            waste_reason=waste_reason,
-            recorded_by=user,
-            branch=user.branch,
-            waste_source=request.data.get('waste_source', ''),
-            station=request.data.get('station', ''),
-            shift=request.data.get('shift', ''),
-            notes=request.data.get('notes', ''),
-            batch_number=request.data.get('batch_number'),
-            expiry_date=request.data.get('expiry_date')
-        )
-
-        # Check if photo was uploaded
-        if 'photo' in request.FILES:
-            waste_record.photo = request.FILES['photo']
-            waste_record.save()
-
-        return Response({
-            'success': True,
-            'waste_record_id': waste_record.id,
-            'message': 'Waste recorded successfully',
-            'details': {
-                'item_name': stock_item.name,
-                'quantity': float(quantity),
-                'unit': stock_item.unit,
-                'cost_per_unit': float(stock_item.cost_per_unit),
-                'total_cost': float(waste_record.total_cost),
-                'reason': waste_reason.name,
-                'status': waste_record.status,
-                'requires_approval': waste_reason.category.requires_approval
-            }
-        })
-
-    except StockItem.DoesNotExist:
-        return Response(
-            {'error': 'Stock item not found'},
-            status=status.HTTP_404_NOT_FOUND
-        )
-    except WasteReason.DoesNotExist:
-        return Response(
-            {'error': 'Waste reason not found'},
-            status=status.HTTP_404_NOT_FOUND
-        )
     except Exception as e:
         return Response(
             {'error': str(e)},

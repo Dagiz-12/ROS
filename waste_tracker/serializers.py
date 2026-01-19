@@ -198,6 +198,8 @@ class WasteRecordSerializer(serializers.ModelSerializer):
         return data
 
 
+# In waste_tracker/serializers.py - Update WasteRecordCreateSerializer's create method
+
 class WasteRecordCreateSerializer(serializers.ModelSerializer):
     """Simplified serializer for creating waste records (employee interface)"""
 
@@ -211,13 +213,48 @@ class WasteRecordCreateSerializer(serializers.ModelSerializer):
     )
     unit = serializers.CharField(read_only=True, source='_stock_item.unit')
 
+    # Add waste_reason field explicitly
+    waste_reason_id = serializers.PrimaryKeyRelatedField(
+        queryset=WasteReason.objects.all(),
+        source='waste_reason',
+        write_only=True
+    )
+
     class Meta:
         model = WasteRecord
         fields = [
-            'waste_reason', 'stock_item_id', 'quantity', 'unit',
+            'waste_reason_id', 'stock_item_id', 'quantity', 'unit',
             'waste_source', 'station', 'shift', 'notes',
             'batch_number', 'expiry_date'
         ]
+
+    def create(self, validated_data):
+        """Create waste record with linked stock transaction"""
+        # Get user from context
+        user = self.context['request'].user
+
+        # Extract temporary fields
+        stock_item = validated_data.pop('_stock_item', None)
+        quantity = validated_data.pop('_quantity', None)
+
+        # Create the waste record with remaining data
+        waste_record = WasteRecord.objects.create(
+            **validated_data,
+            recorded_by=user,
+            branch=user.branch,
+            recorded_at=timezone.now(),
+            waste_occurred_at=timezone.now()
+        )
+
+        # Store stock item and quantity for auto-creation in save()
+        if stock_item and quantity:
+            waste_record._stock_item = stock_item
+            waste_record._quantity = quantity
+
+        # Save to trigger stock transaction creation
+        waste_record.save()
+
+        return waste_record
 
     def to_representation(self, instance):
         """Convert to representation with additional info"""
@@ -226,8 +263,10 @@ class WasteRecordCreateSerializer(serializers.ModelSerializer):
         # Add stock item name for confirmation
         if instance.stock_transaction and instance.stock_transaction.stock_item:
             rep['stock_item_name'] = instance.stock_transaction.stock_item.name
-            rep['unit_cost'] = instance.stock_transaction.stock_item.cost_per_unit
-            rep['total_cost'] = instance.stock_transaction.total_cost
+            rep['unit_cost'] = float(
+                instance.stock_transaction.stock_item.cost_per_unit)
+            rep['total_cost'] = float(instance.stock_transaction.total_cost)
+            rep['unit'] = instance.stock_transaction.stock_item.unit
 
         return rep
 

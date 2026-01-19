@@ -1,8 +1,8 @@
 # inventory/urls.py
 from django.urls import path, include
 from rest_framework.routers import DefaultRouter
-from . import views, profit_views
-# REMOVE: from . import template_views
+from . import views
+# REMOVE: from . import profit_views  # <-- DELETE THIS LINE
 
 router = DefaultRouter()
 router.register(r'stock-items', views.StockItemViewSet, basename='stock-item')
@@ -25,18 +25,11 @@ urlpatterns = [
     path('auto-deduct-order/<int:order_id>/',
          views.auto_deduct_from_order, name='auto-deduct-order'),
 
-    # Profit API endpoints
-    path('profit/dashboard/', profit_views.profit_dashboard,
-         name='profit-dashboard-api'),
-    path('profit/menu-items/', profit_views.menu_item_profitability,
-         name='menu-item-profitability'),
-    path('profit/trend/', profit_views.profit_trend, name='profit-trend'),
-    path('profit/daily/', profit_views.daily_profit, name='daily-profit'),
-    path('profit/issues/', profit_views.profit_issues, name='profit-issues'),
-    path('waste/detailed-analysis/', profit_views.waste_analysis_detailed,
-         name='waste-analysis-detailed'),
-    path('waste/record/', profit_views.record_waste, name='record-waste'),
+    # REMOVE ALL PROFIT ENDPOINTS:
+    # path('profit/dashboard/', profit_views.profit_dashboard, ...), <-- DELETE
+    # path('profit/menu-items/', profit_views.menu_item_profitability, ...), <-- DELETE
+    # ... etc
 
-    # REMOVED TEMPLATE VIEWS FROM HERE
-    # They are now in the main urls.py
+    # Keep only waste endpoints if they're truly waste-specific
+    # But consider moving to waste_tracker app
 ]

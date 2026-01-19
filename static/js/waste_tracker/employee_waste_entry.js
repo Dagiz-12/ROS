@@ -302,46 +302,55 @@ class WasteEntryManager {
             this.formatCurrency(totalCost);
     }
 
-    async submitWaste() {
-        if (!this.validateForm(true)) return;
+    // In employee_waste_entry.js - Update the submitWaste method
 
-        const wasteData = {
-            stock_item_id: this.selectedItem.id,
-            quantity: this.currentQuantity,
-            waste_reason_id: document.getElementById('waste-reason').value,
-            notes: document.getElementById('notes').value.trim(),
-            station: 'kitchen',
-            shift: this.getCurrentShift(),
-            waste_source: 'Kitchen waste'
-        };
+async submitWaste() {
+    if (!this.validateForm(true)) return;
 
-        try {
-            this.showLoading('Recording waste...');
-            
-            const response = await this.apiRequest('POST', this.apiEndpoints.quickEntry, wasteData);
-            
-            if (response && response.success) {
-                this.showSuccess('Waste recorded successfully!');
-                this.clearSelection();
-                
-                // Clear form
-                document.getElementById('waste-reason').value = '';
-                document.getElementById('notes').value = '';
-                
-                // Reload data to update stock levels
-                await this.loadStockItems();
-                await this.loadTodaySummary();
-                
-            } else {
-                throw new Error(response?.error || 'Failed to record waste');
-            }
-        } catch (error) {
-            console.error('Error submitting waste:', error);
-            this.showError(error.message || 'Failed to record waste. Please try again.');
-        } finally {
-            this.hideLoading();
+    const wasteData = {
+        stock_item_id: this.selectedItem.id,
+        quantity: this.currentQuantity,
+        waste_reason_id: document.getElementById('waste-reason').value,
+        notes: document.getElementById('notes').value.trim(),
+        station: 'kitchen',
+        shift: this.getCurrentShift(),
+        waste_source: 'Kitchen waste'
+    };
+
+    // Remove empty fields
+    Object.keys(wasteData).forEach(key => {
+        if (wasteData[key] === '' || wasteData[key] === null || wasteData[key] === undefined) {
+            delete wasteData[key];
         }
+    });
+
+    try {
+        this.showLoading('Recording waste...');
+        
+        const response = await this.apiRequest('POST', this.apiEndpoints.quickEntry, wasteData);
+        
+        if (response && response.success) {
+            this.showSuccess('Waste recorded successfully!');
+            this.clearSelection();
+            
+            // Clear form
+            document.getElementById('waste-reason').value = '';
+            document.getElementById('notes').value = '';
+            
+            // Reload data to update stock levels
+            await this.loadStockItems();
+            await this.loadTodaySummary();
+            
+        } else {
+            throw new Error(response?.error || 'Failed to record waste');
+        }
+    } catch (error) {
+        console.error('Error submitting waste:', error);
+        this.showError(error.message || 'Failed to record waste. Please try again.');
+    } finally {
+        this.hideLoading();
     }
+}
 
     filterItems(searchTerm) {
         const items = document.querySelectorAll('.waste-item-card');
