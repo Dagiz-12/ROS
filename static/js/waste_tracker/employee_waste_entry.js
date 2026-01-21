@@ -7,6 +7,8 @@ class WasteEntryManager {
         this.wasteReasons = [];
         this.selectedItem = null;
         this.currentQuantity = 1;
+        this.userRole = config.userData.role;
+        this.initNavigation();
         
         this.apiEndpoints = {
             stockItems: '/api/inventory/stock-items/',
@@ -31,6 +33,53 @@ class WasteEntryManager {
             return false;
         }
         return true;
+    }
+
+    // new method to initialize navigation based on user role
+    initNavigation() {
+        // Back to dashboard button click handler
+        const backButton = document.querySelector('[href*="/waiter/dashboard/"], [href*="/chef/dashboard/"], [href*="/cashier/dashboard/"]');
+        if (backButton) {
+            backButton.addEventListener('click', (e) => {
+                e.preventDefault();
+                this.goToDashboard();
+            });
+        }
+        
+        // Or if you're handling it dynamically:
+        const dynamicBackButton = document.querySelector('a[href="#back-to-dashboard"]');
+        if (dynamicBackButton) {
+            dynamicBackButton.addEventListener('click', (e) => {
+                e.preventDefault();
+                this.goToDashboard();
+            });
+        }
+    }
+    
+    goToDashboard() {
+        let dashboardUrl = '/';
+        
+        switch(this.userRole) {
+            case 'chef':
+                dashboardUrl = '/chef/dashboard/';
+                break;
+            case 'waiter':
+                dashboardUrl = '/waiter/dashboard/';
+                break;
+            case 'cashier':
+                dashboardUrl = '/cashier/dashboard/';
+                break;
+            case 'manager':
+                dashboardUrl = '/restaurant-admin/dashboard/';
+                break;
+            case 'admin':
+                dashboardUrl = '/admin/';
+                break;
+            default:
+                dashboardUrl = '/login/';
+        }
+        
+        window.location.href = dashboardUrl;
     }
 
     bindEvents() {

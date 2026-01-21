@@ -1,5 +1,6 @@
 # profit_intelligence/template_views.py
 from django.shortcuts import render
+import json
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseForbidden
 from accounts.decorators import role_required
@@ -29,12 +30,26 @@ def profit_dashboard_view(request):
             if user.branch:
                 accessible_branches = [user.branch]
 
+    # Serialize branches for safe insertion into JavaScript
+    try:
+        # Convert queryset or list of Branch objects into simple dicts
+        branches_serializable = []
+        for b in accessible_branches:
+            try:
+                branches_serializable.append({'id': b.id, 'name': str(b.name)})
+            except Exception:
+                continue
+        accessible_branches_json = json.dumps(branches_serializable)
+    except Exception:
+        accessible_branches_json = '[]'
+
     return render(request, 'profit_intelligence/dashboard.html', {
         'user': user,
         'restaurant': user.restaurant,
         'user_role': user.role,
         'manager_scope': user.manager_scope if user.role == 'manager' else 'restaurant',
         'accessible_branches': accessible_branches,
+        'accessible_branches_json': accessible_branches_json,
         'page_title': 'Profit Intelligence Dashboard',
         'page_subtitle': 'Advanced business intelligence and profit analytics'
     })

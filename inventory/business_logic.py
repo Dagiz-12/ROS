@@ -32,14 +32,19 @@ class ProfitCalculator:
         for item in items:
             # Get ingredient cost from recipes
             recipes = Recipe.objects.filter(menu_item=item)
-            ingredient_cost = sum(recipe.ingredient_cost for recipe in recipes)
+            ingredient_cost = Decimal('0.00')
+            for recipe in recipes:
+                # Handle None ingredient_cost
+                recipe_cost = recipe.ingredient_cost or Decimal('0.00')
+                ingredient_cost += recipe_cost
 
             # Calculate profit metrics
-            revenue = item.total_revenue
-            cost_of_goods = ingredient_cost * item.sold_count if item.sold_count > 0 else 0
+            revenue = item.total_revenue or Decimal('0.00')
+            sold_count = item.sold_count or 0
+            cost_of_goods = ingredient_cost * Decimal(str(sold_count))
             gross_profit = revenue - cost_of_goods
             profit_margin = (gross_profit / revenue *
-                             100) if revenue > 0 else 0
+                             100) if revenue > 0 else Decimal('0.00')
 
             # Get recent sales trend (last 7 days)
             week_ago = timezone.now() - timedelta(days=7)
@@ -54,11 +59,11 @@ class ProfitCalculator:
             profit_data.append({
                 'id': item.id,
                 'name': item.name,
-                'category': item.category.name,
-                'price': float(item.price),
-                'cost_price': float(item.cost_price),
+                'category': item.category.name if item.category else 'Uncategorized',
+                'price': float(item.price or Decimal('0.00')),
+                'cost_price': float(item.cost_price or Decimal('0.00')),
                 'ingredient_cost': float(ingredient_cost),
-                'sold_count': item.sold_count,
+                'sold_count': sold_count,
                 'revenue': float(revenue),
                 'gross_profit': float(gross_profit),
                 'profit_margin': float(profit_margin),

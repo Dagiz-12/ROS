@@ -8,6 +8,7 @@ import uuid
 
 from inventory.models import StockItem, StockTransaction
 from restaurants.models import Restaurant, Branch
+from decimal import Decimal
 
 User = get_user_model()
 
@@ -52,15 +53,22 @@ class WasteCategory(models.Model):
         """Calculate total waste cost for this category in last N days"""
         from django.utils.timezone import now
         from datetime import timedelta
+        from django.db.models import Sum, F
 
         cutoff_date = now() - timedelta(days=days)
+
+        # Get waste records and join with stock_transaction
         total = WasteRecord.objects.filter(
             waste_reason__category=self,
             recorded_at__gte=cutoff_date,
             status='approved'
-        ).aggregate(total=Sum('total_cost'))['total']
+        ).filter(
+            stock_transaction__isnull=False  # Only records with linked transactions
+        ).aggregate(
+            total=Sum('stock_transaction__total_cost')
+        )['total']
 
-        return total or 0
+        return total or Decimal('0.00')
 
 
 class WasteReason(models.Model):
@@ -352,6 +360,8 @@ class WasteTarget(models.Model):
     def calculate_current_value(self):
         """Calculate current waste against target"""
         from datetime import timedelta
+        from decimal import Decimal
+        from django.db.models import Sum
 
         end_date = timezone.now().date()
         if self.period == 'daily':
@@ -371,10 +381,12 @@ class WasteTarget(models.Model):
         )
 
         if self.target_type == 'cost':
-            total_cost = 0
-            for record in waste_records:
-                if record.stock_transaction:
-                    total_cost += record.stock_transaction.total_cost
+            # Sum through stock_transaction relationship
+            total_cost = waste_records.filter(
+                stock_transaction__isnull=False
+            ).aggregate(
+                total=Sum('stock_transaction__total_cost')
+            )['total'] or Decimal('0.00')
             self.current_value = total_cost
         elif self.target_type == 'quantity':
             self.current_value = waste_records.count()

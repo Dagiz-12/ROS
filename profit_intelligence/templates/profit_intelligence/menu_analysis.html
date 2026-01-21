@@ -1,0 +1,317 @@
+<!-- profit_intelligence/templates/profit_intelligence/menu_analysis.html -->
+{% extends 'profit_intelligence/dashboard.html' %}
+
+{% block title %}Menu Item Analysis - Profit Intelligence{% endblock %}
+
+{% block page_title %}Menu Item Profitability Analysis{% endblock %}
+{% block page_subtitle %}Detailed analysis of each menu item's performance and profitability{% endblock %}
+
+{% block content %}
+<div class="container mx-auto px-4 py-8">
+    <!-- Filters -->
+    <div class="mb-6 bg-white rounded-lg shadow p-4">
+        <div class="flex flex-wrap gap-4 items-center">
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1">Date Range</label>
+                <select id="period-selector" class="w-40 px-3 py-2 border border-gray-300 rounded-md">
+                    <option value="7">Last 7 Days</option>
+                    <option value="30" selected>Last 30 Days</option>
+                    <option value="90">Last 90 Days</option>
+                    <option value="custom">Custom Range</option>
+                </select>
+            </div>
+            
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1">Sort By</label>
+                <select id="sort-selector" class="w-40 px-3 py-2 border border-gray-300 rounded-md">
+                    <option value="revenue">Revenue (High to Low)</option>
+                    <option value="profit">Profit (High to Low)</option>
+                    <option value="margin" selected>Margin (High to Low)</option>
+                    <option value="quantity">Quantity Sold</option>
+                </select>
+            </div>
+            
+            <div class="ml-auto">
+                <button id="export-btn" class="px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700">
+                    <i class="fas fa-download mr-2"></i>Export CSV
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Summary Cards -->
+    <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
+        <div class="bg-white rounded-lg shadow p-4">
+            <div class="text-sm text-gray-500">Total Items Analyzed</div>
+            <div id="total-items" class="text-2xl font-bold">0</div>
+        </div>
+        
+        <div class="bg-white rounded-lg shadow p-4">
+            <div class="text-sm text-gray-500">Avg. Profit Margin</div>
+            <div id="avg-margin" class="text-2xl font-bold">0.0%</div>
+        </div>
+        
+        <div class="bg-white rounded-lg shadow p-4">
+            <div class="text-sm text-gray-500">Loss Makers</div>
+            <div id="loss-makers" class="text-2xl font-bold text-red-600">0</div>
+        </div>
+        
+        <div class="bg-white rounded-lg shadow p-4">
+            <div class="text-sm text-gray-500">High Profit Items</div>
+            <div id="high-profit" class="text-2xl font-bold text-green-600">0</div>
+        </div>
+    </div>
+
+    <!-- Menu Items Table -->
+    <div class="bg-white rounded-lg shadow overflow-hidden">
+        <div class="px-6 py-4 border-b border-gray-200">
+            <h3 class="text-lg font-medium text-gray-900">Menu Item Performance</h3>
+        </div>
+        
+        <div class="overflow-x-auto">
+            <table class="min-w-full divide-y divide-gray-200">
+                <thead class="bg-gray-50">
+                    <tr>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Menu Item</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Category</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Price</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Sold</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Revenue</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Cost</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Profit</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Margin</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+                    </tr>
+                </thead>
+                <tbody id="menu-items-table" class="bg-white divide-y divide-gray-200">
+                    <!-- Data will be loaded here -->
+                </tbody>
+            </table>
+        </div>
+        
+        <div class="px-6 py-4 border-t border-gray-200">
+            <div id="loading" class="text-center py-8">
+                <div class="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
+                <p class="mt-2 text-gray-500">Loading menu item data...</p>
+            </div>
+            <div id="no-data" class="text-center py-8 hidden">
+                <i class="fas fa-chart-pie text-4xl text-gray-300 mb-3"></i>
+                <p class="text-gray-500">No menu item data available for the selected period.</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- JavaScript -->
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const menuItemAnalysis = new MenuItemAnalysis();
+    menuItemAnalysis.init();
+});
+
+class MenuItemAnalysis {
+    constructor() {
+        this.apiBase = '/profit-intelligence/api/';
+        this.currentPeriod = 30;
+        this.currentSort = 'margin';
+        this.menuItems = [];
+    }
+    
+    init() {
+        this.setupEventListeners();
+        this.loadData();
+    }
+    
+    setupEventListeners() {
+        // Period selector
+        document.getElementById('period-selector').addEventListener('change', (e) => {
+            this.currentPeriod = e.target.value === 'custom' ? 30 : parseInt(e.target.value);
+            this.loadData();
+        });
+        
+        // Sort selector
+        document.getElementById('sort-selector').addEventListener('change', (e) => {
+            this.currentSort = e.target.value;
+            this.sortAndRender();
+        });
+        
+        // Export button
+        document.getElementById('export-btn').addEventListener('click', () => {
+            this.exportData();
+        });
+    }
+    
+    async loadData() {
+        this.showLoading(true);
+        
+        try {
+            const response = await fetch(
+                `${this.apiBase}menu-items/?days=${this.currentPeriod}`
+            );
+            
+            if (!response.ok) throw new Error('Network response was not ok');
+            
+            const data = await response.json();
+            
+            if (data.success) {
+                this.menuItems = data.items || [];
+                this.updateSummary(data.summary || {});
+                this.sortAndRender();
+            } else {
+                throw new Error(data.error || 'Failed to load data');
+            }
+        } catch (error) {
+            console.error('Error loading menu item data:', error);
+            this.showError('Failed to load menu item data. Please try again.');
+        } finally {
+            this.showLoading(false);
+        }
+    }
+    
+    updateSummary(summary) {
+        document.getElementById('total-items').textContent = summary.total_items || 0;
+        document.getElementById('avg-margin').textContent = 
+            summary.average_margin ? summary.average_margin.toFixed(1) + '%' : '0.0%';
+        document.getElementById('loss-makers').textContent = summary.loss_makers || 0;
+        document.getElementById('high-profit').textContent = summary.high_profit_count || 0;
+    }
+    
+    sortAndRender() {
+        // Sort items
+        const sortedItems = [...this.menuItems].sort((a, b) => {
+            switch (this.currentSort) {
+                case 'revenue': return b.revenue - a.revenue;
+                case 'profit': return b.profit - a.profit;
+                case 'margin': return b.profit_margin - a.profit_margin;
+                case 'quantity': return b.quantity_sold - a.quantity_sold;
+                default: return 0;
+            }
+        });
+        
+        this.renderTable(sortedItems);
+    }
+    
+    renderTable(items) {
+        const tbody = document.getElementById('menu-items-table');
+        
+        if (!items || items.length === 0) {
+            document.getElementById('no-data').classList.remove('hidden');
+            tbody.innerHTML = '';
+            return;
+        }
+        
+        document.getElementById('no-data').classList.add('hidden');
+        
+        const rows = items.map(item => {
+            const statusClass = this.getStatusClass(item.status);
+            const statusText = this.getStatusText(item.status);
+            const marginColor = item.profit_margin >= 40 ? 'text-green-600' : 
+                               item.profit_margin >= 20 ? 'text-blue-600' : 
+                               item.profit_margin >= 10 ? 'text-yellow-600' : 
+                               item.profit_margin > 0 ? 'text-orange-600' : 'text-red-600';
+            
+            return `
+                <tr class="hover:bg-gray-50">
+                    <td class="px-6 py-4 whitespace-nowrap">
+                        <div class="font-medium text-gray-900">${item.name}</div>
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                        ${item.category || 'Uncategorized'}
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                        $${item.price.toFixed(2)}
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                        ${item.quantity_sold}
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                        $${item.revenue.toFixed(2)}
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                        $${item.cost.toFixed(2)}
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm font-bold ${item.profit >= 0 ? 'text-green-600' : 'text-red-600'}">
+                        $${item.profit.toFixed(2)}
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm font-bold ${marginColor}">
+                        ${item.profit_margin.toFixed(1)}%
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap">
+                        <span class="px-2 py-1 text-xs font-medium rounded-full ${statusClass}">
+                            ${statusText}
+                        </span>
+                    </td>
+                </tr>
+            `;
+        }).join('');
+        
+        tbody.innerHTML = rows;
+    }
+    
+    getStatusClass(status) {
+        switch (status) {
+            case 'high_profit': return 'bg-green-100 text-green-800';
+            case 'good_profit': return 'bg-blue-100 text-blue-800';
+            case 'low_profit': return 'bg-yellow-100 text-yellow-800';
+            case 'problem': return 'bg-orange-100 text-orange-800';
+            case 'loss': return 'bg-red-100 text-red-800';
+            default: return 'bg-gray-100 text-gray-800';
+        }
+    }
+    
+    getStatusText(status) {
+        switch (status) {
+            case 'high_profit': return 'High Profit';
+            case 'good_profit': return 'Good Profit';
+            case 'low_profit': return 'Low Profit';
+            case 'problem': return 'Needs Attention';
+            case 'loss': return 'Loss Maker';
+            default: return 'Unknown';
+        }
+    }
+    
+    exportData() {
+        // Create CSV data
+        const headers = ['Name', 'Category', 'Price', 'Sold', 'Revenue', 'Cost', 'Profit', 'Margin', 'Status'];
+        const rows = this.menuItems.map(item => [
+            item.name,
+            item.category || '',
+            item.price.toFixed(2),
+            item.quantity_sold,
+            item.revenue.toFixed(2),
+            item.cost.toFixed(2),
+            item.profit.toFixed(2),
+            item.profit_margin.toFixed(1) + '%',
+            this.getStatusText(item.status)
+        ]);
+        
+        const csvContent = [
+            headers.join(','),
+            ...rows.map(row => row.join(','))
+        ].join('\n');
+        
+        // Create and trigger download
+        const blob = new Blob([csvContent], { type: 'text/csv' });
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `menu-item-analysis-${new Date().toISOString().split('T')[0]}.csv`;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        window.URL.revokeObjectURL(url);
+    }
+    
+    showLoading(show) {
+        const loading = document.getElementById('loading');
+        loading.classList.toggle('hidden', !show);
+    }
+    
+    showError(message) {
+        // You could implement a toast notification here
+        console.error('Error:', message);
+        alert(message);
+    }
+}
+</script>
+{% endblock %}

@@ -1,7 +1,8 @@
-# waste_tracker/signals.py
+# waste_tracker/signals.py - FIXED VERSION
 from django.db.models.signals import post_save, pre_save
 from django.dispatch import receiver
 from django.utils import timezone
+from decimal import Decimal
 from .models import WasteRecord, WasteAlert
 
 
@@ -22,10 +23,17 @@ def handle_waste_record_post_save(sender, instance, created, **kwargs):
         # Check if approval is needed
         if instance.waste_reason.category.requires_approval:
             # Create approval needed alert
+            # SAFELY get stock item name
+            stock_item_name = "Unknown Item"
+            if instance.stock_transaction and instance.stock_transaction.stock_item:
+                stock_item_name = instance.stock_transaction.stock_item.name
+            elif hasattr(instance, 'stock_item') and instance.stock_item:
+                stock_item_name = instance.stock_item.name
+
             WasteAlert.objects.create(
                 alert_type='approval_needed',
                 title=f'Waste Record Needs Approval',
-                message=f'Waste record for {instance.stock_item.name if instance.stock_item else "Unknown Item"} '
+                message=f'Waste record for {stock_item_name} '
                 f'needs approval. Reason: {instance.waste_reason.name}',
                 waste_record=instance,
                 branch=instance.branch
@@ -40,9 +48,9 @@ def handle_waste_record_post_save(sender, instance, created, **kwargs):
                 status='approved',
                 created_at__gte=today_start,
                 branch=instance.branch
-            )
+            ).select_related('stock_transaction')
 
-            total_today_cost = 0
+            total_today_cost = Decimal('0.00')
             for record in today_waste:
                 if record.stock_transaction:
                     total_today_cost += record.stock_transaction.total_cost
@@ -71,11 +79,16 @@ def handle_waste_record_post_save(sender, instance, created, **kwargs):
                 ).count()
 
                 if similar_issues >= 3:  # Alert after 3 approved occurrences
+                    # SAFELY get stock item name
+                    stock_item_name = "Unknown Item"
+                    if instance.stock_transaction and instance.stock_transaction.stock_item:
+                        stock_item_name = instance.stock_transaction.stock_item.name
+
                     WasteAlert.objects.create(
                         alert_type='recurring_issue',
                         title=f'Recurring Waste Issue Confirmed',
                         message=f'{similar_issues} occurrences of {instance.waste_reason.name} '
-                        f'for {instance.stock_item.name if instance.stock_item else "Unknown Item"}',
+                        f'for {stock_item_name}',
                         waste_record=instance,
                         waste_reason=instance.waste_reason,
                         branch=instance.branch

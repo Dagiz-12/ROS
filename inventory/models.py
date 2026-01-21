@@ -238,6 +238,8 @@ class StockAlert(models.Model):
 
 
 # Update the Recipe model in inventory/models.py to match your MenuItem model
+# Update the Recipe model in inventory/models.py
+
 class Recipe(models.Model):
     """
     Connects menu items to ingredients with quantities
@@ -248,11 +250,19 @@ class Recipe(models.Model):
         StockItem, on_delete=models.CASCADE, related_name='used_in_recipes')
 
     # Quantity required for one serving (in the unit of the stock item)
-    quantity_required = models.DecimalField(max_digits=10, decimal_places=3)
+    quantity_required = models.DecimalField(
+        max_digits=10,
+        decimal_places=3,
+        default=Decimal('0.000')  # ADD DEFAULT VALUE
+    )
 
     # Optional: Waste factor or preparation loss (percentage)
-    waste_factor = models.DecimalField(max_digits=5, decimal_places=2, default=0,
-                                       help_text="Percentage of ingredient lost during preparation (0-100)")
+    waste_factor = models.DecimalField(
+        max_digits=5,
+        decimal_places=2,
+        default=0,
+        help_text="Percentage of ingredient lost during preparation (0-100)"
+    )
 
     # Notes
     notes = models.TextField(blank=True)
@@ -266,12 +276,19 @@ class Recipe(models.Model):
         ordering = ['stock_item__name']
 
     def __str__(self):
+        if self.quantity_required is None:
+            return f"{self.menu_item.name} - {self.stock_item.name} (No quantity set)"
         return f"{self.menu_item.name} - {self.stock_item.name} ({self.quantity_required} {self.stock_item.unit})"
 
     @property
     def adjusted_quantity(self):
         """Calculate quantity including waste factor"""
         from decimal import Decimal
+
+        # Handle None quantity
+        if self.quantity_required is None:
+            return Decimal('0.000')
+
         waste_multiplier = Decimal('1') + (self.waste_factor / Decimal('100'))
         return self.quantity_required * waste_multiplier
 
@@ -279,17 +296,26 @@ class Recipe(models.Model):
     def ingredient_cost(self):
         """Calculate cost of this ingredient for one serving"""
         from decimal import Decimal
+
+        # Handle None values
+        if self.adjusted_quantity is None or self.stock_item.cost_per_unit is None:
+            return Decimal('0.00')
+
         return self.adjusted_quantity * self.stock_item.cost_per_unit
 
     def update_menu_item_cost(self):
         """Update the menu item's cost_price based on this recipe"""
         # Calculate total cost from all recipes for this menu item
         all_recipes = Recipe.objects.filter(menu_item=self.menu_item)
-        total_cost = sum(recipe.ingredient_cost for recipe in all_recipes)
+        total_cost = Decimal('0.00')
+
+        for recipe in all_recipes:
+            total_cost += recipe.ingredient_cost
 
         # Update menu item cost_price
-        self.menu_item.cost_price = total_cost
-        self.menu_item.save(update_fields=['cost_price'])
+        if self.menu_item:
+            self.menu_item.cost_price = total_cost
+            self.menu_item.save(update_fields=['cost_price'])
 
         return total_cost
 

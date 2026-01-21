@@ -3,6 +3,7 @@ from django.contrib import admin
 from django.utils.html import format_html
 from django.utils import timezone
 from .models import StockItem, StockTransaction, StockAlert, Recipe, InventoryReport
+from decimal import Decimal
 
 
 class StockItemAdmin(admin.ModelAdmin):
@@ -118,6 +119,8 @@ class StockAlertAdmin(admin.ModelAdmin):
     mark_as_resolved.short_description = "Mark selected alerts as resolved"
 
 
+# Update the RecipeAdmin in inventory/admin.py
+
 class RecipeAdmin(admin.ModelAdmin):
     list_display = ['menu_item', 'stock_item', 'quantity_required', 'unit_display',
                     'ingredient_cost_display', 'waste_factor', 'restaurant']
@@ -125,16 +128,29 @@ class RecipeAdmin(admin.ModelAdmin):
     search_fields = ['menu_item__name', 'stock_item__name']
     readonly_fields = ['ingredient_cost', 'created_at', 'updated_at']
 
+    # Add form field customization
+    def formfield_for_dbfield(self, db_field, request, **kwargs):
+        field = super().formfield_for_dbfield(db_field, request, **kwargs)
+        if db_field.name == 'quantity_required':
+            field.initial = Decimal('0.000')  # Set default initial value
+        return field
+
     def unit_display(self, obj):
-        return obj.stock_item.unit
+        return obj.stock_item.unit if obj.stock_item else 'N/A'
     unit_display.short_description = 'Unit'
 
     def ingredient_cost_display(self, obj):
-        return f"${obj.ingredient_cost:.2f}"
+        try:
+            cost = obj.ingredient_cost
+            return f"${cost:.2f}"
+        except (AttributeError, TypeError):
+            return f"$0.00"
     ingredient_cost_display.short_description = 'Ingredient Cost'
 
     def restaurant(self, obj):
-        return obj.menu_item.category.restaurant
+        if obj.menu_item and obj.menu_item.category:
+            return obj.menu_item.category.restaurant
+        return 'N/A'
     restaurant.short_description = 'Restaurant'
 
 

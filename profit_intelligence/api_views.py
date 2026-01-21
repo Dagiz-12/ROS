@@ -43,8 +43,8 @@ class ProfitDashboardAPIView(APIView):
                 }, status=status.HTTP_400_BAD_REQUEST)
 
             # Get parameters
-            view_level = request.query_params.get('view_level', 'branch')
-            branch_id = request.query_params.get('branch_id')
+            view_level = request.GET.get('view_level', 'branch')
+            branch_id = request.GET.get('branch_id')
 
             # Validate view level
             if view_level not in ['branch', 'restaurant']:
@@ -95,10 +95,10 @@ class DailyProfitAPIView(APIView):
             user = request.user
 
             # Get date parameters
-            date_str = request.query_params.get('date')
-            start_date_str = request.query_params.get('start_date')
-            end_date_str = request.query_params.get('end_date')
-            days = int(request.query_params.get('days', 30))
+            date_str = request.GET.get('date')
+            start_date_str = request.GET.get('start_date')
+            end_date_str = request.GET.get('end_date')
+            days = int(request.GET.get('days', 30))
 
             # Single date
             if date_str:
@@ -109,7 +109,7 @@ class DailyProfitAPIView(APIView):
                 profit_data = ProfitCalculator.calculate_daily_profit(
                     date=date,
                     restaurant=user.restaurant,
-                    branch=user.branch if request.query_params.get(
+                    branch=user.branch if request.GET.get(
                         'view_level', 'branch') == 'branch' else None
                 )
 
@@ -141,7 +141,7 @@ class DailyProfitAPIView(APIView):
                     profit_data = ProfitCalculator.calculate_daily_profit(
                         date=current_date,
                         restaurant=user.restaurant,
-                        branch=user.branch if request.query_params.get(
+                        branch=user.branch if request.GET.get(
                             'view_level', 'branch') == 'branch' else None
                     )
 
@@ -183,7 +183,7 @@ class DailyProfitAPIView(APIView):
                 trend_data = ProfitCalculator.calculate_profit_trend(
                     days=days,
                     restaurant=user.restaurant,
-                    branch=user.branch if request.query_params.get(
+                    branch=user.branch if request.GET.get(
                         'view_level', 'branch') == 'branch' else None
                 )
 
@@ -214,7 +214,7 @@ class MenuItemProfitAPIView(APIView):
             user = request.user
 
             # Get date range
-            days = int(request.query_params.get('days', 30))
+            days = int(request.GET.get('days', 30))
             end_date = timezone.now().date()
             start_date = end_date - timedelta(days=days)
 
@@ -225,7 +225,7 @@ class MenuItemProfitAPIView(APIView):
                 restaurant=user.restaurant
             )
 
-            if request.query_params.get('view_level', 'branch') == 'branch' and user.branch:
+            if request.GET.get('view_level', 'branch') == 'branch' and user.branch:
                 performances = performances.filter(branch=user.branch)
 
             # Aggregate by menu item
@@ -312,17 +312,17 @@ class ProfitAlertsAPIView(APIView):
             user = request.user
 
             # Get parameters
-            show_resolved = request.query_params.get(
+            show_resolved = request.GET.get(
                 'show_resolved', 'false').lower() == 'true'
-            alert_type = request.query_params.get('type')
-            severity = request.query_params.get('severity')
+            alert_type = request.GET.get('type')
+            severity = request.GET.get('severity')
 
             # Get alerts
             alerts = ProfitAlert.objects.filter(
                 restaurant=user.restaurant
             )
 
-            if request.query_params.get('view_level', 'branch') == 'branch' and user.branch:
+            if request.GET.get('view_level', 'branch') == 'branch' and user.branch:
                 alerts = alerts.filter(branch=user.branch)
 
             if not show_resolved:
@@ -367,7 +367,7 @@ class ProfitAlertsAPIView(APIView):
                 is_resolved=False
             )
 
-            if request.query_params.get('view_level', 'branch') == 'branch' and user.branch:
+            if request.GET.get('view_level', 'branch') == 'branch' and user.branch:
                 unresolved = unresolved.filter(branch=user.branch)
 
             severity_counts = unresolved.values(
@@ -404,7 +404,7 @@ class ProfitIssuesAPIView(APIView):
             # Analyze profit issues
             issues = ProfitCalculator.analyze_profit_issues(
                 restaurant=user.restaurant,
-                branch=user.branch if request.query_params.get(
+                branch=user.branch if request.GET.get(
                     'view_level', 'branch') == 'branch' else None
             )
 
@@ -446,7 +446,7 @@ class ProfitTableAPIView(APIView):
     def get(self, request):
         try:
             user = request.user
-            period = request.query_params.get('period', 'today')
+            period = request.GET.get('period', 'today')
 
             # Get data for the period
             if period == 'today':
@@ -460,6 +460,17 @@ class ProfitTableAPIView(APIView):
                 # Custom days
                 days = int(period) if period.isdigit() else 7
                 data = self._get_custom_period_profit_table(user, days)
+
+            # Normalize response: admin frontend expects 'items' to be an array.
+            # If the helper returned a dict (summary), return it under 'summary'
+            # and provide an empty items array to avoid JS `.map` errors.
+            if isinstance(data, dict) and not isinstance(data, list):
+                return Response({
+                    'success': True,
+                    'period': period,
+                    'items': [],
+                    'summary': data
+                })
 
             return Response({
                 'success': True,
@@ -483,7 +494,7 @@ class ProfitTableAPIView(APIView):
             table__branch__restaurant=user.restaurant
         )
 
-        if user.branch and self.request.query_params.get('view_level', 'branch') == 'branch':
+        if user.branch and self.request.GET.get('view_level', 'branch') == 'branch':
             orders = orders.filter(table__branch=user.branch)
 
         # Get today's waste
@@ -493,7 +504,7 @@ class ProfitTableAPIView(APIView):
             branch__restaurant=user.restaurant
         )
 
-        if user.branch and self.request.query_params.get('view_level', 'branch') == 'branch':
+        if user.branch and self.request.GET.get('view_level', 'branch') == 'branch':
             waste_records = waste_records.filter(branch=user.branch)
 
         # Calculate totals
@@ -536,7 +547,7 @@ class ProfitTableAPIView(APIView):
             restaurant=user.restaurant
         )
 
-        if user.branch and self.request.query_params.get('view_level', 'branch') == 'branch':
+        if user.branch and self.request.GET.get('view_level', 'branch') == 'branch':
             aggregations = aggregations.filter(branch=user.branch)
 
         # Aggregate data
@@ -569,7 +580,7 @@ class ProfitTableAPIView(APIView):
         )
 
         # use self.request (ensure this method is on a view that has .request)
-        if user.branch and self.request.query_params.get('view_level', 'branch') == 'branch':
+        if user.branch and self.request.GET.get('view_level', 'branch') == 'branch':
             aggregations = aggregations.filter(branch=user.branch)
 
         data = aggregations.aggregate(
@@ -600,7 +611,7 @@ class ProfitTableAPIView(APIView):
             restaurant=user.restaurant
         )
 
-        if user.branch and self.request.query_params.get('view_level', 'branch') == 'branch':
+        if user.branch and self.request.GET.get('view_level', 'branch') == 'branch':
             aggregations = aggregations.filter(branch=user.branch)
 
         data = aggregations.aggregate(
@@ -632,7 +643,7 @@ class BusinessMetricsAPIView(APIView):
     def get(self, request):
         try:
             user = request.user
-            period = request.query_params.get('period', 'today')
+            period = request.GET.get('period', 'today')
 
             # Calculate metrics based on period
             if period == 'today':
@@ -841,7 +852,7 @@ class SalesDataAPIView(APIView):
     def get(self, request):
         try:
             user = request.user
-            days = int(request.query_params.get('days', 7))
+            days = int(request.GET.get('days', 7))
 
             end_date = timezone.now().date()
             start_date = end_date - timedelta(days=days)
@@ -858,7 +869,7 @@ class SalesDataAPIView(APIView):
                     table__branch__restaurant=user.restaurant
                 )
 
-                if user.branch and request.query_params.get('view_level', 'branch') == 'branch':
+                if user.branch and request.GET.get('view_level', 'branch') == 'branch':
                     orders = orders.filter(table__branch=user.branch)
 
                 total_sales = orders.aggregate(
@@ -898,7 +909,7 @@ class PopularItemsAPIView(APIView):
     def get(self, request):
         try:
             user = request.user
-            days = int(request.query_params.get('days', 7))
+            days = int(request.GET.get('days', 7))
 
             start_date = timezone.now().date() - timedelta(days=days)
 
@@ -956,7 +967,7 @@ class RecentActivityAPIView(APIView):
     def get(self, request):
         try:
             user = request.user
-            limit = int(request.query_params.get('limit', 10))
+            limit = int(request.GET.get('limit', 10))
 
             activities = []
 

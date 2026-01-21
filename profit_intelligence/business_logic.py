@@ -52,7 +52,7 @@ class ProfitCalculator:
             ingredient_details = []
 
             for order in orders:
-                for order_item in order.order_items.all():
+                for order_item in order.items.all():
                     if order_item.menu_item and order_item.menu_item.cost_price:
                         item_cost = order_item.menu_item.cost_price * order_item.quantity
                         total_ingredient_cost += item_cost
@@ -563,14 +563,21 @@ class ProfitDashboardAPI:
                 restaurant, branch)
 
             # Calculate key metrics
+            # Build a more complete 'today' payload so frontend can render KPIs
             metrics = {
                 'today': {
                     'revenue': today_data.get('revenue', 0),
-                    'profit': today_data.get('net_profit', 0),
-                    'margin': today_data.get('profit_margin', 0),
-                    'orders': today_data.get('order_count', 0),
+                    'net_profit': today_data.get('net_profit', today_data.get('profit', 0)),
+                    'profit': today_data.get('net_profit', today_data.get('profit', 0)),
+                    'profit_margin': today_data.get('profit_margin', today_data.get('margin', 0)),
+                    'margin': today_data.get('profit_margin', today_data.get('margin', 0)),
+                    'ingredient_cost': today_data.get('ingredient_cost', today_data.get('cost_of_goods', 0)),
+                    'cost_of_goods': today_data.get('ingredient_cost', today_data.get('cost_of_goods', 0)),
                     'waste_cost': today_data.get('waste_cost', 0),
-                    'waste_percentage': today_data.get('waste_percentage', 0)
+                    'waste_percentage': today_data.get('waste_percentage', 0),
+                    'order_count': today_data.get('order_count', today_data.get('orders', 0)),
+                    'orders': today_data.get('order_count', today_data.get('orders', 0)),
+                    'average_order_value': today_data.get('average_order_value') or today_data.get('avg_order_value') or (today_data.get('revenue', 0) / (today_data.get('order_count') or today_data.get('orders') or 1))
                 },
                 'trend': {
                     'total_revenue': trend_data.get('summary', {}).get('total_revenue', 0),

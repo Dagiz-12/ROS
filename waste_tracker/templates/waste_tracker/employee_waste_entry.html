@@ -69,32 +69,41 @@
     <!-- Navigation -->
     <nav class="bg-white shadow-lg sticky top-0 z-50">
         <div class="container mx-auto px-4 py-3">
-            <div class="flex justify-between items-center">
-                <div class="flex items-center space-x-3">
-                    <div class="bg-red-100 p-2 rounded-lg">
-                        <i class="fas fa-trash-alt text-xl text-red-600"></i>
-                    </div>
-                    <div>
-                        <h1 class="text-lg font-bold">Record Waste</h1>
-                        <p class="text-sm text-gray-600">
-                            <span id="user-name">{{ user.username }}</span> 
-                            (<span id="user-role">{{ user.role|title }}</span>)
-                        </p>
-                    </div>
-                </div>
-                <div class="flex items-center space-x-4">
-                    <a href="/waiter/dashboard/" 
-                       class="bg-gray-200 text-gray-700 px-4 py-2 rounded-lg hover:bg-gray-300 transition flex items-center space-x-2">
-                        <i class="fas fa-arrow-left"></i>
-                        <span>Back to Dashboard</span>
-                    </a>
-                    <button id="logout-btn" 
-                            class="bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700 transition flex items-center space-x-2">
-                        <i class="fas fa-sign-out-alt"></i>
-                        <span>Logout</span>
-                    </button>
-                </div>
-            </div>
+         
+<div class="flex items-center space-x-4">
+    <!-- Dynamic dashboard link based on user role -->
+    {% if user.role == 'chef' %}
+    <a href="/chef/dashboard/" 
+       class="bg-gray-200 text-gray-700 px-4 py-2 rounded-lg hover:bg-gray-300 transition flex items-center space-x-2">
+        <i class="fas fa-arrow-left"></i>
+        <span>Back to Kitchen Dashboard</span>
+    </a>
+    {% elif user.role == 'waiter' %}
+    <a href="/waiter/dashboard/" 
+       class="bg-gray-200 text-gray-700 px-4 py-2 rounded-lg hover:bg-gray-300 transition flex items-center space-x-2">
+        <i class="fas fa-arrow-left"></i>
+        <span>Back to Waiter Dashboard</span>
+    </a>
+    {% elif user.role == 'cashier' %}
+    <a href="/cashier/dashboard/" 
+       class="bg-gray-200 text-gray-700 px-4 py-2 rounded-lg hover:bg-gray-300 transition flex items-center space-x-2">
+        <i class="fas fa-arrow-left"></i>
+        <span>Back to Cashier Dashboard</span>
+    </a>
+    {% else %}
+    <a href="/restaurant-admin/dashboard/" 
+       class="bg-gray-200 text-gray-700 px-4 py-2 rounded-lg hover:bg-gray-300 transition flex items-center space-x-2">
+        <i class="fas fa-arrow-left"></i>
+        <span>Back to Admin Dashboard</span>
+    </a>
+    {% endif %}
+    
+    <button id="logout-btn" 
+            class="bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700 transition flex items-center space-x-2">
+        <i class="fas fa-sign-out-alt"></i>
+        <span>Logout</span>
+    </button>
+</div>
         </div>
     </nav>
 

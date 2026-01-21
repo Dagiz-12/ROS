@@ -26,6 +26,14 @@ from accounts.permissions import IsManagerOrAdmin  # Use your existing permissio
 from rest_framework.response import Response
 from rest_framework import status
 from django.contrib.humanize.templatetags.humanize import naturaltime
+from django.http import JsonResponse
+
+# Import profit_intelligence API views for compatibility forwarding
+try:
+    from profit_intelligence.api_views import ProfitDashboardAPIView, ProfitTableAPIView
+except Exception:
+    ProfitDashboardAPIView = None
+    ProfitTableAPIView = None
 
 
 @login_required
@@ -454,15 +462,26 @@ def api_order_analytics(request):
 @login_required
 def api_business_metrics(request):
     """Redirect to profit_intelligence API"""
-    # Instead of calculating here, redirect to profit_intelligence
-    # OR keep for compatibility but call profit_intelligence internally
-    pass
+    # Compatibility proxy: forward to profit_intelligence API view if available
+    if ProfitDashboardAPIView is None:
+        return JsonResponse({'success': False, 'error': 'Profit API not available'}, status=500)
+
+    view = ProfitDashboardAPIView()
+    view.request = request
+    response = view.get(request)
+    return JsonResponse(getattr(response, 'data', {}), status=getattr(response, 'status_code', 200), safe=False)
 
 
 @login_required
 def api_profit_table(request):
     """Redirect to profit_intelligence API"""
-    pass
+    if ProfitTableAPIView is None:
+        return JsonResponse({'success': False, 'error': 'Profit API not available'}, status=500)
+
+    view = ProfitTableAPIView()
+    view.request = request
+    response = view.get(request)
+    return JsonResponse(getattr(response, 'data', {}), status=getattr(response, 'status_code', 200), safe=False)
 
 
 # Menu Management API Endpoints
