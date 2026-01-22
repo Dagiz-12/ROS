@@ -173,6 +173,8 @@ class Order(models.Model):
         ('preparing', 'Preparing in Kitchen'),
         ('ready', 'Ready for Serving'),
         ('served', 'Served to Customer'),
+        ('bill_presented', 'Bill Presented'),  # NEW
+        ('payment_pending', 'Awaiting Payment'),  # NEW
         ('completed', 'Completed (Meal Finished)'),
         ('cancelled', 'Cancelled'),
     ]

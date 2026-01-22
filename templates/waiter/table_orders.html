@@ -1,0 +1,571 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Table Orders - Waiter Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+    <style>
+      .order-card {
+        transition: all 0.3s ease;
+      }
+      .order-card:hover {
+        transform: translateY(-2px);
+      }
+      .status-badge {
+        font-size: 0.75rem;
+        padding: 2px 8px;
+        border-radius: 12px;
+      }
+      .status-pending {
+        background-color: #fef3c7;
+        color: #92400e;
+      }
+      .status-confirmed {
+        background-color: #dbeafe;
+        color: #1e40af;
+      }
+      .status-preparing {
+        background-color: #fce7f3;
+        color: #9d174d;
+      }
+      .status-ready {
+        background-color: #dcfce7;
+        color: #166534;
+      }
+      .status-served {
+        background-color: #f0f9ff;
+        color: #0c4a6e;
+      }
+      .status-completed {
+        background-color: #f5f5f4;
+        color: #44403c;
+      }
+    </style>
+  </head>
+  <body class="bg-gray-50">
+    <!-- Navigation -->
+    <nav class="bg-white shadow-lg">
+      <div class="container mx-auto px-4 py-3">
+        <div class="flex justify-between items-center">
+          <div class="flex items-center space-x-3">
+            <a
+              href="{% url 'waiter-tables' %}"
+              class="text-gray-600 hover:text-red-600"
+            >
+              <i class="fas fa-arrow-left"></i>
+            </a>
+            <i class="fas fa-table text-2xl text-red-600"></i>
+            <div>
+              <h1 class="text-xl font-bold">Table {{ table.table_number }} Orders</h1>
+              <div class="flex items-center space-x-2">
+                <span class="text-sm text-gray-600">{{ table.table_name }}</span>
+                <span class="status-badge px-2 py-1 rounded-full text-xs font-medium 
+                    {{ table.status|default:'available'|lower }}">
+                  {{ table.status|default:"Available" }}
+                </span>
+              </div>
+            </div>
+          </div>
+          <div class="flex items-center space-x-4">
+            <span class="bg-red-100 text-red-800 px-3 py-1 rounded-full"
+              >{{ user_role|title }}</span
+            >
+            <a
+              href="{% url 'waiter-new-order-with-table' table.id %}"
+              class="bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700"
+            >
+              <i class="fas fa-plus mr-2"></i>New Order
+            </a>
+          </div>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="container mx-auto px-4 py-6">
+      <!-- Stats Bar -->
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+        <div class="bg-white rounded-lg shadow p-4">
+          <div class="flex items-center">
+            <div class="bg-blue-100 p-3 rounded-lg mr-4">
+              <i class="fas fa-clock text-blue-600 text-xl"></i>
+            </div>
+            <div>
+              <p class="text-gray-500 text-sm">Active Orders</p>
+              <h3 class="text-2xl font-bold" id="active-orders-count">0</h3>
+            </div>
+          </div>
+        </div>
+
+        <div class="bg-white rounded-lg shadow p-4">
+          <div class="flex items-center">
+            <div class="bg-green-100 p-3 rounded-lg mr-4">
+              <i class="fas fa-check-circle text-green-600 text-xl"></i>
+            </div>
+            <div>
+              <p class="text-gray-500 text-sm">Ready to Serve</p>
+              <h3 class="text-2xl font-bold" id="ready-count">0</h3>
+            </div>
+          </div>
+        </div>
+
+        <div class="bg-white rounded-lg shadow p-4">
+          <div class="flex items-center">
+            <div class="bg-yellow-100 p-3 rounded-lg mr-4">
+              <i class="fas fa-money-bill-wave text-yellow-600 text-xl"></i>
+            </div>
+            <div>
+              <p class="text-gray-500 text-sm">Total Revenue</p>
+              <h3 class="text-2xl font-bold" id="total-revenue">$0</h3>
+            </div>
+          </div>
+        </div>
+
+        <div class="bg-white rounded-lg shadow p-4">
+          <div class="flex items-center">
+            <div class="bg-purple-100 p-3 rounded-lg mr-4">
+              <i class="fas fa-users text-purple-600 text-xl"></i>
+            </div>
+            <div>
+              <p class="text-gray-500 text-sm">Capacity</p>
+              <h3 class="text-2xl font-bold">{{ table.capacity }} seats</h3>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Orders List -->
+      <div class="bg-white rounded-lg shadow overflow-hidden mb-6">
+        <div class="p-4 border-b">
+          <div class="flex justify-between items-center">
+            <h2 class="text-lg font-bold">Orders for Table {{ table.table_number }}</h2>
+            <div class="flex space-x-2">
+              <button
+                onclick="refreshOrders()"
+                class="bg-gray-100 text-gray-700 px-3 py-1 rounded-lg hover:bg-gray-200"
+              >
+                <i class="fas fa-sync-alt mr-1"></i>Refresh
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <div id="orders-container" class="divide-y divide-gray-200">
+          <!-- Orders will be loaded here -->
+          <div class="p-8 text-center text-gray-500">
+            <div class="w-12 h-12 border-4 border-red-600 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+            <p>Loading orders...</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Quick Actions -->
+      <div class="bg-white rounded-lg shadow p-4">
+        <h2 class="text-lg font-bold mb-4">Quick Actions</h2>
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
+          <button
+            onclick="updateTableStatus()"
+            class="border border-gray-300 py-3 rounded-lg hover:bg-gray-50"
+          >
+            <i class="fas fa-edit mr-2"></i>Change Status
+          </button>
+          <a
+            href="{% url 'waiter-new-order-with-table' table.id %}"
+            class="bg-red-600 text-white py-3 rounded-lg hover:bg-red-700 text-center"
+          >
+            <i class="fas fa-plus mr-2"></i>New Order
+          </a>
+          <button
+            onclick="printTableSummary()"
+            class="border border-gray-300 py-3 rounded-lg hover:bg-gray-50"
+          >
+            <i class="fas fa-print mr-2"></i>Print Summary
+          </button>
+          <button
+            onclick="showTableQR()"
+            class="border border-gray-300 py-3 rounded-lg hover:bg-gray-50"
+          >
+            <i class="fas fa-qrcode mr-2"></i>Show QR Code
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- QR Code Modal -->
+    <div
+      id="qr-modal"
+      class="fixed inset-0 bg-black bg-opacity-50 z-50 hidden items-center justify-center p-4"
+    >
+      <div class="bg-white rounded-lg p-6 max-w-sm">
+        <div class="flex justify-between items-center mb-4">
+          <h3 class="text-lg font-bold">Table {{ table.table_number }} QR Code</h3>
+          <button onclick="closeQRModal()" class="text-gray-500 hover:text-gray-700">
+            <i class="fas fa-times"></i>
+          </button>
+        </div>
+        <div class="text-center">
+          {% if table.qr_code %}
+            <img src="{{ table.qr_code.url }}" alt="QR Code" class="w-48 h-48 mx-auto mb-4">
+          {% else %}
+            <div class="w-48 h-48 bg-gray-200 flex items-center justify-center mx-auto mb-4">
+              <i class="fas fa-qrcode text-4xl text-gray-400"></i>
+            </div>
+          {% endif %}
+          <p class="text-sm text-gray-600">Scan to view menu for Table {{ table.table_number }}</p>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      const API_BASE = "/api/tables";
+      const TABLE_ID = {{ table.id }};
+      const USER_TOKEN = "{{ request.session.access_token }}"; // Or get from localStorage
+      let orders = [];
+
+      async function loadTableOrders() {
+  try {
+    // Use the correct endpoint for table-specific orders
+    const response = await fetch(`${API_BASE}/orders/by_table/${TABLE_ID}/`, {
+      headers: {
+        'Authorization': `Bearer ${localStorage.getItem('access_token')}`,
+        'Content-Type': 'application/json'
+      }
+    });
+    
+    if (response.ok) {
+      orders = await response.json();
+      renderOrders();
+      updateStats();
+    } else {
+      throw new Error('Failed to load orders');
+    }
+  } catch (error) {
+    console.error("Error loading orders:", error);
+    alert("Failed to load orders. Please try again."); // Replace showError with alert
+  }
+}
+
+      function renderOrders() {
+        const container = document.getElementById("orders-container");
+        if (!container) return;
+
+        if (!orders || orders.length === 0) {
+          container.innerHTML = `
+            <div class="p-8 text-center text-gray-500">
+              <i class="fas fa-clipboard-list text-4xl mb-4"></i>
+              <p>No orders for this table</p>
+              <p class="text-sm mt-2">Create a new order to get started</p>
+            </div>
+          `;
+          return;
+        }
+
+        container.innerHTML = orders.map(order => `
+          <div class="order-card p-4 hover:bg-gray-50">
+            <div class="flex justify-between items-start mb-3">
+              <div>
+                <div class="font-bold">${order.order_number || `#${order.id}`}</div>
+                <div class="text-sm text-gray-600">
+                  ${formatDate(order.placed_at)} • ${order.customer_name || "Guest"}
+                </div>
+              </div>
+              <span class="status-badge ${getStatusClass(order.status)}">
+                ${order.status}
+              </span>
+            </div>
+
+            <div class="mb-3">
+              ${(order.items || []).slice(0, 3).map(item => `
+                <div class="flex justify-between text-sm mb-1">
+                  <span>${item.quantity}x ${item.menu_item?.name || "Item"}</span>
+                  <span>$${(item.quantity * (item.unit_price || 0)).toFixed(2)}</span>
+                </div>
+              `).join("")}
+              ${(order.items || []).length > 3 ? `
+                <div class="text-sm text-gray-500 text-center mt-1">
+                  +${order.items.length - 3} more items
+                </div>
+              ` : ""}
+            </div>
+
+            <div class="flex justify-between items-center pt-3 border-t">
+              <div class="font-bold">$${order.total_amount || "0.00"}</div>
+              <div class="flex space-x-2">
+                ${order.status === "pending" ? `
+                <button onclick="confirmOrder(${order.id})" 
+                        class="text-green-600 hover:text-green-800 text-sm">
+                  <i class="fas fa-check mr-1"></i>Confirm
+                </button>
+                ` : ""}
+                
+                ${order.status === "ready" ? `
+                <button onclick="serveOrder(${order.id})" 
+                        class="text-blue-600 hover:text-blue-800 text-sm">
+                  <i class="fas fa-concierge-bell mr-1"></i>Serve
+                </button>
+                ` : ""}
+                
+                <button onclick="showOrderDetails(${order.id})" 
+                        class="text-gray-600 hover:text-gray-800 text-sm">
+                  <i class="fas fa-eye mr-1"></i>Details
+                </button>
+              </div>
+            </div>
+          </div>
+        `).join("");
+      }
+
+      function getStatusClass(status) {
+        const classes = {
+          pending: "status-pending",
+          confirmed: "status-confirmed",
+          preparing: "status-preparing",
+          ready: "status-ready",
+          served: "status-served",
+          completed: "status-completed",
+        };
+        return classes[status] || "status-pending";
+      }
+
+      function formatDate(dateString) {
+        if (!dateString) return "";
+        const date = new Date(dateString);
+        return date.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
+      }
+
+      function updateStats() {
+        const activeOrders = orders.filter(order => 
+          ["pending", "confirmed", "preparing", "ready", "served"].includes(order.status)
+        ).length;
+        
+        const readyOrders = orders.filter(order => order.status === "ready").length;
+        
+        const totalRevenue = orders.reduce((sum, order) => 
+          sum + (parseFloat(order.total_amount) || 0), 0
+        );
+
+        document.getElementById("active-orders-count").textContent = activeOrders;
+        document.getElementById("ready-count").textContent = readyOrders;
+        document.getElementById("total-revenue").textContent = "$" + totalRevenue.toFixed(2);
+      }
+
+      async function confirmOrder(orderId) {
+        if (!confirm("Confirm this order?")) return;
+        
+        try {
+          const response = await fetch(`${API_BASE}/orders/${orderId}/update_status/`, {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              "X-CSRFToken": getCookie("csrftoken"),
+            },
+            body: JSON.stringify({ status: "confirmed" }),
+          });
+
+          if (response.ok) {
+            alert("Order confirmed!");
+            loadTableOrders();
+          }
+        } catch (error) {
+          console.error("Error confirming order:", error);
+          alert("Failed to confirm order");
+        }
+      }
+
+      async function serveOrder(orderId) {
+        if (!confirm("Mark this order as served?")) return;
+        
+        try {
+          const response = await fetch(`${API_BASE}/orders/${orderId}/update_status/`, {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              "X-CSRFToken": getCookie("csrftoken"),
+            },
+            body: JSON.stringify({ status: "served" }),
+          });
+
+          if (response.ok) {
+            alert("Order marked as served!");
+            loadTableOrders();
+          }
+        } catch (error) {
+          console.error("Error serving order:", error);
+          alert("Failed to update order");
+        }
+      }
+
+      function showOrderDetails(orderId) {
+        window.open(`${API_BASE}/orders/${orderId}/`, "_blank");
+      }
+
+      function updateTableStatus() {
+        // Get current status from the page
+        const currentStatus = "{{ table.status|default:'available' }}".toLowerCase();
+        
+        // Determine available statuses
+        const availableStatuses = getAvailableTableStatuses(currentStatus);
+        
+        if (availableStatuses.length === 0) {
+          alert("No status changes available");
+          return;
+        }
+
+        const modal = document.createElement("div");
+        modal.className = "fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4";
+        modal.innerHTML = `
+          <div class="bg-white rounded-lg max-w-sm w-full">
+            <div class="p-6">
+              <div class="flex justify-between items-center mb-4">
+                <h3 class="text-lg font-bold">Change Table Status</h3>
+                <button onclick="this.closest('.fixed').remove()" class="text-gray-500 hover:text-gray-700">
+                  <i class="fas fa-times"></i>
+                </button>
+              </div>
+              
+              <p class="text-sm text-gray-600 mb-4">Table {{ table.table_number }}</p>
+              
+              <div class="space-y-2">
+                ${availableStatuses.map(status => `
+                  <button onclick="selectTableStatus('${status}')" 
+                          class="w-full text-left px-4 py-3 border rounded-lg hover:bg-gray-50 transition capitalize">
+                    <div class="font-medium">${status}</div>
+                  </button>
+                `).join('')}
+              </div>
+            </div>
+          </div>
+        `;
+        
+        document.body.appendChild(modal);
+      }
+
+      function getAvailableTableStatuses(currentStatus) {
+        // Based on waiter permissions
+        const transitions = {
+          'available': ['reserved'],
+          'reserved': ['available'],
+          'cleaning': ['available'],
+          'occupied': ['cleaning'],
+        };
+        
+        return transitions[currentStatus] || [];
+      }
+
+      async function selectTableStatus(newStatus) {
+        try {
+          const response = await fetch(`${API_BASE}/tables/${TABLE_ID}/update_status/`, {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              "X-CSRFToken": getCookie("csrftoken"),
+            },
+            body: JSON.stringify({ status: newStatus }),
+          });
+
+          if (response.ok) {
+            document.querySelector('.fixed.inset-0').remove();
+            alert(`Table status updated to ${newStatus}`);
+            location.reload();
+          } else {
+            const error = await response.json();
+            alert(`Failed to update status: ${error.error || 'Unknown error'}`);
+          }
+        } catch (error) {
+          console.error("Error updating status:", error);
+          alert("Failed to update status");
+        }
+      }
+
+      function showTableQR() {
+        document.getElementById("qr-modal").classList.remove("hidden");
+        document.getElementById("qr-modal").classList.add("flex");
+      }
+
+      function closeQRModal() {
+        document.getElementById("qr-modal").classList.add("hidden");
+        document.getElementById("qr-modal").classList.remove("flex");
+      }
+
+      function printTableSummary() {
+        window.print();
+      }
+
+      function refreshOrders() {
+        loadTableOrders();
+      }
+
+      function getCookie(name) {
+        let cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+          const cookies = document.cookie.split(';');
+          for (let i = 0; i < cookies.length; i++) {
+            const cookie = cookies[i].trim();
+            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+              cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+              break;
+            }
+          }
+        }
+        return cookieValue;
+      }
+
+      // Load orders on page load
+      document.addEventListener("DOMContentLoaded", loadTableOrders);
+      
+      // Auto-refresh every 20 seconds
+      setInterval(loadTableOrders, 20000);
+
+      // Add at the beginning of your script section
+function showError(message) {
+    // Simple alert for now, can be enhanced with toast notifications
+    alert(`Error: ${message}`);
+}
+
+function showSuccess(message) {
+    alert(`Success: ${message}`);
+}
+
+function getCookie(name) {
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+        const cookies = document.cookie.split(';');
+        for (let i = 0; i < cookies.length; i++) {
+            const cookie = cookies[i].trim();
+            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
+}
+
+// Add auth headers helper
+function getAuthHeaders() {
+    const headers = {
+        'Content-Type': 'application/json'
+    };
+    
+    // Add CSRF token
+    const csrfToken = getCookie('csrftoken');
+    if (csrfToken) {
+        headers['X-CSRFToken'] = csrfToken;
+    }
+    
+    // Add JWT token if available
+    const jwtToken = localStorage.getItem('access_token');
+    if (jwtToken) {
+        headers['Authorization'] = `Bearer ${jwtToken}`;
+    }
+    
+    return headers;
+}
+    </script>
+  </body>
+</html>

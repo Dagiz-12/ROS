@@ -383,13 +383,11 @@
 
         modalContent.innerHTML = `
                 <div class="flex justify-between items-start mb-4">
-                    <h3 class="text-xl font-bold">Table ${
-                      table.table_number
-                    }</h3>
-                    <button onclick="closeModal()" class="text-gray-500 hover:text-gray-700">
-                        <i class="fas fa-times text-xl"></i>
-                    </button>
-                </div>
+        <h3 class="text-xl font-bold">Table ${table.table_number}</h3>
+        <button onclick="closeTableDetailsModal()" class="text-gray-500 hover:text-gray-700">
+            <i class="fas fa-times text-xl"></i>
+        </button>
+    </div>
                 
                 <div class="space-y-4">
                     <div>
@@ -476,59 +474,75 @@
         modal.classList.add("flex");
       }
 
+      function closeTableDetailsModal() {
+    const modal = document.getElementById("table-modal");
+    if (modal) {
+        modal.classList.add("hidden");
+        modal.classList.remove("flex");
+    }
+}
+
       function createOrder(tableId) {
-        window.location.href = `/api/tables/waiter/new-order/${tableId}/`;
+        window.location.href = `/waiter/new-order/${tableId}/`;
       }
 
       function viewOrders(tableId) {
-        window.location.href = `/api/tables/orders/?table=${tableId}`;
+         window.location.href = `${API_BASE}/orders/?table=${tableId}`;
       }
 
       async function updateTableStatus(tableId) {
-        const table = allTables.find((t) => t.id === tableId);
-        if (!table) return;
+    const table = allTables.find((t) => t.id === tableId);
+    if (!table) return;
 
-        // Get available status transitions based on current status and user role
-        const availableStatuses = getAvailableStatuses(table.status);
+    // Get available status transitions based on current status and user role
+    const availableStatuses = getAvailableStatuses(table.status);
 
-        if (availableStatuses.length === 0) {
-            alert("No status changes available for your role");
-            return;
-        }
+    if (availableStatuses.length === 0) {
+        alert("No status changes available for your role");
+        return;
+    }
 
-        // Create status selection modal
-        const modal = document.createElement("div");
-        modal.className = "fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4";
-        modal.innerHTML = `
-            <div class="bg-white rounded-lg max-w-sm w-full">
-                <div class="p-6">
-                    <div class="flex justify-between items-center mb-4">
-                        <h3 class="text-lg font-bold">Change Table Status</h3>
-                        <button onclick="this.closest('.fixed').remove()" class="text-gray-500 hover:text-gray-700">
-                            <i class="fas fa-times"></i>
+    // Create status selection modal
+    const modal = document.createElement("div");
+    modal.className = "fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4";
+    modal.innerHTML = `
+        <div class="bg-white rounded-lg max-w-sm w-full">
+            <div class="p-6">
+                <div class="flex justify-between items-center mb-4">
+                    <h3 class="text-lg font-bold">Change Table Status</h3>
+                    <button onclick="closeStatusModal(this)" class="text-gray-500 hover:text-gray-700">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+                
+                <div class="mb-4">
+                    <p class="text-sm text-gray-600">Table ${table.table_number}</p>
+                    <p class="text-sm text-gray-600">Current: <span class="capitalize font-medium">${table.status}</span></p>
+                </div>
+                
+                <div class="space-y-2">
+                    ${availableStatuses.map(status => `
+                        <button onclick="selectTableStatus(${tableId}, '${status}')" 
+                                class="w-full text-left px-4 py-3 border rounded-lg hover:bg-gray-50 transition capitalize">
+                            <div class="font-medium">${status}</div>
+                            <div class="text-sm text-gray-500">${getStatusDescription(status)}</div>
                         </button>
-                    </div>
-                    
-                    <div class="mb-4">
-                        <p class="text-sm text-gray-600">Table ${table.table_number}</p>
-                        <p class="text-sm text-gray-600">Current: <span class="capitalize font-medium">${table.status}</span></p>
-                    </div>
-                    
-                    <div class="space-y-2">
-                        ${availableStatuses.map(status => `
-                            <button onclick="selectTableStatus(${tableId}, '${status}')" 
-                                    class="w-full text-left px-4 py-3 border rounded-lg hover:bg-gray-50 transition capitalize">
-                                <div class="font-medium">${status}</div>
-                                <div class="text-sm text-gray-500">${getStatusDescription(status)}</div>
-                            </button>
-                        `).join('')}
-                    </div>
+                    `).join('')}
                 </div>
             </div>
-        `;
-        
-        document.body.appendChild(modal);
-      }
+        </div>
+    `;
+    
+    document.body.appendChild(modal);
+}
+
+// Add this new helper function to close the status modal
+function closeStatusModal(button) {
+    const modal = button.closest('.fixed.inset-0');
+    if (modal) {
+        modal.remove();
+    }
+}
 
       function getAvailableStatuses(currentStatus) {
         // Define available transitions based on user role
@@ -536,6 +550,8 @@
             'waiter': {
                 'cleaning': ['available'],
                 'available': ['reserved'],
+                'reserved': ['available', 'occupied'], // ADDED: waiters can unreserve
+                'occupied': ['cleaning'], // Waiters can mark occupied as cleaning
             },
             'manager': {
                 'available': ['reserved', 'out_of_service'],
@@ -569,39 +585,59 @@
       }
 
       async function selectTableStatus(tableId, newStatus) {
-        try {
-            const response = await fetch(
-                `${API_BASE}/tables/${tableId}/update_status/`,
-                {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json",
-                        "X-CSRFToken": getCookie("csrftoken"),
-                    },
-                    body: JSON.stringify({ status: newStatus }),
-                }
-            );
-
-            if (response.ok) {
-                // Remove the modal
-                document.querySelector('.fixed.inset-0').remove();
-                alert("Table status updated!");
-                loadTables();
-                closeModal();
-            } else {
-                const error = await response.json();
-                alert(`Failed to update status: ${error.error || 'Unknown error'}`);
-            }
-        } catch (error) {
-            console.error("Error updating status:", error);
-            alert("Failed to update status");
+    try {
+        // Remove the modal FIRST before making API call
+        const modal = document.querySelector('.fixed.inset-0');
+        if (modal) {
+            modal.remove();
         }
-      }
+
+        const response = await fetch(
+            `${API_BASE}/tables/${tableId}/update_status/`,
+            {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "X-CSRFToken": getCookie("csrftoken"),
+                },
+                body: JSON.stringify({ status: newStatus }),
+            }
+        );
+
+        if (response.ok) {
+            alert("Table status updated!");
+            loadTables(); // Refresh the table list
+            
+            // Check if table details modal is open and close it
+            const tableModal = document.getElementById("table-modal");
+            if (tableModal && !tableModal.classList.contains("hidden")) {
+                tableModal.classList.add("hidden");
+                tableModal.classList.remove("flex");
+            }
+        } else {
+            const error = await response.json();
+            alert(`Failed to update status: ${error.error || 'Unknown error'}`);
+        }
+    } catch (error) {
+        console.error("Error updating status:", error);
+        alert("Failed to update status");
+    }
+}
 
       function closeModal() {
-        document.getElementById("table-modal").classList.add("hidden");
-        document.getElementById("table-modal").classList.remove("flex");
-      }
+    // Check if table details modal is open
+    const tableModal = document.getElementById("table-modal");
+    if (tableModal && !tableModal.classList.contains("hidden")) {
+        tableModal.classList.add("hidden");
+        tableModal.classList.remove("flex");
+    }
+    
+    // Also close any status modal that might be open
+    const statusModal = document.querySelector('.fixed.inset-0');
+    if (statusModal) {
+        statusModal.remove();
+    }
+}
 
       function refreshTables() {
         loadTables();
@@ -691,6 +727,53 @@
         }
         return cookieValue;
       }
+
+
+      // Add at the beginning of your script section
+function showError(message) {
+    // Simple alert for now, can be enhanced with toast notifications
+    alert(`Error: ${message}`);
+}
+
+function showSuccess(message) {
+    alert(`Success: ${message}`);
+}
+
+function getCookie(name) {
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+        const cookies = document.cookie.split(';');
+        for (let i = 0; i < cookies.length; i++) {
+            const cookie = cookies[i].trim();
+            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
+}
+
+// Add auth headers helper
+function getAuthHeaders() {
+    const headers = {
+        'Content-Type': 'application/json'
+    };
+    
+    // Add CSRF token
+    const csrfToken = getCookie('csrftoken');
+    if (csrfToken) {
+        headers['X-CSRFToken'] = csrfToken;
+    }
+    
+    // Add JWT token if available
+    const jwtToken = localStorage.getItem('access_token');
+    if (jwtToken) {
+        headers['Authorization'] = `Bearer ${jwtToken}`;
+    }
+    
+    return headers;
+}
     </script>
   </body>
 </html>

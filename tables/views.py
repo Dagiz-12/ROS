@@ -23,7 +23,7 @@ from .models import Table, Cart, CartItem, Order, OrderItem
 from .serializers import (
     TableSerializer, TableCreateSerializer, CartSerializer, CartItemSerializer,
     OrderSerializer, OrderCreateSerializer, QRValidationSerializer,
-    CartAddItemSerializer, CartUpdateItemSerializer, OrderStatusUpdateSerializer, OrderWithItemsSerializer
+    CartAddItemSerializer, CartUpdateItemSerializer, OrderStatusUpdateSerializer, OrderWithItemsSerializer, OrderItemSerializer
 )
 from menu.models import MenuItem
 from accounts.permissions import IsAdminUser, IsManagerOrAdmin, IsWaiterOrHigher, IsCashierOrHigher, IsChefOrHigher
@@ -35,22 +35,22 @@ from django.contrib.auth.decorators import login_required, user_passes_test
 from django.shortcuts import render
 
 
-def check_role(user, allowed_roles):
-    """Check if user has one of the allowed roles"""
-    return hasattr(user, 'role') and user.role in allowed_roles
+# def check_role(user, allowed_roles):
+#   """Check if user has one of the allowed roles"""
+#  return hasattr(user, 'role') and user.role in allowed_roles
 
 
-def role_required(allowed_roles):
-    """Decorator to check user role"""
-    def decorator(view_func):
-        @login_required
-        def wrapper(request, *args, **kwargs):
-            if not check_role(request.user, allowed_roles):
-                from django.http import HttpResponseForbidden
-                return HttpResponseForbidden("Permission denied")
-            return view_func(request, *args, **kwargs)
-        return wrapper
-    return decorator
+# def role_required(allowed_roles):
+#   """Decorator to check user role"""
+#  def decorator(view_func):
+#     @login_required
+#    def wrapper(request, *args, **kwargs):
+#       if not check_role(request.user, allowed_roles):
+#          from django.http import HttpResponseForbidden
+#         return HttpResponseForbidden("Permission denied")
+#    return view_func(request, *args, **kwargs)
+# return wrapper
+# return decorator
 
 # QR Menu Template View - ALREADY EXISTS (keep it)
 
@@ -226,22 +226,28 @@ class TableViewSet(viewsets.ModelViewSet):
         """Validate if table status transition is allowed for user role"""
         valid_transitions = {
             'waiter': {
-                'cleaning': ['available'],
                 'available': ['reserved'],  # Waiters can reserve tables
+                # Waiters can unreserve OR mark as occupied
+                'reserved': ['available', 'occupied'],
+                # Waiters can mark occupied as cleaning
+                'occupied': ['cleaning'],
+                # Waiters can mark cleaning tables as available
+                'cleaning': ['available'],
+                'out_of_service': [],  # Waiters cannot modify out_of_service tables
             },
             'manager': {
-                'available': ['reserved', 'out_of_service'],
-                'occupied': ['cleaning'],
-                'reserved': ['available'],
-                'cleaning': ['available'],
-                'out_of_service': ['available'],
+                'available': ['reserved', 'out_of_service', 'occupied'],
+                'occupied': ['cleaning', 'available', 'out_of_service'],
+                'reserved': ['available', 'occupied', 'out_of_service'],
+                'cleaning': ['available', 'out_of_service'],
+                'out_of_service': ['available', 'reserved'],
             },
             'admin': {
-                'available': ['reserved', 'out_of_service'],
-                'occupied': ['cleaning', 'available'],
-                'reserved': ['available'],
-                'cleaning': ['available'],
-                'out_of_service': ['available'],
+                'available': ['reserved', 'out_of_service', 'occupied'],
+                'occupied': ['cleaning', 'available', 'out_of_service'],
+                'reserved': ['available', 'occupied', 'out_of_service'],
+                'cleaning': ['available', 'out_of_service'],
+                'out_of_service': ['available', 'reserved', 'occupied'],
             },
         }
 
@@ -438,7 +444,7 @@ class OrderViewSet(viewsets.ModelViewSet):
     queryset = Order.objects.all()
     serializer_class = OrderSerializer
     # Restrict to staff only
-    permission_classes = [IsWaiterOrHigher]
+    permission_classes = [IsCashierOrHigher]
    # filter_backends = [DjangoFilterBackend,
     #                  filters.SearchFilter, filters.OrderingFilter]
     # filterset_fields = ['table', 'status',
@@ -458,7 +464,11 @@ class OrderViewSet(viewsets.ModelViewSet):
         if is_paid:
             queryset = queryset.filter(is_paid=(is_paid.lower() == 'true'))
 
-        return queryset
+        return queryset.select_related(
+            'table', 'waiter'
+        ).prefetch_related(
+            'items__menu_item'
+        )
 
     search_fields = ['order_number', 'customer_name', 'table__table_number']
     ordering_fields = ['placed_at', 'total_amount', 'order_number']
@@ -894,3 +904,137 @@ def print_order(request, order_id):
 
     except Order.DoesNotExist:
         return Response({'error': 'Order not found'}, status=404)
+
+
+# ==================== UTILITIES ====================
+# payment views
+
+# In tables/views.py - Update the existing process_payment function
+@api_view(['POST'])
+@permission_classes([IsWaiterOrHigher])
+def process_payment(request, order_id):
+    """Process payment for an order - Now uses Payment model"""
+    try:
+        order = Order.objects.get(id=order_id)
+
+        # Check if order is served
+        if order.status != 'served':
+            return Response({
+                'error': f'Order must be served before payment. Current status: {order.status}'
+            }, status=400)
+
+        # Get payment data from request
+        payment_method = request.data.get('payment_method', 'cash')
+        amount_paid = request.data.get('amount_paid')
+        customer_name = request.data.get('customer_name', order.customer_name)
+        customer_phone = request.data.get('customer_phone', '')
+        notes = request.data.get('notes', '')
+
+        # If amount not specified, use order total
+        if not amount_paid:
+            amount_paid = order.total_amount
+
+        # Import Payment model
+        from payments.models import Payment
+
+        # Create payment
+        payment = Payment.objects.create(
+            order=order,
+            payment_method=payment_method,
+            amount=amount_paid,
+            status='completed' if payment_method == 'cash' else 'pending',
+            processed_by=request.user,
+            customer_name=customer_name,
+            customer_phone=customer_phone,
+            notes=notes
+        )
+
+        # For cash payments, complete immediately
+        if payment_method == 'cash':
+            payment.mark_as_completed(
+                transaction_id=f"CASH-{payment.payment_id}",
+                user=request.user
+            )
+
+            # Update order status to completed
+            order.status = 'completed'
+            order.completed_at = timezone.now()
+            order.is_paid = True
+            order.save()
+
+            # Update table status to cleaning
+            if order.table:
+                order.table.status = 'cleaning'
+                order.table.save()
+
+        # For digital payments, initiate payment
+        elif payment_method in ['cbe', 'telebirr', 'cbe_wallet']:
+            # This would initiate payment through gateway
+            # For now, we'll just mark as pending
+            pass
+
+        return Response({
+            'success': True,
+            'payment_id': str(payment.payment_id),
+            'order_number': order.order_number,
+            'amount_paid': float(amount_paid),
+            'payment_method': payment_method,
+            'status': payment.status,
+            'message': f'Payment {payment.status}.'
+        })
+
+    except Order.DoesNotExist:
+        return Response({'error': 'Order not found'}, status=404)
+    except Exception as e:
+        return Response({'error': str(e)}, status=400)
+
+
+# tables/views.py
+@api_view(['POST'])
+@permission_classes([IsWaiterOrHigher])
+def present_bill(request, order_id):
+    """Waiter presents bill to customer"""
+    order = get_object_or_404(Order, id=order_id)
+
+    # Validate: Order must be served
+    if order.status != 'served':
+        return Response({
+            'error': f'Order must be served first. Current status: {order.status}'
+        }, status=400)
+
+    # Update status
+    order.status = 'bill_presented'
+    order.save()
+
+    # Generate bill data
+    bill_data = {
+        'order_number': order.order_number,
+        'table_number': order.table.table_number if order.table else 'N/A',
+        'customer_name': order.customer_name,
+        'total_amount': order.total_amount,
+        'items': OrderItemSerializer(order.items.all(), many=True).data
+    }
+
+    return Response({
+        'success': True,
+        'message': 'Bill presented successfully',
+        'bill': bill_data
+    })
+
+
+# detail tables orders views
+
+@role_required(['waiter', 'manager', 'admin'])
+def table_orders(request, table_id):
+    """View orders for a specific table"""
+    try:
+        table = Table.objects.get(id=table_id)
+    except Table.DoesNotExist:
+        return HttpResponse("Table not found", status=404)
+
+    context = {
+        'user': request.user,
+        'user_role': request.user.role,
+        'table': table,
+    }
+    return render(request, 'waiter/table_orders.html', context)

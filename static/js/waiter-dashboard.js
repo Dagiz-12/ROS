@@ -122,29 +122,45 @@ class WaiterDashboard {
         }
     }
 
+    // In static/js/waiter-dashboard.js or similar
     renderTables(tables) {
-        const container = document.getElementById('tables-grid');
-        if (!tables || tables.length === 0) {
-            container.innerHTML = `
-                <div class="col-span-full text-center py-8 text-gray-500">
-                    <i class="fas fa-table text-3xl mb-3"></i>
-                    <p>No tables available</p>
-                </div>
-            `;
-            return;
-        }
+    const container = document.getElementById('tables-grid');
+    if (!container) return;
 
-        container.innerHTML = tables.map(table => `
-            <a href="/waiter/new-order/${table.id}/" 
-               class="block p-3 rounded-lg border-2 text-center transition hover:shadow-md ${this.getTableClasses(table.status)}">
-                <div class="text-2xl font-bold mb-1">${table.table_number}</div>
-                <div class="text-sm capitalize ${this.getTableTextColor(table.status)}">
-                    ${table.status || 'available'}
+    container.innerHTML = tables.map(table => `
+        <div class="bg-white rounded-lg shadow border p-4 cursor-pointer hover:shadow-md transition-shadow"
+             onclick="window.location.href='/waiter/table/${table.id}/orders/'">
+            <div class="flex justify-between items-start mb-2">
+                <div>
+                    <div class="text-xl font-bold">Table ${table.table_number}</div>
+                    <div class="text-sm text-gray-600">${table.table_name || ''}</div>
                 </div>
-                <div class="text-xs text-gray-500 mt-1">${table.capacity || 4} seats</div>
-            </a>
-        `).join('');
-    }
+                <span class="px-2 py-1 text-xs rounded-full ${
+                    table.status === 'available' ? 'bg-green-100 text-green-800' :
+                    table.status === 'occupied' ? 'bg-red-100 text-red-800' :
+                    table.status === 'reserved' ? 'bg-yellow-100 text-yellow-800' :
+                    table.status === 'cleaning' ? 'bg-blue-100 text-blue-800' :
+                    'bg-gray-100 text-gray-800'
+                }">
+                    ${table.status}
+                </span>
+            </div>
+            <div class="text-sm text-gray-500 mb-3">
+                ${table.capacity || 4} seats
+            </div>
+            <div class="flex space-x-2">
+                <button onclick="event.stopPropagation(); window.location.href='/waiter/new-order/${table.id}/'" 
+                        class="flex-1 bg-red-600 text-white py-1 rounded text-sm hover:bg-red-700">
+                    <i class="fas fa-plus mr-1"></i>Order
+                </button>
+                <button onclick="event.stopPropagation(); window.location.href='/waiter/table/${table.id}/orders/'"
+                        class="flex-1 border border-gray-300 py-1 rounded text-sm hover:bg-gray-50">
+                    <i class="fas fa-eye mr-1"></i>View
+                </button>
+            </div>
+        </div>
+    `).join('');
+}
 
     getTableClasses(status) {
         switch(status) {

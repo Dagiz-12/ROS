@@ -1,4 +1,4 @@
-<!-- templates/cashier/dashboard.html - MODIFIED HEAD SECTION -->
+<!-- templates/cashier/dashboard.html - FIXED VERSION -->
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -6,18 +6,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Payment System - Cashier Dashboard</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link
-      rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
-    />
-
-    <!-- Custom CSS -->
-    <link href="/static/css/styles.css" rel="stylesheet" />
-
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    
     <style>
-      /* Keep only essential styles */
       .payment-card {
         transition: all 0.3s ease;
+        cursor: pointer;
       }
       .payment-card:hover {
         transform: translateY(-2px);
@@ -26,219 +20,268 @@
       .status-unpaid {
         border-left: 4px solid #ef4444;
       }
-      .status-partial {
-        border-left: 4px solid #f59e0b;
-      }
       .status-paid {
         border-left: 4px solid #10b981;
       }
-      .payment-method-cash {
-        background-color: #f0f9ff;
-      }
-      .payment-method-card {
-        background-color: #fef7ff;
-      }
-      .payment-method-mobile {
-        background-color: #f0fdf4;
-      }
-      .receipt {
-        font-family: "Courier New", monospace;
+      .payment-method-btn {
+        padding: 8px 12px;
+        border: 1px solid #d1d5db;
+        border-radius: 6px;
         background: white;
-        color: black;
+        transition: all 0.2s;
+      }
+      .payment-method-btn:hover {
+        background: #f3f4f6;
+      }
+      .payment-method-btn.active {
+        border: 2px solid #10b981;
+        background: #f0fdf4;
+      }
+      .toast-container {
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        z-index: 1000;
+      }
+      .toast {
+        background: white;
+        border-radius: 8px;
+        padding: 12px 16px;
+        margin-bottom: 10px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        animation: slideIn 0.3s ease;
+        border-left: 4px solid #3b82f6;
+      }
+      .toast.error {
+        border-left-color: #ef4444;
+      }
+      .toast.success {
+        border-left-color: #10b981;
+      }
+      @keyframes slideIn {
+        from { transform: translateX(100%); opacity: 0; }
+        to { transform: translateX(0); opacity: 1; }
       }
     </style>
   </head>
-  <body class="bg-gray-50">
+  <body class="bg-gray-50 min-h-screen">
     <!-- Navigation -->
-    <nav class="bg-white shadow-lg px-4 py-3 flex items-center justify-between">
+    <nav class="bg-white shadow-lg px-6 py-4 flex items-center justify-between">
       <div class="flex items-center space-x-4">
-        <a href="/" class="text-gray-800 font-semibold">ROS</a>
-        <span class="text-gray-600 text-sm">Cashier</span>
+        <a href="/" class="text-gray-800 font-bold text-xl">ROS</a>
+        <span class="text-gray-600">Cashier Dashboard</span>
       </div>
-      <div class="flex items-center space-x-3">
-        <div class="text-sm text-gray-700 mr-4">
+      <div class="flex items-center space-x-4">
+        <div class="text-sm text-gray-700">
           Signed in as <strong id="cashierNameNav">{{ user.username }}</strong>
+          <span class="ml-2 px-2 py-1 bg-red-100 text-red-800 text-xs rounded-full">{{ user.role|title }}</span>
         </div>
-        <button
-          id="logout-btn"
-          onclick="logout()"
-          class="px-3 py-2 bg-red-600 hover:bg-red-700 rounded text-sm text-white"
-        >
-          Logout
+        <button id="logout-btn" class="px-4 py-2 bg-red-600 hover:bg-red-700 rounded text-white">
+          <i class="fas fa-sign-out-alt mr-2"></i>Logout
         </button>
       </div>
     </nav>
 
     <!-- Main Content -->
     <div class="container mx-auto px-4 py-6">
-      <div class="flex items-start gap-6">
-        <!-- Left: Pending bills -->
-        <div class="w-2/3 bg-white rounded shadow p-4">
-          <div class="flex items-center justify-between mb-4">
-            <h2 class="text-lg font-semibold">Pending Bills</h2>
-            <div class="flex items-center gap-2">
-              <select id="table-filter" class="px-2 py-1 border rounded">
+      <div class="grid grid-cols-3 gap-6">
+        <!-- Left: Pending bills (2/3 width) -->
+        <div class="col-span-2 bg-white rounded-lg shadow p-6">
+          <div class="flex items-center justify-between mb-6">
+            <div>
+              <h2 class="text-xl font-bold text-gray-800">Pending Bills</h2>
+              <p class="text-sm text-gray-600">Unpaid orders ready for payment</p>
+            </div>
+            <div class="flex items-center gap-3">
+              <select id="table-filter" class="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
                 <option value="all">All Tables</option>
+                <!-- Table options will be populated by JS -->
               </select>
-              <button
-                id="refresh-btn"
-                class="px-3 py-1 bg-blue-600 text-white rounded"
-              >
-                Refresh
+              <button id="refresh-btn" class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition flex items-center">
+                <i class="fas fa-sync-alt mr-2"></i>Refresh
               </button>
-              <button
-                id="cash-drawer-btn"
-                class="px-3 py-1 bg-gray-200 rounded"
-              >
-                Open Drawer
+              <button id="cash-drawer-btn" class="px-4 py-2 bg-gray-200 hover:bg-gray-300 text-gray-800 rounded-lg transition flex items-center">
+                <i class="fas fa-cash-register mr-2"></i>Open Drawer
               </button>
             </div>
           </div>
 
-          <div id="pending-bills" class="space-y-3 min-h-[300px]">
-            <!-- Bill cards rendered here -->
+          <div id="pending-bills" class="space-y-4 min-h-[400px]">
+            <!-- Bill cards will be rendered here by JavaScript -->
+            <div class="text-center py-12 text-gray-500">
+              <div class="inline-block p-4 bg-gray-100 rounded-full mb-4">
+                <i class="fas fa-receipt text-3xl"></i>
+              </div>
+              <p class="text-lg font-medium">No pending bills</p>
+              <p class="text-sm">All bills have been paid or no orders are served yet</p>
+            </div>
           </div>
         </div>
 
-        <!-- Right: Selected bill & actions -->
-        <div class="w-1/3">
-          <div class="bg-white rounded shadow p-4 mb-4">
-            <h3 class="font-semibold">Selected Bill</h3>
-            <div
-              id="selected-bill-container"
-              class="mt-3 text-sm text-gray-600"
-            >
-              <div class="text-center py-8 text-gray-500">
-                <i class="fas fa-receipt text-3xl mb-3"></i>
-                <p>No bill selected</p>
-                <p class="text-sm">Select a bill from the left</p>
-              </div>
+        <!-- Right: Payment Interface (1/3 width) -->
+        <div class="space-y-6">
+          <!-- Selected Bill Panel -->
+          <div class="bg-white rounded-lg shadow p-6">
+            <div class="flex items-center justify-between mb-4">
+              <h3 class="text-lg font-bold text-gray-800">Selected Bill</h3>
+              <span id="selected-bill-status" class="px-3 py-1 text-xs font-medium rounded-full bg-gray-100 text-gray-800">
+                None
+              </span>
             </div>
-          </div>
+            
+            <div id="selected-bill-container" class="text-center py-8 text-gray-500">
+              <div class="inline-block p-4 bg-gray-100 rounded-full mb-4">
+                <i class="fas fa-hand-pointer text-2xl"></i>
+              </div>
+              <p class="font-medium">Select a bill</p>
+              <p class="text-sm mt-1">Click on a bill from the left panel to process payment</p>
+            </div>
 
-          <div
-            id="payment-interface"
-            class="bg-white rounded shadow p-4 hidden"
-          >
-            <h4 class="font-semibold">Process Payment</h4>
-            <div class="mt-3 space-y-2">
-              <div class="flex justify-between text-sm">
-                <span>Subtotal</span>
-                <span id="bill-subtotal">$0.00</span>
-              </div>
-              <div class="flex justify-between text-sm">
-                <span>Tax</span>
-                <span id="bill-tax">$0.00</span>
-              </div>
-              <div class="flex justify-between text-sm">
-                <span>Service</span>
-                <span id="bill-service">$0.00</span>
-              </div>
-              <div class="flex justify-between text-sm font-bold border-t pt-2">
-                <span>Total</span>
-                <span id="bill-total">$0.00</span>
-              </div>
-              <div class="flex justify-between text-sm">
-                <span>Paid</span>
-                <span id="bill-paid">$0.00</span>
-              </div>
-              <div class="flex justify-between text-sm">
-                <span>Balance</span>
-                <span id="bill-balance">$0.00</span>
+            <!-- Payment Interface (hidden by default) -->
+            <div id="payment-interface" class="hidden">
+              <div class="border-t pt-4 mt-4">
+                <h4 class="font-bold text-gray-700 mb-4">Payment Summary</h4>
+                <div class="space-y-2 text-sm">
+                  <div class="flex justify-between">
+                    <span class="text-gray-600">Subtotal:</span>
+                    <span id="bill-subtotal" class="font-medium">$0.00</span>
+                  </div>
+                  <div class="flex justify-between">
+                    <span class="text-gray-600">Tax (15%):</span>
+                    <span id="bill-tax" class="font-medium">$0.00</span>
+                  </div>
+                  <div class="flex justify-between">
+                    <span class="text-gray-600">Service (10%):</span>
+                    <span id="bill-service" class="font-medium">$0.00</span>
+                  </div>
+                  <div class="flex justify-between pt-2 border-t font-bold text-lg">
+                    <span>Total:</span>
+                    <span id="bill-total" class="text-red-600">$0.00</span>
+                  </div>
+                </div>
               </div>
 
-              <div class="mt-3">
-                <div class="flex gap-2 mb-2">
+              <!-- Payment Method Selection -->
+              <div class="mt-6">
+                <h4 class="font-bold text-gray-700 mb-3">Payment Method</h4>
+                <div class="grid grid-cols-3 gap-2 mb-4">
                   <button class="payment-method-btn" data-method="cash">
-                    Cash
+                    <i class="fas fa-money-bill-wave mr-2"></i>Cash
                   </button>
                   <button class="payment-method-btn" data-method="card">
-                    Card
+                    <i class="fas fa-credit-card mr-2"></i>Card
                   </button>
                   <button class="payment-method-btn" data-method="mobile">
-                    Mobile
+                    <i class="fas fa-mobile-alt mr-2"></i>Mobile
                   </button>
                 </div>
 
-                <div class="flex gap-2 mb-2">
-                  <button data-amount="5" class="px-2 py-1 bg-gray-100 rounded">
-                    + $5
-                  </button>
-                  <button
-                    data-amount="10"
-                    class="px-2 py-1 bg-gray-100 rounded"
-                  >
-                    + $10
-                  </button>
-                  <button
-                    data-amount="20"
-                    class="px-2 py-1 bg-gray-100 rounded"
-                  >
-                    + $20
-                  </button>
+                <!-- Amount Input -->
+                <div class="mb-4">
+                  <label class="block text-sm font-medium text-gray-700 mb-2">Amount Received</label>
+                  <div class="flex gap-2 mb-2">
+                    <button data-amount="5" class="flex-1 px-3 py-2 bg-gray-100 hover:bg-gray-200 rounded-lg text-sm">
+                      + $5
+                    </button>
+                    <button data-amount="10" class="flex-1 px-3 py-2 bg-gray-100 hover:bg-gray-200 rounded-lg text-sm">
+                      + $10
+                    </button>
+                    <button data-amount="20" class="flex-1 px-3 py-2 bg-gray-100 hover:bg-gray-200 rounded-lg text-sm">
+                      + $20
+                    </button>
+                  </div>
+                  <input id="amount-received" type="number" step="0.01" min="0" 
+                         class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                         placeholder="0.00">
                 </div>
 
-                <input
-                  id="amount-received"
-                  type="number"
-                  step="0.01"
-                  placeholder="Amount received"
-                  class="w-full px-2 py-1 border rounded"
-                />
-
-                <div id="change-container" class="mt-2 hidden">
-                  Change: <span id="change-amount">$0.00</span>
+                <!-- Change Display -->
+                <div id="change-container" class="mb-4 hidden">
+                  <div class="bg-green-50 border border-green-200 rounded-lg p-3">
+                    <div class="flex justify-between items-center">
+                      <span class="text-green-700 font-medium">Change Due:</span>
+                      <span id="change-amount" class="text-green-900 font-bold text-lg">$0.00</span>
+                    </div>
+                  </div>
                 </div>
 
-                <div class="mt-3">
-                  <button
-                    id="process-payment-btn"
-                    class="px-4 py-2 bg-green-600 text-white rounded"
-                    disabled
-                  >
-                    Process Payment
-                  </button>
-                </div>
+                <!-- Process Payment Button -->
+                <button id="process-payment-btn" 
+                        class="w-full py-3 bg-green-600 hover:bg-green-700 text-white font-bold rounded-lg transition disabled:opacity-50 disabled:cursor-not-allowed"
+                        disabled>
+                  <i class="fas fa-check-circle mr-2"></i>Process Payment
+                </button>
               </div>
             </div>
           </div>
 
-          <div class="bg-white rounded shadow p-4 mt-4">
-            <h4 class="font-semibold">Today</h4>
-            <div class="mt-2 text-sm text-gray-700">
-              <div class="flex justify-between">
-                <span>Pending payments</span
-                ><span id="pending-payments">0</span>
+          <!-- Today's Stats -->
+          <div class="bg-white rounded-lg shadow p-6">
+            <h4 class="text-lg font-bold text-gray-800 mb-4">Today's Summary</h4>
+            <div class="space-y-3">
+              <div class="flex justify-between items-center p-3 bg-blue-50 rounded-lg">
+                <div>
+                  <p class="text-sm text-gray-600">Pending Payments</p>
+                  <p id="pending-payments" class="text-2xl font-bold text-blue-700">0</p>
+                </div>
+                <i class="fas fa-clock text-blue-500 text-xl"></i>
               </div>
-              <div class="flex justify-between">
-                <span>Today revenue</span><span id="today-revenue">$0.00</span>
+              
+              <div class="flex justify-between items-center p-3 bg-green-50 rounded-lg">
+                <div>
+                  <p class="text-sm text-gray-600">Today's Revenue</p>
+                  <p id="today-revenue" class="text-2xl font-bold text-green-700">$0.00</p>
+                </div>
+                <i class="fas fa-chart-line text-green-500 text-xl"></i>
               </div>
-              <div class="flex justify-between">
-                <span>Card</span><span id="card-payments">0</span>
-              </div>
-              <div class="flex justify-between">
-                <span>Mobile</span><span id="mobile-payments">0</span>
+              
+              <div class="grid grid-cols-2 gap-3">
+                <div class="p-3 bg-purple-50 rounded-lg">
+                  <p class="text-xs text-gray-600">Card Payments</p>
+                  <p id="card-payments" class="text-lg font-bold text-purple-700">0</p>
+                </div>
+                <div class="p-3 bg-indigo-50 rounded-lg">
+                  <p class="text-xs text-gray-600">Mobile Payments</p>
+                  <p id="mobile-payments" class="text-lg font-bold text-indigo-700">0</p>
+                </div>
               </div>
             </div>
           </div>
         </div>
       </div>
 
-      <div class="mt-6 bg-white rounded shadow p-4">
-        <h3 class="font-semibold mb-2">Recent Transactions</h3>
-        <div class="overflow-auto">
+      <!-- Recent Transactions -->
+      <div class="mt-8 bg-white rounded-lg shadow p-6">
+        <div class="flex items-center justify-between mb-4">
+          <div>
+            <h3 class="text-xl font-bold text-gray-800">Recent Transactions</h3>
+            <p class="text-sm text-gray-600">Last 10 completed payments</p>
+          </div>
+          <button id="print-receipt-btn" class="px-4 py-2 border border-gray-300 hover:bg-gray-50 rounded-lg transition flex items-center">
+            <i class="fas fa-print mr-2"></i>Print Report
+          </button>
+        </div>
+        
+        <div class="overflow-x-auto">
           <table class="w-full text-sm">
             <thead>
-              <tr class="text-left text-gray-600">
-                <th class="px-4 py-2">Time</th>
-                <th class="px-4 py-2">Table</th>
-                <th class="px-4 py-2">Amount</th>
-                <th class="px-4 py-2">Method</th>
-                <th class="px-4 py-2">Status</th>
+              <tr class="border-b border-gray-200">
+                <th class="px-4 py-3 text-left text-gray-600 font-medium">Time</th>
+                <th class="px-4 py-3 text-left text-gray-600 font-medium">Table</th>
+                <th class="px-4 py-3 text-left text-gray-600 font-medium">Order #</th>
+                <th class="px-4 py-3 text-left text-gray-600 font-medium">Amount</th>
+                <th class="px-4 py-3 text-left text-gray-600 font-medium">Method</th>
+                <th class="px-4 py-3 text-left text-gray-600 font-medium">Status</th>
               </tr>
             </thead>
             <tbody id="recent-transactions">
-              <!-- Recent transactions rows inserted here -->
+              <!-- Transactions will be populated by JavaScript -->
+              <tr>
+                <td colspan="6" class="px-4 py-8 text-center text-gray-500">
+                  <i class="fas fa-history text-2xl mb-2"></i>
+                  <p>No recent transactions</p>
+                </td>
+              </tr>
             </tbody>
           </table>
         </div>
@@ -246,90 +289,46 @@
     </div>
 
     <!-- Receipt Modal -->
-    <div
-      id="receipt-modal"
-      class="fixed inset-0 bg-black bg-opacity-50 z-50 hidden"
-    >
-      <!-- Modal content will be filled by JS -->
+    <div id="receipt-modal" class="fixed inset-0 bg-black bg-opacity-50 z-50 hidden items-center justify-center p-4">
+      <!-- Content will be filled by JavaScript -->
     </div>
 
-    <!-- Hidden user data for JS -->
-    <div
-      id="user-data"
-      data-user='{"username": "{{ user.username }}", "role": "{{ user.role }}"}'
-    ></div>
-
-    <!-- Toast container -->
+    <!-- Toast Container -->
     <div id="toast-container" class="toast-container"></div>
+
+    <!-- Hidden user data -->
+    <div id="user-data" 
+         data-user='{"username": "{{ user.username }}", "role": "{{ user.role }}", "id": "{{ user.id }}"}'>
+    </div>
 
     <!-- External JavaScript -->
     <script src="/static/js/auth-manager.js"></script>
     <script src="/static/js/cashier-dashboard.js"></script>
 
     <script>
-      // Minimal initialization script
-      document.addEventListener("DOMContentLoaded", function () {
-        // Update buttons with proper IDs and data attributes
-        const refreshBtn = document.querySelector('button[onclick*="refresh"]');
-        if (refreshBtn) {
-          refreshBtn.id = "refresh-btn";
-          refreshBtn.removeAttribute("onclick");
+      // Simple logout function that uses authManager if available
+      function logout() {
+        if (typeof authManager !== 'undefined') {
+          authManager.logout();
+        } else {
+          localStorage.clear();
+          window.location.href = '/login/';
         }
+      }
 
-        const cashDrawerBtn = document.querySelector(
-          'button[onclick*="openCashDrawer"]'
-        );
-        if (cashDrawerBtn) {
-          cashDrawerBtn.id = "cash-drawer-btn";
-          cashDrawerBtn.removeAttribute("onclick");
+      // Attach logout to button
+      document.addEventListener('DOMContentLoaded', function() {
+        const logoutBtn = document.getElementById('logout-btn');
+        if (logoutBtn) {
+          logoutBtn.onclick = logout;
         }
-
-        // Update payment method buttons
-        document
-          .querySelectorAll('[onclick*="selectPaymentMethod"]')
-          .forEach((btn) => {
-            const method = btn.onclick
-              .toString()
-              .match(/selectPaymentMethod\('(.*)'\)/)[1];
-            btn.dataset.method = method;
-            btn.classList.add("payment-method-btn");
-            btn.removeAttribute("onclick");
-          });
-
-        // Update quick amount buttons
-        document.querySelectorAll('[onclick*="addAmount"]').forEach((btn) => {
-          const amount = btn.onclick.toString().match(/addAmount\((\d+)\)/)[1];
-          btn.dataset.amount = amount;
-          btn.removeAttribute("onclick");
-        });
-
-        // Update view buttons
-        document
-          .querySelectorAll('[onclick*="viewBillDetails"]')
-          .forEach((btn) => btn.removeAttribute("onclick"));
-
-        // Update process payment button
-        const processBtn = document.querySelector(
-          '[onclick*="processPayment"]'
-        );
-        if (processBtn) {
-          processBtn.id = "process-payment-btn";
-          processBtn.removeAttribute("onclick");
+        
+        // Initialize cashier dashboard
+        if (typeof CashierDashboard !== 'undefined') {
+          console.log('CashierDashboard class found');
+        } else {
+          console.error('CashierDashboard class not found. Check if cashier-dashboard.js is loaded.');
         }
-
-        // Update print receipt button
-        const printBtn = document.querySelector('[onclick*="printReceipt"]');
-        if (printBtn) {
-          printBtn.id = "print-receipt-btn";
-          printBtn.removeAttribute("onclick");
-        }
-
-        // Remove onclick from bill selection
-        document
-          .querySelectorAll('[onclick*="selectBill"]')
-          .forEach((el) => el.removeAttribute("onclick"));
-
-        console.log("Cashier template initialized for external JS");
       });
     </script>
   </body>

@@ -54,6 +54,7 @@ INSTALLED_APPS = [
     'inventory',
     'waste_tracker',
     'profit_intelligence',
+    'payments',
 ]
 
 MIDDLEWARE = [

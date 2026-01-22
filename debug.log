@@ -14848,3 +14848,579 @@ Traceback (most recent call last):
   File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django\utils\html.py", line 145, in format_html
     return mark_safe(format_string.format(*args_safe, **kwargs_safe))
 ValueError: Unknown format code 'f' for object of type 'SafeString'
+Watching for file changes with StatReloader
+Not Found: /restaurant-admin/dashboard/menu_items/food-pizza-still-life-hd-wallpaper-preview_Cj6yzIs.jpg
+Not Found: /restaurant-admin/dashboard/menu_items/skincare-9973091_1280.jpg
+Not Found: /restaurant-admin/dashboard/menu_items/id.jpg
+Not Found: /restaurant-admin/dashboard/menu_items/food-pizza-still-life-hd-wallpaper-preview_Cj6yzIs.jpg
+Not Found: /restaurant-admin/dashboard/menu_items/skincare-9973091_1280.jpg
+Not Found: /restaurant-admin/dashboard/menu_items/id.jpg
+Getting dashboard data for user: Tom, view_level: branch
+Calculating daily profit for 2026-01-21 - Restaurant: test001, Branch: b001
+Found 1 completed orders for 2026-01-21
+Total revenue: $1100.00
+Total ingredient cost: $1368.70
+Getting waste costs for 2026-01-21 - Restaurant: test001, Branch: b001
+Found 0 waste records for 2026-01-21
+Total waste cost for 2026-01-21: $0.00
+Waste cost from waste tracker: $0.00
+Waste records found: 0
+Net profit: $-268.70
+Profit margin: -24.43%
+Waste percentage: 0.00%
+Profit aggregation updated: 11
+Updating menu item performances for 2026-01-21
+Updated performance record for burger
+Updated performance record for fried chicken
+Updated performance record for firfir
+Calculating profit trend from 2025-12-23 to 2026-01-21 (30 days)
+Analyzing profit issues for test001
+Not Found: /restaurant-admin/dashboard/menu_items/skincare-9973091_1280.jpg
+Not Found: /restaurant-admin/dashboard/menu_items/id.jpg
+Not Found: /restaurant-admin/dashboard/menu_items/food-pizza-still-life-hd-wallpaper-preview_Cj6yzIs.jpg
+Getting dashboard data for user: Tom, view_level: branch
+Calculating daily profit for 2026-01-21 - Restaurant: test001, Branch: b001
+Found 1 completed orders for 2026-01-21
+Total revenue: $1100.00
+Total ingredient cost: $1368.70
+Getting waste costs for 2026-01-21 - Restaurant: test001, Branch: b001
+Found 0 waste records for 2026-01-21
+Total waste cost for 2026-01-21: $0.00
+Waste cost from waste tracker: $0.00
+Waste records found: 0
+Net profit: $-268.70
+Profit margin: -24.43%
+Waste percentage: 0.00%
+Profit aggregation updated: 11
+Updating menu item performances for 2026-01-21
+Updated performance record for burger
+Updated performance record for fried chicken
+Updated performance record for firfir
+Calculating profit trend from 2025-12-23 to 2026-01-21 (30 days)
+Analyzing profit issues for test001
+Watching for file changes with StatReloader
+Getting dashboard data for user: Tom, view_level: branch
+Calculating daily profit for 2026-01-21 - Restaurant: test001, Branch: b001
+Found 1 completed orders for 2026-01-21
+Total revenue: $1100.00
+Total ingredient cost: $1368.70
+Getting waste costs for 2026-01-21 - Restaurant: test001, Branch: b001
+Found 0 waste records for 2026-01-21
+Total waste cost for 2026-01-21: $0.00
+Waste cost from waste tracker: $0.00
+Waste records found: 0
+Net profit: $-268.70
+Profit margin: -24.43%
+Waste percentage: 0.00%
+Profit aggregation updated: 11
+Updating menu item performances for 2026-01-21
+Updated performance record for burger
+Updated performance record for fried chicken
+Updated performance record for firfir
+Calculating profit trend from 2025-12-23 to 2026-01-21 (30 days)
+Analyzing profit issues for test001
+Getting dashboard data for user: Tom, view_level: branch
+Calculating daily profit for 2026-01-21 - Restaurant: test001, Branch: b001
+Found 1 completed orders for 2026-01-21
+Total revenue: $1100.00
+Total ingredient cost: $1368.70
+Getting waste costs for 2026-01-21 - Restaurant: test001, Branch: b001
+Found 0 waste records for 2026-01-21
+Total waste cost for 2026-01-21: $0.00
+Waste cost from waste tracker: $0.00
+Waste records found: 0
+Net profit: $-268.70
+Profit margin: -24.43%
+Waste percentage: 0.00%
+Profit aggregation updated: 11
+Updating menu item performances for 2026-01-21
+Updated performance record for burger
+Updated performance record for fried chicken
+Updated performance record for firfir
+Calculating profit trend from 2025-12-23 to 2026-01-21 (30 days)
+Analyzing profit issues for test001
+Getting dashboard data for user: Tom, view_level: branch
+Calculating daily profit for 2026-01-21 - Restaurant: test001, Branch: b001
+Found 1 completed orders for 2026-01-21
+Total revenue: $1100.00
+Total ingredient cost: $1368.70
+Getting waste costs for 2026-01-21 - Restaurant: test001, Branch: b001
+Found 0 waste records for 2026-01-21
+Total waste cost for 2026-01-21: $0.00
+Waste cost from waste tracker: $0.00
+Waste records found: 0
+Net profit: $-268.70
+Profit margin: -24.43%
+Waste percentage: 0.00%
+Profit aggregation updated: 11
+Updating menu item performances for 2026-01-21
+Updated performance record for burger
+Updated performance record for fried chicken
+Updated performance record for firfir
+Calculating profit trend from 2025-12-23 to 2026-01-21 (30 days)
+Analyzing profit issues for test001
+Not Found: /favicon.ico
+Getting dashboard data for user: Tom, view_level: branch
+Calculating daily profit for 2026-01-21 - Restaurant: test001, Branch: b001
+Found 1 completed orders for 2026-01-21
+Total revenue: $1100.00
+Total ingredient cost: $1368.70
+Getting waste costs for 2026-01-21 - Restaurant: test001, Branch: b001
+Found 0 waste records for 2026-01-21
+Total waste cost for 2026-01-21: $0.00
+Waste cost from waste tracker: $0.00
+Waste records found: 0
+Net profit: $-268.70
+Profit margin: -24.43%
+Waste percentage: 0.00%
+Profit aggregation updated: 11
+Updating menu item performances for 2026-01-21
+Updated performance record for burger
+Updated performance record for fried chicken
+Updated performance record for firfir
+Calculating profit trend from 2025-12-23 to 2026-01-21 (30 days)
+Analyzing profit issues for test001
+Calculating profit trend from 2026-01-15 to 2026-01-21 (7 days)
+Getting dashboard data for user: Tom, view_level: branch
+Calculating daily profit for 2026-01-21 - Restaurant: test001, Branch: b001
+Found 1 completed orders for 2026-01-21
+Total revenue: $1100.00
+Total ingredient cost: $1368.70
+Getting waste costs for 2026-01-21 - Restaurant: test001, Branch: b001
+Found 0 waste records for 2026-01-21
+Total waste cost for 2026-01-21: $0.00
+Waste cost from waste tracker: $0.00
+Waste records found: 0
+Net profit: $-268.70
+Profit margin: -24.43%
+Waste percentage: 0.00%
+Profit aggregation updated: 11
+Updating menu item performances for 2026-01-21
+Updated performance record for burger
+Updated performance record for fried chicken
+Updated performance record for firfir
+Calculating profit trend from 2025-12-23 to 2026-01-21 (30 days)
+Analyzing profit issues for test001
+Getting dashboard data for user: Tom, view_level: branch
+Calculating daily profit for 2026-01-21 - Restaurant: test001, Branch: b001
+Found 1 completed orders for 2026-01-21
+Total revenue: $1100.00
+Total ingredient cost: $1368.70
+Getting waste costs for 2026-01-21 - Restaurant: test001, Branch: b001
+Found 0 waste records for 2026-01-21
+Total waste cost for 2026-01-21: $0.00
+Waste cost from waste tracker: $0.00
+Waste records found: 0
+Net profit: $-268.70
+Profit margin: -24.43%
+Waste percentage: 0.00%
+Profit aggregation updated: 11
+Updating menu item performances for 2026-01-21
+Updated performance record for burger
+Updated performance record for fried chicken
+Updated performance record for firfir
+Calculating profit trend from 2025-12-23 to 2026-01-21 (30 days)
+Analyzing profit issues for test001
+Getting dashboard data for user: Tom, view_level: branch
+Calculating daily profit for 2026-01-21 - Restaurant: test001, Branch: b001
+Found 1 completed orders for 2026-01-21
+Total revenue: $1100.00
+Total ingredient cost: $1368.70
+Getting waste costs for 2026-01-21 - Restaurant: test001, Branch: b001
+Found 0 waste records for 2026-01-21
+Total waste cost for 2026-01-21: $0.00
+Waste cost from waste tracker: $0.00
+Waste records found: 0
+Net profit: $-268.70
+Profit margin: -24.43%
+Waste percentage: 0.00%
+Profit aggregation updated: 11
+Updating menu item performances for 2026-01-21
+Updated performance record for burger
+Updated performance record for fried chicken
+Updated performance record for firfir
+Calculating profit trend from 2025-12-23 to 2026-01-21 (30 days)
+Analyzing profit issues for test001
+Not Found: /favicon.ico
+Not Found: /favicon.ico
+Not Found: /favicon.ico
+Not Found: /favicon.ico
+Getting dashboard data for user: Tom, view_level: branch
+Calculating daily profit for 2026-01-21 - Restaurant: test001, Branch: b001
+Found 1 completed orders for 2026-01-21
+Total revenue: $1100.00
+Total ingredient cost: $1368.70
+Getting waste costs for 2026-01-21 - Restaurant: test001, Branch: b001
+Found 0 waste records for 2026-01-21
+Total waste cost for 2026-01-21: $0.00
+Waste cost from waste tracker: $0.00
+Waste records found: 0
+Net profit: $-268.70
+Profit margin: -24.43%
+Waste percentage: 0.00%
+Profit aggregation updated: 11
+Updating menu item performances for 2026-01-21
+Updated performance record for burger
+Updated performance record for fried chicken
+Updated performance record for firfir
+Calculating profit trend from 2025-12-23 to 2026-01-21 (30 days)
+Analyzing profit issues for test001
+Calculating profit trend from 2026-01-15 to 2026-01-21 (7 days)
+Getting dashboard data for user: Tom, view_level: branch
+Calculating daily profit for 2026-01-21 - Restaurant: test001, Branch: b001
+Found 1 completed orders for 2026-01-21
+Total revenue: $1100.00
+Total ingredient cost: $1368.70
+Getting waste costs for 2026-01-21 - Restaurant: test001, Branch: b001
+Found 0 waste records for 2026-01-21
+Total waste cost for 2026-01-21: $0.00
+Waste cost from waste tracker: $0.00
+Waste records found: 0
+Net profit: $-268.70
+Profit margin: -24.43%
+Waste percentage: 0.00%
+Profit aggregation updated: 11
+Updating menu item performances for 2026-01-21
+Updated performance record for burger
+Updated performance record for fried chicken
+Updated performance record for firfir
+Calculating profit trend from 2025-12-23 to 2026-01-21 (30 days)
+Analyzing profit issues for test001
+Getting dashboard data for user: Tom, view_level: branch
+Calculating daily profit for 2026-01-21 - Restaurant: test001, Branch: b001
+Found 1 completed orders for 2026-01-21
+Total revenue: $1100.00
+Total ingredient cost: $1368.70
+Getting waste costs for 2026-01-21 - Restaurant: test001, Branch: b001
+Found 0 waste records for 2026-01-21
+Total waste cost for 2026-01-21: $0.00
+Waste cost from waste tracker: $0.00
+Waste records found: 0
+Net profit: $-268.70
+Profit margin: -24.43%
+Waste percentage: 0.00%
+Profit aggregation updated: 11
+Updating menu item performances for 2026-01-21
+Updated performance record for burger
+Updated performance record for fried chicken
+Updated performance record for firfir
+Calculating profit trend from 2025-12-23 to 2026-01-21 (30 days)
+Analyzing profit issues for test001
+Getting dashboard data for user: Tom, view_level: branch
+Calculating daily profit for 2026-01-21 - Restaurant: test001, Branch: b001
+Found 1 completed orders for 2026-01-21
+Total revenue: $1100.00
+Total ingredient cost: $1368.70
+Getting waste costs for 2026-01-21 - Restaurant: test001, Branch: b001
+Found 0 waste records for 2026-01-21
+Total waste cost for 2026-01-21: $0.00
+Waste cost from waste tracker: $0.00
+Waste records found: 0
+Net profit: $-268.70
+Profit margin: -24.43%
+Waste percentage: 0.00%
+Profit aggregation updated: 11
+Updating menu item performances for 2026-01-21
+Updated performance record for burger
+Updated performance record for fried chicken
+Updated performance record for firfir
+Calculating profit trend from 2025-12-23 to 2026-01-21 (30 days)
+Analyzing profit issues for test001
+Not Found: /restaurant-admin/tables/restaurant_logos/food-pizza-still-life-hd-wallpaper-preview.jpg
+Not Found: /restaurant-admin/tables/restaurant_logos/food-pizza-still-life-hd-wallpaper-preview.jpg
+Not Found: /restaurant-admin/dashboard/menu_items/food-pizza-still-life-hd-wallpaper-preview_Cj6yzIs.jpg
+Not Found: /restaurant-admin/dashboard/menu_items/skincare-9973091_1280.jpg
+Not Found: /restaurant-admin/dashboard/menu_items/id.jpg
+Not Found: /inventory/alerts/
+Watching for file changes with StatReloader
+Not Found: /restaurant-admin/dashboard/menu_items/id.jpg
+Not Found: /restaurant-admin/dashboard/menu_items/skincare-9973091_1280.jpg
+Not Found: /restaurant-admin/dashboard/menu_items/food-pizza-still-life-hd-wallpaper-preview_Cj6yzIs.jpg
+Forbidden: /api/auth/verify-token/
+Not Found: /waiter/new-order/8/
+C:\Users\USER\DAGIIIz\eco\res\res3\ROS\ROS\urls.py changed, reloading.
+Watching for file changes with StatReloader
+Not Found: /waiter/new-order/8/
+Not Found: /waiter/new-order/8/
+Not Found: /favicon.ico
+Not Found: /favicon.ico
+Not Found: /waiter/new-order/8/
+Not Found: /favicon.ico
+Not Found: /favicon.ico
+Not Found: /waiter/new-order/8/
+C:\Users\USER\DAGIIIz\eco\res\res3\ROS\tables\views.py changed, reloading.
+Watching for file changes with StatReloader
+C:\Users\USER\DAGIIIz\eco\res\res3\ROS\tables\urls.py changed, reloading.
+Watching for file changes with StatReloader
+Not Found: /waiter/new-order/8/
+Not Found: /favicon.ico
+Not Found: /favicon.ico
+C:\Users\USER\DAGIIIz\eco\res\res3\ROS\tables\views.py changed, reloading.
+Watching for file changes with StatReloader
+C:\Users\USER\DAGIIIz\eco\res\res3\ROS\tables\views.py changed, reloading.
+Watching for file changes with StatReloader
+C:\Users\USER\DAGIIIz\eco\res\res3\ROS\tables\urls_template.py changed, reloading.
+Watching for file changes with StatReloader
+Not Found: /favicon.ico
+Not Found: /favicon.ico
+Not Found: /favicon.ico
+Not Found: /waiter/table/8/orders/
+Not Found: /favicon.ico
+Not Found: /favicon.ico
+Not Found: /waiter/table/8/orders/
+Not Found: /favicon.ico
+Not Found: /favicon.ico
+Not Found: /favicon.ico
+Watching for file changes with StatReloader
+Not Found: /favicon.ico
+Not Found: /favicon.ico
+Not Found: /favicon.ico
+Not Found: /favicon.ico
+Not Found: /waiter/table/8/orders/
+Not Found: /favicon.ico
+Not Found: /favicon.ico
+Not Found: /waiter/new-order/8/
+Not Found: /favicon.ico
+Not Found: /favicon.ico
+Not Found: /waiter/new-order/8/
+Not Found: /favicon.ico
+Not Found: /favicon.ico
+Not Found: /waiter/new-order/8/
+Not Found: /favicon.ico
+Not Found: /favicon.ico
+Not Found: /waiter/table/8/orders/
+Not Found: /favicon.ico
+Not Found: /favicon.ico
+Not Found: /favicon.ico
+C:\Users\USER\DAGIIIz\eco\res\res3\ROS\ROS\urls.py changed, reloading.
+Watching for file changes with StatReloader
+C:\Users\USER\DAGIIIz\eco\res\res3\ROS\ROS\urls.py changed, reloading.
+Watching for file changes with StatReloader
+C:\Users\USER\DAGIIIz\eco\res\res3\ROS\tables\urls_template.py changed, reloading.
+Watching for file changes with StatReloader
+C:\Users\USER\DAGIIIz\eco\res\res3\ROS\tables\views.py changed, reloading.
+Watching for file changes with StatReloader
+Not Found: /favicon.ico
+C:\Users\USER\DAGIIIz\eco\res\res3\ROS\tables\views.py changed, reloading.
+Watching for file changes with StatReloader
+C:\Users\USER\DAGIIIz\eco\res\res3\ROS\tables\views.py changed, reloading.
+Watching for file changes with StatReloader
+Not Found: /favicon.ico
+Not Found: /favicon.ico
+Not Found: /favicon.ico
+Not Found: /favicon.ico
+Not Found: /favicon.ico
+Not Found: /favicon.ico
+Not Found: /favicon.ico
+Not Found: /favicon.ico
+Not Found: /favicon.ico
+Not Found: /favicon.ico
+Forbidden: /api/auth/verify-token/
+Waste recorded for oil, updating profit
+Calculating daily profit for 2026-01-22 12:14:37.893524+00:00 - Restaurant: test001, Branch: b001
+Found 0 completed orders for 2026-01-22 12:14:37.893524+00:00
+Total revenue: $0.00
+Total ingredient cost: $0.00
+Getting waste costs for 2026-01-22 12:14:37.893524+00:00 - Restaurant: test001, Branch: b001
+Found 0 waste records for 2026-01-22 12:14:37.893524+00:00
+Total waste cost for 2026-01-22 12:14:37.893524+00:00: $0.00
+Waste cost from waste tracker: $0.00
+Waste records found: 0
+Net profit: $0.00
+Profit margin: 0.00%
+Waste percentage: 0.00%
+Profit aggregation created: 12
+Updating menu item performances for 2026-01-22 12:14:37.893524+00:00
+Forbidden: /api/auth/verify-token/
+Forbidden: /api/tables/orders/
+Forbidden: /api/tables/orders/
+Unauthorized: /api/auth/verify-token/
+Unauthorized: /api/auth/login/
+Not Found: /restaurant-admin/dashboard/menu_items/id.jpg
+Not Found: /restaurant-admin/dashboard/menu_items/skincare-9973091_1280.jpg
+Not Found: /restaurant-admin/dashboard/menu_items/food-pizza-still-life-hd-wallpaper-preview_Cj6yzIs.jpg
+Order 2601220001 completed, updating profit calculations
+Calculating daily profit for 2026-01-22 - Restaurant: test001, Branch: b001
+Found 1 completed orders for 2026-01-22
+Total revenue: $2700.00
+Total ingredient cost: $3091.20
+Getting waste costs for 2026-01-22 - Restaurant: test001, Branch: b001
+Found 0 waste records for 2026-01-22
+Total waste cost for 2026-01-22: $0.00
+Waste cost from waste tracker: $0.00
+Waste records found: 0
+Net profit: $-391.20
+Profit margin: -14.49%
+Waste percentage: 0.00%
+Profit aggregation updated: 12
+Updating menu item performances for 2026-01-22
+Created performance record for burger
+Created performance record for fried chicken
+Created performance record for firfir
+Order 2601220001 completed, updating profit calculations
+Calculating daily profit for 2026-01-22 - Restaurant: test001, Branch: b001
+Found 1 completed orders for 2026-01-22
+Total revenue: $2700.00
+Total ingredient cost: $3091.20
+Getting waste costs for 2026-01-22 - Restaurant: test001, Branch: b001
+Found 0 waste records for 2026-01-22
+Total waste cost for 2026-01-22: $0.00
+Waste cost from waste tracker: $0.00
+Waste records found: 0
+Net profit: $-391.20
+Profit margin: -14.49%
+Waste percentage: 0.00%
+Profit aggregation updated: 12
+Updating menu item performances for 2026-01-22
+Updated performance record for burger
+Updated performance record for fried chicken
+Updated performance record for firfir
+Not Found: /restaurant-admin/dashboard/menu_items/skincare-9973091_1280.jpg
+Not Found: /restaurant-admin/dashboard/menu_items/id.jpg
+Not Found: /restaurant-admin/dashboard/menu_items/food-pizza-still-life-hd-wallpaper-preview_Cj6yzIs.jpg
+Getting dashboard data for user: Tom, view_level: branch
+Calculating daily profit for 2026-01-22 - Restaurant: test001, Branch: b001
+Found 1 completed orders for 2026-01-22
+Total revenue: $2700.00
+Total ingredient cost: $3091.20
+Getting waste costs for 2026-01-22 - Restaurant: test001, Branch: b001
+Found 0 waste records for 2026-01-22
+Total waste cost for 2026-01-22: $0.00
+Waste cost from waste tracker: $0.00
+Waste records found: 0
+Net profit: $-391.20
+Profit margin: -14.49%
+Waste percentage: 0.00%
+Profit aggregation updated: 12
+Updating menu item performances for 2026-01-22
+Updated performance record for burger
+Updated performance record for fried chicken
+Updated performance record for firfir
+Calculating profit trend from 2025-12-24 to 2026-01-22 (30 days)
+Analyzing profit issues for test001
+Calculating profit trend from 2026-01-16 to 2026-01-22 (7 days)
+Forbidden: /api/auth/verify-token/
+Forbidden: /api/auth/verify-token/
+Forbidden: /api/tables/orders/
+Forbidden: /api/tables/orders/
+Unauthorized: /api/auth/verify-token/
+C:\Users\USER\DAGIIIz\eco\res\res3\ROS\tables\views.py changed, reloading.
+Watching for file changes with StatReloader
+Forbidden: /api/auth/verify-token/
+Forbidden: /api/auth/verify-token/
+Order 2601220002 completed, updating profit calculations
+Calculating daily profit for 2026-01-22 - Restaurant: test001, Branch: b001
+Found 2 completed orders for 2026-01-22
+Total revenue: $3325.00
+Total ingredient cost: $3330.70
+Getting waste costs for 2026-01-22 - Restaurant: test001, Branch: b001
+Found 0 waste records for 2026-01-22
+Total waste cost for 2026-01-22: $0.00
+Waste cost from waste tracker: $0.00
+Waste records found: 0
+Net profit: $-5.70
+Profit margin: -0.17%
+Waste percentage: 0.00%
+Profit aggregation updated: 12
+Updating menu item performances for 2026-01-22
+Updated performance record for burger
+Updated performance record for fried chicken
+Updated performance record for firfir
+Order 2601220002 completed, updating profit calculations
+Calculating daily profit for 2026-01-22 - Restaurant: test001, Branch: b001
+Found 2 completed orders for 2026-01-22
+Total revenue: $3325.00
+Total ingredient cost: $3330.70
+Getting waste costs for 2026-01-22 - Restaurant: test001, Branch: b001
+Found 0 waste records for 2026-01-22
+Total waste cost for 2026-01-22: $0.00
+Waste cost from waste tracker: $0.00
+Waste records found: 0
+Net profit: $-5.70
+Profit margin: -0.17%
+Waste percentage: 0.00%
+Profit aggregation updated: 12
+Updating menu item performances for 2026-01-22
+Updated performance record for burger
+Updated performance record for fried chicken
+Updated performance record for firfir
+Watching for file changes with StatReloader
+Forbidden: /api/auth/verify-token/
+Forbidden: /api/auth/verify-token/
+Order 2601220003 completed, updating profit calculations
+Calculating daily profit for 2026-01-22 - Restaurant: test001, Branch: b001
+Found 3 completed orders for 2026-01-22
+Total revenue: $4675.00
+Total ingredient cost: $4795.20
+Getting waste costs for 2026-01-22 - Restaurant: test001, Branch: b001
+Found 0 waste records for 2026-01-22
+Total waste cost for 2026-01-22: $0.00
+Waste cost from waste tracker: $0.00
+Waste records found: 0
+Net profit: $-120.20
+Profit margin: -2.57%
+Waste percentage: 0.00%
+Profit aggregation updated: 12
+Updating menu item performances for 2026-01-22
+Updated performance record for burger
+Updated performance record for fried chicken
+Updated performance record for firfir
+Order 2601220003 completed, updating profit calculations
+Calculating daily profit for 2026-01-22 - Restaurant: test001, Branch: b001
+Found 3 completed orders for 2026-01-22
+Total revenue: $4675.00
+Total ingredient cost: $4795.20
+Getting waste costs for 2026-01-22 - Restaurant: test001, Branch: b001
+Found 0 waste records for 2026-01-22
+Total waste cost for 2026-01-22: $0.00
+Waste cost from waste tracker: $0.00
+Waste records found: 0
+Net profit: $-120.20
+Profit margin: -2.57%
+Waste percentage: 0.00%
+Profit aggregation updated: 12
+Updating menu item performances for 2026-01-22
+Updated performance record for burger
+Updated performance record for fried chicken
+Updated performance record for firfir
+C:\Users\USER\DAGIIIz\eco\res\res3\ROS\tables\views.py changed, reloading.
+Watching for file changes with StatReloader
+Forbidden: /api/auth/verify-token/
+Forbidden: /api/auth/verify-token/
+Order 2601220004 completed, updating profit calculations
+Calculating daily profit for 2026-01-22 - Restaurant: test001, Branch: b001
+Found 4 completed orders for 2026-01-22
+Total revenue: $5800.00
+Total ingredient cost: $5388.50
+Getting waste costs for 2026-01-22 - Restaurant: test001, Branch: b001
+Found 0 waste records for 2026-01-22
+Total waste cost for 2026-01-22: $0.00
+Waste cost from waste tracker: $0.00
+Waste records found: 0
+Net profit: $411.50
+Profit margin: 7.09%
+Waste percentage: 0.00%
+Profit aggregation updated: 12
+Updating menu item performances for 2026-01-22
+Updated performance record for burger
+Updated performance record for fried chicken
+Updated performance record for firfir
+Order 2601220004 completed, updating profit calculations
+Calculating daily profit for 2026-01-22 - Restaurant: test001, Branch: b001
+Found 4 completed orders for 2026-01-22
+Total revenue: $5800.00
+Total ingredient cost: $5388.50
+Getting waste costs for 2026-01-22 - Restaurant: test001, Branch: b001
+Found 0 waste records for 2026-01-22
+Total waste cost for 2026-01-22: $0.00
+Waste cost from waste tracker: $0.00
+Waste records found: 0
+Net profit: $411.50
+Profit margin: 7.09%
+Waste percentage: 0.00%
+Profit aggregation updated: 12
+Updating menu item performances for 2026-01-22
+Updated performance record for burger
+Updated performance record for fried chicken
+Updated performance record for firfir
+Watching for file changes with StatReloader

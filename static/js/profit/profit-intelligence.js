@@ -582,14 +582,6 @@ class ProfitDashboard {
         }
     }
 
-    showFallbackData() {
-        // Show fallback data when API fails
-        this.updateElement('today-revenue', '$125.50');
-        this.updateElement('net-profit', '$75.50');
-        this.updateElement('profit-margin', '60.2%');
-        this.updateElement('today-orders', '1');
-        this.showToast('Showing sample data. Check API connection.', 'warning');
-    }
 
     updateLastUpdated() {
         const now = new Date();

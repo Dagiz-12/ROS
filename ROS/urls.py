@@ -24,6 +24,9 @@ urlpatterns = [
     path('logout/', TemplateView.as_view(template_name='auth/logout.html'), name='logout'),
 
     # ============ STAFF INTERFACES ============
+    path('waiter/', include('tables.urls_template')),
+    # Include all template views from tables app
+    path('', include('tables.urls_template')),
     path('waiter/dashboard/', waiter_dashboard, name='waiter-dashboard'),
     path('waiter/tables/', waiter_tables, name='waiter-tables'),
     path('waiter/orders/', waiter_orders, name='waiter-orders'),
@@ -69,6 +72,11 @@ urlpatterns = [
     path('api/inventory/profit/menu-items/', RedirectView.as_view(
         url='/profit-intelligence/api/menu-items/', permanent=False
     )),
+
+    # ============ payments ============
+
+    # Add to ROS/urls.py
+    path('payments/', include('payments.urls')),
 
 
     # ============ API ENDPOINTS ============

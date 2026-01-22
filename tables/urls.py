@@ -41,6 +41,11 @@ urlpatterns = [
     # orders print view
 
     path('orders/<int:order_id>/print/', views.print_order, name='print-order'),
+
+    # payment processing
+
+    path('orders/<int:order_id>/process_payment/', views.process_payment,
+         name='process-payment'),
 ]
 
 # REMOVE ALL TEMPLATE VIEWS FROM THIS FILE!
