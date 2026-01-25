@@ -37,6 +37,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django.contrib.humanize',
+    'payments.apps.PaymentsConfig',
 
     # third-party apps
     'corsheaders',
@@ -54,7 +55,7 @@ INSTALLED_APPS = [
     'inventory',
     'waste_tracker',
     'profit_intelligence',
-    'payments',
+
 ]
 
 MIDDLEWARE = [
@@ -168,6 +169,7 @@ REST_FRAMEWORK = {
         'rest_framework.authentication.SessionAuthentication',
         'rest_framework.authentication.BasicAuthentication',
         'accounts.authentication.JWTAuthentication',
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
     ],
     'DEFAULT_PERMISSION_CLASSES': [
         'rest_framework.permissions.IsAuthenticated',
@@ -248,3 +250,12 @@ EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 EMAIL_HOST_USER = ''
 EMAIL_HOST_PASSWORD = ''
+
+
+# for payments
+PAYMENT_SETTINGS = {
+    'IDEMPOTENCY_KEY_TTL': 3600,  # 1 hour
+    'AUTO_CREATE_PAYMENT_ON_SERVE': True,
+    'DEFAULT_PAYMENT_METHOD': 'cash',
+    'RECEIPT_PRINTER_ENABLED': False,  # Set to True if you have a thermal printer
+}

@@ -910,119 +910,134 @@ def print_order(request, order_id):
 # payment views
 
 # In tables/views.py - Update the existing process_payment function
+# tables/views.py - UPDATE the process_payment function
+# tables/views.py - FIX process_payment function
 @api_view(['POST'])
 @permission_classes([IsWaiterOrHigher])
 def process_payment(request, order_id):
-    """Process payment for an order - Now uses Payment model"""
+    """Waiter processes payment - FOLLOW PROPER WORKFLOW"""
     try:
         order = Order.objects.get(id=order_id)
+        user = request.user
 
-        # Check if order is served
-        if order.status != 'served':
-            return Response({
-                'error': f'Order must be served before payment. Current status: {order.status}'
-            }, status=400)
-
-        # Get payment data from request
+        # Get payment data
         payment_method = request.data.get('payment_method', 'cash')
-        amount_paid = request.data.get('amount_paid')
-        customer_name = request.data.get('customer_name', order.customer_name)
-        customer_phone = request.data.get('customer_phone', '')
-        notes = request.data.get('notes', '')
-
-        # If amount not specified, use order total
-        if not amount_paid:
-            amount_paid = order.total_amount
+        amount_paid = request.data.get('amount_paid', order.total_amount)
 
         # Import Payment model
         from payments.models import Payment
 
-        # Create payment
-        payment = Payment.objects.create(
+        # Check if order already has a completed payment
+        existing_completed_payment = Payment.objects.filter(
             order=order,
-            payment_method=payment_method,
-            amount=amount_paid,
-            status='completed' if payment_method == 'cash' else 'pending',
-            processed_by=request.user,
-            customer_name=customer_name,
-            customer_phone=customer_phone,
-            notes=notes
-        )
+            status='completed'
+        ).first()
 
-        # For cash payments, complete immediately
-        if payment_method == 'cash':
-            payment.mark_as_completed(
-                transaction_id=f"CASH-{payment.payment_id}",
-                user=request.user
+        if existing_completed_payment:
+            return Response({
+                'error': f'Payment already processed. Payment ID: {existing_completed_payment.payment_id}'
+            }, status=400)
+
+        # Check for existing pending payment
+        existing_pending_payment = Payment.objects.filter(
+            order=order,
+            status='pending'
+        ).first()
+
+        if existing_pending_payment:
+            # Update existing payment
+            payment = existing_pending_payment
+            payment.payment_method = payment_method
+            payment.amount = amount_paid
+            payment.status = 'completed'
+            payment.processed_by = user
+        else:
+            # Create new payment
+            payment = Payment.objects.create(
+                order=order,
+                payment_method=payment_method,
+                amount=amount_paid,
+                status='completed',
+                processed_by=user,
+                customer_name=order.customer_name,
+                notes=f'Processed by {user.role} {user.username}'
             )
 
-            # Update order status to completed
-            order.status = 'completed'
-            order.completed_at = timezone.now()
-            order.is_paid = True
-            order.save()
-
-            # Update table status to cleaning
-            if order.table:
-                order.table.status = 'cleaning'
-                order.table.save()
-
-        # For digital payments, initiate payment
-        elif payment_method in ['cbe', 'telebirr', 'cbe_wallet']:
-            # This would initiate payment through gateway
-            # For now, we'll just mark as pending
-            pass
+        # Update payment status (triggers signal)
+        payment.mark_as_completed(
+            transaction_id=f"{payment_method.upper()}-{payment.payment_id}",
+            user=user
+        )
 
         return Response({
             'success': True,
             'payment_id': str(payment.payment_id),
             'order_number': order.order_number,
-            'amount_paid': float(amount_paid),
+            'order_status': order.status,
+            'is_paid': order.is_paid,
+            'table_number': order.table.table_number if order.table else None,
+            'total_amount': order.total_amount,
             'payment_method': payment_method,
-            'status': payment.status,
-            'message': f'Payment {payment.status}.'
+            'message': f'Payment completed for Order #{order.order_number}. Table {order.table.table_number if order.table else "N/A"} is now free.'
         })
 
     except Order.DoesNotExist:
         return Response({'error': 'Order not found'}, status=404)
     except Exception as e:
-        return Response({'error': str(e)}, status=400)
-
+        import traceback
+        print(f"Error processing payment: {e}")
+        print(traceback.format_exc())
+        return Response({'error': 'Internal server error'}, status=500)
+        return Response({'error': str(e)}, status=500)
 
 # tables/views.py
+
+
+# Add to tables/views.py
 @api_view(['POST'])
 @permission_classes([IsWaiterOrHigher])
 def present_bill(request, order_id):
-    """Waiter presents bill to customer"""
-    order = get_object_or_404(Order, id=order_id)
+    """Waiter presents bill to customer (INDUSTRY STANDARD STEP)"""
+    try:
+        order = Order.objects.get(id=order_id)
 
-    # Validate: Order must be served
-    if order.status != 'served':
+        # Validate order status
+        if order.status != 'served':
+            return Response({
+                'error': f'Order must be served first. Current status: {order.status}'
+            }, status=400)
+
+        # Update status
+        order.status = 'bill_presented'
+        order.save()
+
+        # Auto-create pending payment (triggered by signal)
+        from payments.models import Payment
+        Payment.objects.create(
+            order=order,
+            payment_method='pending',
+            amount=order.total_amount,
+            status='pending',
+            processed_by=request.user,
+            customer_name=order.customer_name,
+            notes='Bill presented to customer'
+        )
+
         return Response({
-            'error': f'Order must be served first. Current status: {order.status}'
-        }, status=400)
+            'success': True,
+            'order_number': order.order_number,
+            'status': order.status,
+            'total_amount': order.total_amount,
+            'table_number': order.table.table_number if order.table else None,
+            'message': f'Bill presented for Order #{order.order_number}. Payment ready for cashier.'
+        })
 
-    # Update status
-    order.status = 'bill_presented'
-    order.save()
-
-    # Generate bill data
-    bill_data = {
-        'order_number': order.order_number,
-        'table_number': order.table.table_number if order.table else 'N/A',
-        'customer_name': order.customer_name,
-        'total_amount': order.total_amount,
-        'items': OrderItemSerializer(order.items.all(), many=True).data
-    }
-
-    return Response({
-        'success': True,
-        'message': 'Bill presented successfully',
-        'bill': bill_data
-    })
-
-
+    except Order.DoesNotExist:
+        return Response({'error': 'Order not found'}, status=404)
+    except Exception as e:
+        return Response({'error': str(e)}, status=500)
 # detail tables orders views
+
 
 @role_required(['waiter', 'manager', 'admin'])
 def table_orders(request, table_id):

@@ -1,0 +1,1215 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Order Management - Waiter Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+    <style>
+      .order-card {
+        transition: all 0.3s ease;
+      }
+      .order-card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+      }
+      .status-badge {
+        font-size: 0.75rem;
+        padding: 2px 8px;
+        border-radius: 12px;
+      }
+      .status-pending {
+        background-color: #fef3c7;
+        color: #92400e;
+      }
+      .status-confirmed {
+        background-color: #dbeafe;
+        color: #1e40af;
+      }
+      .status-preparing {
+        background-color: #fce7f3;
+        color: #9d174d;
+      }
+      .status-ready {
+        background-color: #dcfce7;
+        color: #166534;
+      }
+      .status-served {
+        background-color: #f0f9ff;
+        color: #0c4a6e;
+      }
+      .status-bill_presented {
+        background-color: #fef3c7;
+        color: #92400e;
+      }
+      .status-payment_pending {
+        background-color: #fce7f3;
+        color: #9d174d;
+      }
+      .status-completed {
+        background-color: #f5f5f4;
+        color: #44403c;
+      }
+      .status-cancelled {
+        background-color: #fee2e2;
+        color: #991b1b;
+      }
+      .workflow-btn {
+        padding: 8px 16px;
+        border-radius: 8px;
+        font-weight: 500;
+        transition: all 0.2s;
+      }
+      .workflow-btn:hover:not(:disabled) {
+        transform: translateY(-1px);
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+      }
+      .workflow-btn:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+      }
+    </style>
+  </head>
+  <body class="bg-gray-50">
+    <!-- Navigation -->
+    <nav class="bg-white shadow-lg">
+      <div class="container mx-auto px-4 py-3">
+        <div class="flex justify-between items-center">
+          <div class="flex items-center space-x-3">
+            <a
+              href="{% url 'waiter-dashboard' %}"
+              class="text-gray-600 hover:text-red-600"
+            >
+              <i class="fas fa-arrow-left"></i>
+            </a>
+            <i class="fas fa-clipboard-list text-2xl text-red-600"></i>
+            <div>
+              <h1 class="text-xl font-bold">Order Management</h1>
+              <p class="text-sm text-gray-600">
+                {{ user.get_full_name|default:user.username }}
+              </p>
+            </div>
+          </div>
+          <div class="flex items-center space-x-4">
+            <span class="bg-red-100 text-red-800 px-3 py-1 rounded-full"
+              >{{ user_role|title }}</span
+            >
+            <a
+              href="{% url 'waiter-new-order' %}"
+              class="bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700"
+            >
+              <i class="fas fa-plus mr-2"></i>New Order
+            </a>
+          </div>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="container mx-auto px-4 py-6">
+      <!-- Stats Bar -->
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+        <div class="bg-white rounded-lg shadow p-4">
+          <div class="flex items-center">
+            <div class="bg-yellow-100 p-3 rounded-lg mr-4">
+              <i class="fas fa-clock text-yellow-600 text-xl"></i>
+            </div>
+            <div>
+              <p class="text-gray-500 text-sm">Pending</p>
+              <h3 class="text-2xl font-bold" id="pending-count">0</h3>
+            </div>
+          </div>
+        </div>
+
+        <div class="bg-white rounded-lg shadow p-4">
+          <div class="flex items-center">
+            <div class="bg-blue-100 p-3 rounded-lg mr-4">
+              <i class="fas fa-utensils text-blue-600 text-xl"></i>
+            </div>
+            <div>
+              <p class="text-gray-500 text-sm">Preparing</p>
+              <h3 class="text-2xl font-bold" id="preparing-count">0</h3>
+            </div>
+          </div>
+        </div>
+
+        <div class="bg-white rounded-lg shadow p-4">
+          <div class="flex items-center">
+            <div class="bg-green-100 p-3 rounded-lg mr-4">
+              <i class="fas fa-check-circle text-green-600 text-xl"></i>
+            </div>
+            <div>
+              <p class="text-gray-500 text-sm">Ready</p>
+              <h3 class="text-2xl font-bold" id="ready-count">0</h3>
+            </div>
+          </div>
+        </div>
+
+        <div class="bg-white rounded-lg shadow p-4">
+          <div class="flex items-center">
+            <div class="bg-purple-100 p-3 rounded-lg mr-4">
+              <i class="fas fa-money-bill-wave text-purple-600 text-xl"></i>
+            </div>
+            <div>
+              <p class="text-gray-500 text-sm">Today's Revenue</p>
+              <h3 class="text-2xl font-bold" id="revenue-count">$0</h3>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Filters and Search -->
+      <div class="bg-white rounded-lg shadow p-4 mb-6">
+        <div
+          class="flex flex-col md:flex-row md:items-center justify-between space-y-4 md:space-y-0"
+        >
+          <div
+            class="flex flex-col md:flex-row md:items-center space-y-4 md:space-y-0 md:space-x-4"
+          >
+            <div class="relative md:w-64">
+              <input
+                type="text"
+                id="search-orders"
+                class="w-full border rounded-lg px-4 py-2 pl-10 focus:ring-2 focus:ring-red-500 focus:border-transparent"
+                placeholder="Search orders..."
+              />
+              <i class="fas fa-search absolute left-3 top-3 text-gray-400"></i>
+            </div>
+
+            <div class="flex space-x-2">
+              <select
+                id="status-filter"
+                class="border rounded-lg px-4 py-2 focus:ring-2 focus:ring-red-500 focus:border-transparent"
+              >
+                <option value="all">All Status</option>
+                <option value="pending">Pending</option>
+                <option value="confirmed">Confirmed</option>
+                <option value="preparing">Preparing</option>
+                <option value="ready">Ready</option>
+                <option value="served">Served</option>
+                <option value="bill_presented">Bill Presented</option>
+                <option value="payment_pending">Awaiting Payment</option>
+                <option value="completed">Completed</option>
+              </select>
+
+              <select
+                id="time-filter"
+                class="border rounded-lg px-4 py-2 focus:ring-2 focus:ring-red-500 focus:border-transparent"
+              >
+                <option value="today">Today</option>
+                <option value="yesterday">Yesterday</option>
+                <option value="week">This Week</option>
+                <option value="month">This Month</option>
+                <option value="all">All Time</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="flex space-x-2">
+            <button
+              onclick="printOrders()"
+              class="border border-gray-300 px-4 py-2 rounded-lg hover:bg-gray-50"
+            >
+              <i class="fas fa-print mr-2"></i>Print
+            </button>
+            <button
+              onclick="exportOrders()"
+              class="border border-gray-300 px-4 py-2 rounded-lg hover:bg-gray-50"
+            >
+              <i class="fas fa-download mr-2"></i>Export
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Orders Table -->
+      <div class="bg-white rounded-lg shadow overflow-hidden mb-6">
+        <div class="overflow-x-auto">
+          <table class="min-w-full divide-y divide-gray-200">
+            <thead class="bg-gray-50">
+              <tr>
+                <th
+                  class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                >
+                  Order #
+                </th>
+                <th
+                  class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                >
+                  Table
+                </th>
+                <th
+                  class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                >
+                  Items
+                </th>
+                <th
+                  class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                >
+                  Total
+                </th>
+                <th
+                  class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                >
+                  Status
+                </th>
+                <th
+                  class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                >
+                  Time
+                </th>
+                <th
+                  class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                >
+                  Actions
+                </th>
+              </tr>
+            </thead>
+            <tbody id="orders-body" class="bg-white divide-y divide-gray-200">
+              <!-- Orders will be loaded here -->
+              <tr>
+                <td colspan="7" class="px-6 py-12 text-center text-gray-500">
+                  <div
+                    class="spinner w-12 h-12 border-4 border-red-600 border-t-transparent rounded-full animate-spin mx-auto mb-4"
+                  ></div>
+                  <p>Loading orders...</p>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Pagination -->
+        <div class="px-6 py-3 bg-gray-50 border-t border-gray-200">
+          <div class="flex items-center justify-between">
+            <div class="text-sm text-gray-700">
+              Showing <span id="start-index">1</span> to
+              <span id="end-index">10</span> of
+              <span id="total-orders">0</span> orders
+            </div>
+            <div class="flex space-x-2">
+              <button
+                onclick="previousPage()"
+                id="prev-btn"
+                disabled
+                class="border border-gray-300 px-3 py-1 rounded disabled:opacity-50"
+              >
+                <i class="fas fa-chevron-left"></i>
+              </button>
+              <button
+                onclick="nextPage()"
+                id="next-btn"
+                disabled
+                class="border border-gray-300 px-3 py-1 rounded disabled:opacity-50"
+              >
+                <i class="fas fa-chevron-right"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Order Details Modal -->
+      <div
+        id="order-modal"
+        class="fixed inset-0 bg-black bg-opacity-50 z-50 hidden items-center justify-center p-4"
+      >
+        <div
+          class="bg-white rounded-lg max-w-4xl w-full max-h-[90vh] overflow-y-auto"
+        >
+          <div class="p-6">
+            <!-- Order details will be loaded here -->
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      const API_BASE = "/api/tables";
+      let allOrders = [];
+      let currentPage = 1;
+      const pageSize = 10;
+      let viewOrders = null; // filtered view
+      let selectedPaymentMethod = null;
+      let currentOrderDetails = null;
+
+      async function loadOrders() {
+        try {
+          showLoading();
+          const response = await fetch(`${API_BASE}/orders/`);
+
+          if (response.ok) {
+            const data = await response.json();
+            allOrders = data.results || data || [];
+            viewOrders = null;
+            console.debug('Loaded orders:', allOrders.length);
+            updateStats(allOrders);
+            renderOrdersTable();
+          } else {
+            const text = await response.text();
+            console.error('Failed loading orders', response.status, text);
+            showError('Failed to load orders from server');
+          }
+        } catch (error) {
+          console.error("Error loading orders:", error);
+          showError("Failed to load orders");
+        } finally {
+          hideLoading();
+        }
+      }
+
+      function updateStats(orders) {
+        const today = new Date().toISOString().split("T")[0];
+        const todayOrders = orders.filter(
+          (order) => order.placed_at && order.placed_at.startsWith(today)
+        );
+
+        const counts = {
+          pending: 0,
+          preparing: 0,
+          ready: 0,
+        };
+
+        let todayRevenue = 0;
+
+        todayOrders.forEach((order) => {
+          if (counts.hasOwnProperty(order.status)) {
+            counts[order.status]++;
+          }
+          if (order.total_amount && order.status === 'completed') {
+            todayRevenue += parseFloat(order.total_amount);
+          }
+        });
+
+        document.getElementById("pending-count").textContent = counts.pending;
+        document.getElementById("preparing-count").textContent =
+          counts.preparing;
+        document.getElementById("ready-count").textContent = counts.ready;
+        document.getElementById(
+          "revenue-count"
+        ).textContent = `$${todayRevenue.toFixed(2)}`;
+      }
+
+      function renderOrdersTable(ordersList = null) {
+        const source = ordersList || viewOrders || allOrders || [];
+        const start = (currentPage - 1) * pageSize;
+        const end = start + pageSize;
+        const pageOrders = source.slice(start, end);
+
+        const tbody = document.getElementById("orders-body");
+
+        if (!pageOrders || pageOrders.length === 0) {
+          tbody.innerHTML = `
+                    <tr>
+                        <td colspan="7" class="px-6 py-12 text-center text-gray-500">
+                            <i class="fas fa-clipboard-list text-4xl mb-4"></i>
+                            <p>No orders found</p>
+                        </td>
+                    </tr>
+                `;
+          return;
+        }
+
+        tbody.innerHTML = pageOrders
+          .map(
+            (order) => `
+                <tr class="order-card hover:bg-gray-50 cursor-pointer" onclick="showOrderDetails(${
+                  order.id
+                })">
+                    <td class="px-6 py-4 whitespace-nowrap">
+                        <div class="font-bold">${
+                          order.order_number || `#${order.id}`
+                        }</div>
+                        <div class="text-sm text-gray-500">${
+                          order.order_type || "waiter"
+                        }</div>
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap">
+                        <div class="font-medium">${
+                          order.table?.table_number || "N/A"
+                        }</div>
+                        <div class="text-sm text-gray-500">${
+                          order.customer_name || "Guest"
+                        }</div>
+                    </td>
+                    <td class="px-6 py-4">
+                        <div class="text-sm">${
+                          order.items?.length || 0
+                        } items</div>
+                        <div class="text-xs text-gray-500 truncate max-w-xs">
+                            ${
+                              order.items
+                                ?.map((item) => item.menu_item?.name)
+                                .join(", ") || ""
+                            }
+                        </div>
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap">
+                        <div class="font-bold">$${
+                          order.total_amount
+                            ? parseFloat(order.total_amount).toFixed(2)
+                            : "0.00"
+                        }</div>
+                        ${order.is_paid ? '<div class="text-xs text-green-600">Paid</div>' : ''}
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap">
+                        <span class="status-badge ${getStatusClass(
+                          order.status
+                        )}">
+                            ${formatStatus(order.status)}
+                        </span>
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap">
+                        <div class="text-sm">${formatTime(
+                          order.placed_at
+                        )}</div>
+                        <div class="text-xs text-gray-500">${formatDate(
+                          order.placed_at
+                        )}</div>
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                        <div class="flex space-x-2">
+                            ${
+                              order.status === "pending"
+                                ? `
+                            <button onclick="event.stopPropagation(); confirmOrder(${order.id})" 
+                                    class="text-green-600 hover:text-green-900">
+                                <i class="fas fa-check"></i>
+                            </button>
+                            `
+                                : ""
+                            }
+                            
+                            ${
+                              order.status === "ready"
+                                ? `
+                            <button onclick="event.stopPropagation(); serveOrder(${order.id})" 
+                                    class="text-blue-600 hover:text-blue-900">
+                                <i class="fas fa-concierge-bell"></i>
+                            </button>
+                            `
+                                : ""
+                            }
+                            
+                            <!-- Show workflow buttons for served orders -->
+                            ${
+                              order.status === "served" && !order.is_paid
+                                ? `
+                            <button onclick="event.stopPropagation(); presentBill(${order.id})" 
+                                    class="text-yellow-600 hover:text-yellow-900">
+                                <i class="fas fa-file-invoice-dollar"></i>
+                            </button>
+                            `
+                                : ""
+                            }
+                            
+                            <!-- Show payment button for payment_pending orders -->
+                            ${
+                              order.status === "payment_pending" && !order.is_paid
+                                ? `
+                            <button onclick="event.stopPropagation(); showOrderDetails(${order.id})" 
+                                    class="text-green-600 hover:text-green-900">
+                                <i class="fas fa-money-bill-wave"></i>
+                            </button>
+                            `
+                                : ""
+                            }
+                            
+                            <button onclick="event.stopPropagation(); printOrder(${
+                              order.id
+                            })" 
+                                    class="text-gray-600 hover:text-gray-900">
+                                <i class="fas fa-print"></i>
+                            </button>
+                        </div>
+                    </td>
+                </tr>
+            `
+          )
+          .join("");
+
+        // Update pagination info
+        document.getElementById("start-index").textContent = start + 1;
+        document.getElementById("end-index").textContent = Math.min(
+          end,
+          source.length
+        );
+        document.getElementById("total-orders").textContent = source.length;
+
+        // Update pagination buttons
+        document.getElementById("prev-btn").disabled = currentPage === 1;
+        document.getElementById("next-btn").disabled = end >= source.length;
+      }
+
+      function getStatusClass(status) {
+        const classes = {
+          pending: "status-pending",
+          confirmed: "status-confirmed",
+          preparing: "status-preparing",
+          ready: "status-ready",
+          served: "status-served",
+          bill_presented: "status-bill_presented",
+          payment_pending: "status-payment_pending",
+          completed: "status-completed",
+          cancelled: "status-cancelled",
+        };
+        return classes[status] || "status-pending";
+      }
+
+      function formatStatus(status) {
+        const statusMap = {
+          pending: "Pending",
+          confirmed: "Confirmed",
+          preparing: "Preparing",
+          ready: "Ready",
+          served: "Served",
+          bill_presented: "Bill Presented",
+          payment_pending: "Awaiting Payment",
+          completed: "Completed",
+          cancelled: "Cancelled",
+        };
+        return statusMap[status] || status;
+      }
+
+      function formatDate(dateString) {
+        if (!dateString) return "N/A";
+        const date = new Date(dateString);
+        return date.toLocaleDateString();
+      }
+
+      function formatTime(dateString) {
+        if (!dateString) return "N/A";
+        const date = new Date(dateString);
+        return date.toLocaleTimeString([], {
+          hour: "2-digit",
+          minute: "2-digit",
+        });
+      }
+
+      // Enhanced order details modal with workflow
+async function showOrderDetails(orderId) {
+    try {
+        const response = await fetch(`${API_BASE}/orders/${orderId}/`);
+        if (!response.ok) return;
+
+        const order = await response.json();
+        currentOrderDetails = order;
+        
+        const modal = document.getElementById("order-modal");
+        const modalContent = modal.querySelector(".p-6");
+
+        // Generate workflow section based on order status
+        let workflowSection = generateWorkflowSection(order);
+        
+        // Generate items list
+        let itemsList = '';
+        if (order.items && order.items.length > 0) {
+            itemsList = `
+                <div class="mt-4">
+                    <h4 class="font-bold mb-3">Order Items</h4>
+                    <div class="space-y-2">
+                        ${order.items.map(item => `
+                            <div class="flex justify-between items-center border-b pb-2">
+                                <div>
+                                    <div class="font-medium">${item.quantity}x ${item.menu_item?.name || 'Item'}</div>
+                                    ${item.special_instructions ? `<div class="text-sm text-gray-600">${item.special_instructions}</div>` : ''}
+                                </div>
+                                <div class="font-bold">$${(item.total_price || 0).toFixed(2)}</div>
+                            </div>
+                        `).join('')}
+                    </div>
+                </div>
+            `;
+        }
+
+        modalContent.innerHTML = `
+            <div class="flex justify-between items-start mb-6">
+                <div>
+                    <h3 class="text-2xl font-bold">Order ${order.order_number}</h3>
+                    <p class="text-gray-600">
+                        Table ${order.table?.table_number || 'N/A'} • 
+                        ${order.customer_name || "Guest"} • 
+                        ${formatDate(order.placed_at)} ${formatTime(order.placed_at)}
+                    </p>
+                </div>
+                <button onclick="closeOrderModal()" class="text-gray-500 hover:text-gray-700">
+                    <i class="fas fa-times text-2xl"></i>
+                </button>
+            </div>
+            
+            <!-- Order Status -->
+            <div class="mb-6">
+                <div class="flex items-center justify-between mb-2">
+                    <span class="text-gray-600">Current Status:</span>
+                    <span class="px-3 py-1 rounded-full ${getStatusClass(order.status)}">
+                        ${formatStatus(order.status)}
+                    </span>
+                </div>
+                <div class="flex items-center justify-between mb-2">
+                    <span class="text-gray-600">Payment Status:</span>
+                    <span class="font-bold ${order.is_paid ? 'text-green-600' : 'text-red-600'}">
+                        ${order.is_paid ? 'Paid' : 'Unpaid'}
+                    </span>
+                </div>
+                <div class="flex items-center justify-between">
+                    <span class="text-gray-600">Total Amount:</span>
+                    <span class="font-bold text-lg">$${order.total_amount || '0.00'}</span>
+                </div>
+            </div>
+            
+            ${itemsList}
+            
+            ${workflowSection}
+            
+            <!-- Totals Summary -->
+            <div class="mt-6 pt-6 border-t">
+                <h4 class="font-bold mb-3">Payment Summary</h4>
+                <div class="space-y-2 text-sm">
+                    <div class="flex justify-between">
+                        <span class="text-gray-600">Subtotal:</span>
+                        <span class="font-medium">$${order.subtotal || '0.00'}</span>
+                    </div>
+                    <div class="flex justify-between">
+                        <span class="text-gray-600">Tax (15%):</span>
+                        <span class="font-medium">$${order.tax_amount || '0.00'}</span>
+                    </div>
+                    <div class="flex justify-between">
+                        <span class="text-gray-600">Service (10%):</span>
+                        <span class="font-medium">$${order.service_charge || '0.00'}</span>
+                    </div>
+                    <div class="flex justify-between pt-2 border-t font-bold text-lg">
+                        <span>Total:</span>
+                        <span class="text-red-600">$${order.total_amount || '0.00'}</span>
+                    </div>
+                </div>
+            </div>
+        `;
+
+        // Initialize payment method selection
+        initializePaymentMethodSelection();
+        
+        modal.classList.remove("hidden");
+        modal.classList.add("flex");
+        
+    } catch (error) {
+        console.error("Error loading order details:", error);
+        alert("Failed to load order details");
+    }
+}
+
+function generateWorkflowSection(order) {
+    if (order.status === 'completed' || order.is_paid) {
+        return `
+            <div class="mt-6 pt-6 border-t">
+                <div class="bg-green-50 border border-green-200 rounded-lg p-4">
+                    <div class="flex items-center">
+                        <i class="fas fa-check-circle text-green-600 text-xl mr-3"></i>
+                        <div>
+                            <h4 class="font-bold text-green-800">Order Completed</h4>
+                            <p class="text-sm text-green-600">This order has been paid and completed</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        `;
+    }
+    
+    if (order.status === 'served') {
+        return `
+            <div class="mt-6 pt-6 border-t">
+                <h4 class="font-bold mb-4">Payment Workflow</h4>
+                
+                <!-- Workflow Steps -->
+                <div class="mb-6">
+                    <div class="flex items-center mb-4">
+                        <div class="w-8 h-8 bg-blue-600 text-white rounded-full flex items-center justify-center mr-3">
+                            1
+                        </div>
+                        <div>
+                            <h5 class="font-bold">Present Bill</h5>
+                            <p class="text-sm text-gray-600">Give bill to customer</p>
+                        </div>
+                        <button onclick="presentBill(${order.id})" 
+                                class="ml-auto bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 workflow-btn">
+                            <i class="fas fa-file-invoice-dollar mr-2"></i>Present Bill
+                        </button>
+                    </div>
+                </div>
+                
+                <p class="text-sm text-gray-500 italic">
+                    After presenting the bill, the customer will review it. 
+                    Then mark as "Ready to Pay" when they're ready.
+                </p>
+            </div>
+        `;
+    }
+    
+    if (order.status === 'bill_presented') {
+        return `
+            <div class="mt-6 pt-6 border-t">
+                <h4 class="font-bold mb-4">Payment Workflow</h4>
+                
+                <!-- Workflow Steps -->
+                <div class="mb-6">
+                    <div class="flex items-center mb-4">
+                        <div class="w-8 h-8 bg-green-600 text-white rounded-full flex items-center justify-center mr-3">
+                            1
+                        </div>
+                        <div>
+                            <h5 class="font-bold">✓ Bill Presented</h5>
+                            <p class="text-sm text-gray-600">Customer has the bill</p>
+                        </div>
+                    </div>
+                    
+                    <div class="flex items-center mb-4">
+                        <div class="w-8 h-8 bg-blue-600 text-white rounded-full flex items-center justify-center mr-3">
+                            2
+                        </div>
+                        <div>
+                            <h5 class="font-bold">Ready to Pay</h5>
+                            <p class="text-sm text-gray-600">Customer is ready for payment</p>
+                        </div>
+                        <button onclick="markPaymentPending(${order.id})" 
+                                class="ml-auto bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 workflow-btn">
+                            <i class="fas fa-money-bill-wave mr-2"></i>Ready to Pay
+                        </button>
+                    </div>
+                </div>
+            </div>
+        `;
+    }
+    
+    if (order.status === 'payment_pending') {
+        return `
+            <div class="mt-6 pt-6 border-t">
+                <h4 class="font-bold mb-4">Process Payment</h4>
+                
+                <!-- Payment Method Selection -->
+                <div class="mb-4">
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Payment Method</label>
+                    <div class="grid grid-cols-2 gap-2 mb-4">
+                        <button class="payment-method-btn border rounded-lg py-2 ${selectedPaymentMethod === 'cash' ? 'bg-blue-100 border-blue-400' : ''}" 
+                                onclick="selectPaymentMethod('cash')">
+                            <i class="fas fa-money-bill-wave mr-2"></i>Cash
+                        </button>
+                        <button class="payment-method-btn border rounded-lg py-2 ${selectedPaymentMethod === 'cbe' ? 'bg-blue-100 border-blue-400' : ''}" 
+                                onclick="selectPaymentMethod('cbe')">
+                            <i class="fas fa-bank mr-2"></i>CBE
+                        </button>
+                        <button class="payment-method-btn border rounded-lg py-2 ${selectedPaymentMethod === 'telebirr' ? 'bg-blue-100 border-blue-400' : ''}" 
+                                onclick="selectPaymentMethod('telebirr')">
+                            <i class="fas fa-mobile-alt mr-2"></i>Telebirr
+                        </button>
+                        <button class="payment-method-btn border rounded-lg py-2 ${selectedPaymentMethod === 'card' ? 'bg-blue-100 border-blue-400' : ''}" 
+                                onclick="selectPaymentMethod('card')">
+                            <i class="fas fa-credit-card mr-2"></i>Card
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Amount -->
+                <div class="mb-4">
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Amount Received</label>
+                    <div class="flex items-center">
+                        <span class="bg-gray-100 border border-r-0 rounded-l-lg px-3 py-2">$</span>
+                        <input type="number" id="amount-paid" 
+                               class="flex-1 border rounded-r-lg px-3 py-2"
+                               value="${order.total_amount || '0.00'}"
+                               step="0.01" min="0"
+                               oninput="updateChangeCalculation()">
+                    </div>
+                    <div class="flex gap-2 mt-2">
+                        <button onclick="addAmount(5)" class="flex-1 px-2 py-1 bg-gray-100 hover:bg-gray-200 rounded text-sm">
+                            + $5
+                        </button>
+                        <button onclick="addAmount(10)" class="flex-1 px-2 py-1 bg-gray-100 hover:bg-gray-200 rounded text-sm">
+                            + $10
+                        </button>
+                        <button onclick="addAmount(20)" class="flex-1 px-2 py-1 bg-gray-100 hover:bg-gray-200 rounded text-sm">
+                            + $20
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Change Calculation -->
+                <div id="change-container" class="mb-4 hidden">
+                    <div class="bg-green-50 border border-green-200 rounded-lg p-3">
+                        <div class="flex justify-between items-center">
+                            <span class="text-green-700 font-medium">Change Due:</span>
+                            <span id="change-amount" class="text-green-900 font-bold text-lg">$0.00</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Process Payment Button -->
+                <button id="process-payment-btn" 
+                        onclick="processPayment(${order.id})"
+                        class="w-full bg-green-600 text-white py-3 rounded-lg hover:bg-green-700 transition disabled:opacity-50 disabled:cursor-not-allowed workflow-btn"
+                        disabled>
+                    <i class="fas fa-check-circle mr-2"></i>Complete Payment
+                </button>
+            </div>
+        `;
+    }
+    
+    return '';
+}
+
+function initializePaymentMethodSelection() {
+    selectedPaymentMethod = null;
+    updateProcessPaymentButton();
+}
+
+function selectPaymentMethod(method) {
+    selectedPaymentMethod = method;
+    
+    // Update UI
+    document.querySelectorAll('.payment-method-btn').forEach(btn => {
+        btn.classList.remove('bg-blue-100', 'border-blue-400');
+        btn.classList.add('border-gray-300');
+    });
+    
+    const selectedBtn = document.querySelector(`[onclick="selectPaymentMethod('${method}')"]`);
+    if (selectedBtn) {
+        selectedBtn.classList.remove('border-gray-300');
+        selectedBtn.classList.add('bg-blue-100', 'border-blue-400');
+    }
+    
+    updateProcessPaymentButton();
+}
+
+function addAmount(amount) {
+    const amountInput = document.getElementById('amount-paid');
+    const currentValue = parseFloat(amountInput.value) || 0;
+    amountInput.value = (currentValue + amount).toFixed(2);
+    updateChangeCalculation();
+    updateProcessPaymentButton();
+}
+
+function updateChangeCalculation() {
+    const amountPaid = parseFloat(document.getElementById('amount-paid').value) || 0;
+    const orderTotal = currentOrderDetails ? parseFloat(currentOrderDetails.total_amount) || 0 : 0;
+    const changeContainer = document.getElementById('change-container');
+    const changeAmount = document.getElementById('change-amount');
+    
+    if (selectedPaymentMethod === 'cash' && amountPaid > orderTotal) {
+        const change = amountPaid - orderTotal;
+        changeAmount.textContent = `$${change.toFixed(2)}`;
+        changeContainer.classList.remove('hidden');
+    } else {
+        changeContainer.classList.add('hidden');
+    }
+    
+    updateProcessPaymentButton();
+}
+
+function updateProcessPaymentButton() {
+    const amountPaid = parseFloat(document.getElementById('amount-paid')?.value) || 0;
+    const orderTotal = currentOrderDetails ? parseFloat(currentOrderDetails.total_amount) || 0 : 0;
+    const processBtn = document.getElementById('process-payment-btn');
+    
+    if (!processBtn) return;
+    
+    if (selectedPaymentMethod && amountPaid >= orderTotal) {
+        processBtn.disabled = false;
+    } else {
+        processBtn.disabled = true;
+    }
+}
+
+async function presentBill(orderId) {
+    if (!confirm("Present bill to customer?")) return;
+    
+    try {
+        const response = await fetch(
+            `/api/tables/orders/${orderId}/present_bill/`,
+            {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "X-CSRFToken": getCookie("csrftoken"),
+                }
+            }
+        );
+
+        const result = await response.json();
+        
+        if (response.ok) {
+            alert(result.message || "Bill presented successfully!");
+            loadOrders();
+            closeOrderModal();
+        } else {
+            alert(`Failed to present bill: ${result.error || 'Unknown error'}`);
+        }
+    } catch (error) {
+        console.error("Error presenting bill:", error);
+        alert("Failed to present bill");
+    }
+}
+
+async function markPaymentPending(orderId) {
+  if (!confirm("Mark order as ready to pay?")) return;
+
+  try {
+    const response = await fetch(
+      `/api/tables/orders/${orderId}/update_status/`,
+      {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-CSRFToken': getCookie('csrftoken')
+        },
+        body: JSON.stringify({ status: 'payment_pending' })
+      }
+    );
+
+    const result = await response.json();
+    if (response.ok) {
+      alert(result.message || 'Order marked as payment pending');
+      loadOrders();
+      closeOrderModal();
+    } else {
+      alert(`Failed to update order: ${result.error || 'Unknown error'}`);
+    }
+  } catch (error) {
+    console.error('Error marking payment pending:', error);
+    alert('Failed to update order');
+  }
+}
+
+async function processPayment(orderId) {
+  if (!selectedPaymentMethod) {
+    alert('Select a payment method');
+    return;
+  }
+
+  const amountPaid = parseFloat(document.getElementById('amount-paid')?.value) || 0;
+  const orderTotal = currentOrderDetails ? parseFloat(currentOrderDetails.total_amount) || 0 : 0;
+  if (amountPaid < orderTotal) {
+    alert('Received amount is less than order total');
+    return;
+  }
+
+  if (!confirm('Complete payment?')) return;
+
+  try {
+    const response = await fetch(`/api/tables/orders/${orderId}/process_payment/`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-CSRFToken': getCookie('csrftoken')
+      },
+      body: JSON.stringify({
+        payment_method: selectedPaymentMethod,
+        amount_paid: amountPaid
+      })
+    });
+
+    const result = await response.json();
+    if (response.ok) {
+      alert(result.message || 'Payment processed successfully');
+      loadOrders();
+      closeOrderModal();
+    } else {
+      alert(`Payment failed: ${result.error || 'Unknown error'}`);
+    }
+  } catch (error) {
+    console.error('Error processing payment:', error);
+    alert('Failed to process payment');
+  }
+}
+
+async function confirmOrder(orderId) {
+  if (!confirm('Confirm this order?')) return;
+  try {
+    const response = await fetch(`/api/tables/orders/${orderId}/update_status/`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-CSRFToken': getCookie('csrftoken')
+      },
+      body: JSON.stringify({ status: 'confirmed' })
+    });
+    const result = await response.json();
+    if (response.ok) {
+      alert('Order confirmed');
+      loadOrders();
+    } else {
+      alert(`Failed to confirm: ${result.error || 'Unknown error'}`);
+    }
+  } catch (error) {
+    console.error('Error confirming order:', error);
+    alert('Failed to confirm order');
+  }
+}
+
+async function serveOrder(orderId) {
+  if (!confirm('Mark order as served?')) return;
+  try {
+    const response = await fetch(`/api/tables/orders/${orderId}/update_status/`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-CSRFToken': getCookie('csrftoken')
+      },
+      body: JSON.stringify({ status: 'served' })
+    });
+    const result = await response.json();
+    if (response.ok) {
+      alert('Order marked as served');
+      loadOrders();
+    } else {
+      alert(`Failed to update: ${result.error || 'Unknown error'}`);
+    }
+  } catch (error) {
+    console.error('Error serving order:', error);
+    alert('Failed to update order');
+  }
+}
+
+function printOrders() {
+  window.print();
+}
+
+function exportOrders() {
+  if (!allOrders || allOrders.length === 0) {
+    alert('No orders to export');
+    return;
+  }
+
+  const rows = [];
+  rows.push(['Order #', 'Table', 'Customer', 'Items', 'Total', 'Status', 'Placed At']);
+  allOrders.forEach(o => {
+    rows.push([
+      o.order_number || o.id,
+      o.table?.table_number || 'N/A',
+      o.customer_name || 'Guest',
+      (o.items || []).map(i => i.menu_item?.name).join('; '),
+      o.total_amount || 0,
+      o.status,
+      o.placed_at || ''
+    ]);
+  });
+
+  const csvContent = rows.map(r => r.map(c => `"${String(c).replace(/"/g, '""')}"`).join(',')).join('\n');
+  const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `orders_export_${new Date().toISOString().slice(0,10)}.csv`;
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  URL.revokeObjectURL(url);
+}
+
+function printOrder(orderId) {
+  window.open(`/api/tables/orders/${orderId}/print/`, '_blank');
+}
+
+function previousPage() {
+  if (currentPage > 1) {
+    currentPage -= 1;
+    renderOrdersTable();
+  }
+}
+
+function nextPage() {
+  const sourceLen = (viewOrders || allOrders || []).length;
+  const maxPage = Math.ceil(sourceLen / pageSize);
+  if (currentPage < maxPage) {
+    currentPage += 1;
+    renderOrdersTable();
+  }
+}
+
+function showLoading() {
+  const tbody = document.getElementById('orders-body');
+  if (tbody) {
+    tbody.innerHTML = `
+      <tr>
+        <td colspan="7" class="px-6 py-12 text-center text-gray-500">
+          <div class="spinner w-12 h-12 border-4 border-red-600 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+          <p>Loading orders...</p>
+        </td>
+      </tr>
+    `;
+  }
+}
+
+function hideLoading() {
+  // no-op; renderOrdersTable will replace loading state
+}
+
+function showError(msg) {
+  alert(msg);
+}
+
+function closeOrderModal() {
+  const modal = document.getElementById('order-modal');
+  if (modal) {
+    modal.classList.remove('flex');
+    modal.classList.add('hidden');
+    const modalContent = modal.querySelector('.p-6');
+    if (modalContent) modalContent.innerHTML = '';
+    currentOrderDetails = null;
+  }
+}
+
+// Reuse cookie helper from other templates
+function getCookie(name) {
+  let cookieValue = null;
+  if (document.cookie && document.cookie !== '') {
+    const cookies = document.cookie.split(';');
+    for (let i = 0; i < cookies.length; i++) {
+      const cookie = cookies[i].trim();
+      if (cookie.substring(0, name.length + 1) === (name + '=')) {
+        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+        break;
+      }
+    }
+  }
+  return cookieValue;
+}
+
+// Wire up filters and initial load
+document.addEventListener('DOMContentLoaded', () => {
+  loadOrders();
+
+  document.getElementById('status-filter')?.addEventListener('change', (e) => {
+    const status = e.target.value;
+    if (status === 'all') {
+      // reload all
+      currentPage = 1;
+        viewOrders = null;
+        renderOrdersTable();
+    } else {
+      // filter locally
+        const filtered = allOrders.filter(o => o.status === status);
+        viewOrders = filtered;
+        currentPage = 1;
+        renderOrdersTable();
+    }
+  });
+
+  document.getElementById('search-orders')?.addEventListener('input', (e) => {
+    const q = e.target.value.toLowerCase();
+    const filtered = allOrders.filter(o => {
+      return (o.order_number || '').toString().toLowerCase().includes(q) ||
+           (o.customer_name || '').toLowerCase().includes(q) ||
+           (o.table?.table_number || '').toString().toLowerCase().includes(q);
+    });
+    viewOrders = filtered;
+    currentPage = 1;
+    renderOrdersTable();
+  });
+
+  document.getElementById('time-filter')?.addEventListener('change', () => {
+    // For now just reload; server-side filtering would be preferable
+    loadOrders();
+  });
+});

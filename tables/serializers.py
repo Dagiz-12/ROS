@@ -109,6 +109,8 @@ class OrderSerializer(serializers.ModelSerializer):
     # Add this field to make it easier for JavaScript
     table_number = serializers.SerializerMethodField()
     table_name = serializers.SerializerMethodField()
+    items_count = serializers.SerializerMethodField()
+    is_served = serializers.SerializerMethodField()
 
     class Meta:
         model = Order
@@ -118,7 +120,7 @@ class OrderSerializer(serializers.ModelSerializer):
             'notes', 'subtotal', 'tax_amount', 'service_charge', 'discount_amount',
             'total_amount', 'placed_at', 'confirmed_at', 'preparation_started_at',
             'ready_at', 'served_at', 'completed_at', 'cancelled_at', 'is_paid',
-            'is_priority', 'requires_waiter_confirmation', 'items', 'preparation_time'
+            'is_priority', 'requires_waiter_confirmation', 'items', 'preparation_time', 'items_count', 'is_served'
         ]
         read_only_fields = [
             'id', 'order_number', 'placed_at', 'confirmed_at', 'preparation_started_at',
@@ -137,6 +139,15 @@ class OrderSerializer(serializers.ModelSerializer):
         if obj.table:
             return obj.table.table_name
         return None
+
+    def get_waiter_name(self, obj):
+        return obj.waiter.get_full_name() if obj.waiter else None
+
+    def get_items_count(self, obj):
+        return obj.items.count()
+
+    def get_is_served(self, obj):
+        return obj.status == 'served'
 
 
 class OrderCreateSerializer(serializers.ModelSerializer):

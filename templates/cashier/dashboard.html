@@ -7,7 +7,7 @@
     <title>Payment System - Cashier Dashboard</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
-    
+    <meta name="csrf-token" content="{{ csrf_token }}">
     <style>
       .payment-card {
         transition: all 0.3s ease;
@@ -301,35 +301,79 @@
          data-user='{"username": "{{ user.username }}", "role": "{{ user.role }}", "id": "{{ user.id }}"}'>
     </div>
 
-    <!-- External JavaScript -->
-    <script src="/static/js/auth-manager.js"></script>
-    <script src="/static/js/cashier-dashboard.js"></script>
+    <div id="api-endpoints" 
+     data-api-base="/api/payments"
+     data-orders-api="/api/tables"
+     data-user-id="{{ user.id }}"
+     data-user-role="{{ user.role }}"
+     style="display: none;">
+</div>
 
-    <script>
-      // Simple logout function that uses authManager if available
-      function logout() {
-        if (typeof authManager !== 'undefined') {
-          authManager.logout();
-        } else {
-          localStorage.clear();
-          window.location.href = '/login/';
-        }
-      }
+    <!-- Replace the script section at bottom of cashier/dashboard.html -->
+<!-- Replace the script section at bottom of cashier/dashboard.html -->
+<script src="/static/js/auth-manager.js"></script>
+<script src="/static/js/cashier/cashier-dashboard-industrial.js"></script>
 
-      // Attach logout to button
-      document.addEventListener('DOMContentLoaded', function() {
-        const logoutBtn = document.getElementById('logout-btn');
-        if (logoutBtn) {
-          logoutBtn.onclick = logout;
+<script>
+// Prevent double initialization
+if (!window.cashierTemplateInitialized) {
+    window.cashierTemplateInitialized = true;
+    
+    document.addEventListener('DOMContentLoaded', function() {
+        // Get API endpoints from hidden div
+        const apiEndpoints = document.getElementById('api-endpoints');
+        if (apiEndpoints) {
+            window.API_BASE = apiEndpoints.dataset.apiBase || '/api/payments';
+            window.ORDERS_API = apiEndpoints.dataset.ordersApi || '/api/tables';
+            window.USER_ID = apiEndpoints.dataset.userId;
+            window.USER_ROLE = apiEndpoints.dataset.userRole;
         }
         
-        // Initialize cashier dashboard
-        if (typeof CashierDashboard !== 'undefined') {
-          console.log('CashierDashboard class found');
-        } else {
-          console.error('CashierDashboard class not found. Check if cashier-dashboard.js is loaded.');
+        // Logout function
+        const logoutBtn = document.getElementById('logout-btn');
+        if (logoutBtn) {
+            logoutBtn.onclick = function() {
+                if (confirm('Are you sure you want to logout?')) {
+                    if (typeof authManager !== 'undefined') {
+                        authManager.logout();
+                    } else {
+                        localStorage.clear();
+                        window.location.href = '/login/';
+                    }
+                }
+            };
         }
-      });
-    </script>
+        
+        // Cash drawer button
+        const cashDrawerBtn = document.getElementById('cash-drawer-btn');
+        if (cashDrawerBtn) {
+            cashDrawerBtn.onclick = function() {
+                // This would trigger the cash drawer via printer
+                console.log('Opening cash drawer...');
+                if (window.cashierDashboard && window.cashierDashboard.showToast) {
+                    window.cashierDashboard.showToast('Cash drawer opened', 'info');
+                } else {
+                    alert('Cash drawer opened');
+                }
+            };
+        }
+        
+        // Print receipt button
+        const printBtn = document.getElementById('print-receipt-btn');
+        if (printBtn) {
+            printBtn.onclick = function() {
+                if (window.cashierDashboard && window.cashierDashboard.selectedOrder) {
+                    // Print receipt for selected order
+                    window.open(`/api/payments/print-receipt/${window.cashierDashboard.selectedOrder.payment_id}/`, '_blank');
+                } else {
+                    alert('Please select an order first');
+                }
+            };
+        }
+        
+        console.log('✅ Cashier template initialized');
+    });
+}
+</script>
   </body>
 </html>

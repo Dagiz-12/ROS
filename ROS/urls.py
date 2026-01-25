@@ -76,7 +76,9 @@ urlpatterns = [
     # ============ payments ============
 
     # Add to ROS/urls.py
-    path('payments/', include('payments.urls')),
+
+
+    path('api/payments/', include('payments.urls')),
 
 
     # ============ API ENDPOINTS ============

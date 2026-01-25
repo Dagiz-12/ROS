@@ -44,8 +44,10 @@ urlpatterns = [
 
     # payment processing
 
-    path('orders/<int:order_id>/process_payment/', views.process_payment,
-         name='process-payment'),
+    path('orders/<int:order_id>/present_bill/',
+         views.present_bill, name='present-bill'),
+    path('orders/<int:order_id>/process_payment/',
+         views.process_payment, name='process-payment'),
 ]
 
 # REMOVE ALL TEMPLATE VIEWS FROM THIS FILE!

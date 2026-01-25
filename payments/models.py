@@ -123,6 +123,21 @@ class Payment(models.Model):
         """Check if payment is digital (not cash)"""
         return self.payment_method in ['cbe', 'telebirr', 'cbe_wallet', 'card']
 
+    @classmethod
+    def check_duplicate_payment(cls, order, payment_method, amount):
+        """Check for duplicate payments (same order, method, amount within 5 minutes)"""
+        five_minutes_ago = timezone.now() - timezone.timedelta(minutes=5)
+
+        duplicate = cls.objects.filter(
+            order=order,
+            payment_method=payment_method,
+            amount=amount,
+            created_at__gte=five_minutes_ago,
+            status__in=['completed', 'pending']
+        ).exists()
+
+        return duplicate
+
 
 class Receipt(models.Model):
     """Receipt generation and tracking"""

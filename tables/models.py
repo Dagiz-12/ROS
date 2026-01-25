@@ -229,7 +229,10 @@ class Order(models.Model):
     inventory_deducted = models.BooleanField(
         default=False,
         help_text="Whether inventory has been automatically deducted for this order"
-    )    # for inventory management
+    )
+    # for inventory management
+    metadata = models.JSONField(
+        default=dict, blank=True, help_text="Additional order data")
 
     class Meta:
         ordering = ['-placed_at']
@@ -350,10 +353,48 @@ class Order(models.Model):
         self.served_at = timezone.now()
         self.save()
 
-    def mark_completed(self, update_sales=True):
-        """Mark order as completed and update sales statistics"""
+    def mark_bill_presented(self):
+        """Waiter presents bill to customer (INDUSTRY STANDARD)"""
+        if self.status != 'served':
+            raise ValueError(
+                f'Order must be served first. Current status: {self.status}')
+
+        self.status = 'bill_presented'
+        self.save()
+        return self
+
+    def mark_payment_pending(self):
+        """Customer ready to pay (INDUSTRY STANDARD)"""
+        if self.status != 'bill_presented':
+            raise ValueError(
+                f'Bill must be presented first. Current status: {self.status}')
+
+        self.status = 'payment_pending'
+        self.save()
+        return self
+
+    # In tables/models.py - ENHANCE YOUR mark_completed method
+    def mark_completed(self, payment_method=None, payment_id=None, update_sales=True):
+        """
+        INDUSTRY STANDARD: Mark order as completed after payment
+        Enhanced to work with payment system
+        """
+        # Validate order can be completed
+        valid_statuses = ['served', 'bill_presented', 'payment_pending']
+        if self.status not in valid_statuses:
+            raise ValueError(
+                f'Order must be served, bill presented, or payment pending. Current status: {self.status}')
+
         self.status = 'completed'
+        self.is_paid = True
         self.completed_at = timezone.now()
+
+        # Store payment info if provided
+        if payment_method:
+            self.metadata = self.metadata or {}
+            self.metadata['payment_method'] = payment_method
+            self.metadata['payment_id'] = payment_id
+            self.metadata['paid_at'] = self.completed_at.isoformat()
 
         if update_sales:
             # Update menu item sales statistics
@@ -362,6 +403,13 @@ class Order(models.Model):
                 menu_item.update_sales(order_item.quantity)
 
         self.save()
+
+        # Update table status
+        if self.table:
+            self.table.status = 'cleaning'
+            self.table.save()
+
+        return self
 
 
 class OrderItem(models.Model):

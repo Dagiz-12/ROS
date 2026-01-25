@@ -23,7 +23,8 @@ class PaymentSerializer(serializers.ModelSerializer):
             'transaction_id', 'processed_by', 'processed_by_name',
             'customer_name', 'customer_phone', 'notes',
             'created_at', 'processed_at', 'refunded_at',
-            'receipt_details'
+            'receipt_details', 'table_number',
+            'order_number',
         ]
         read_only_fields = ['payment_id', 'created_at',
                             'processed_at', 'refunded_at']
@@ -52,12 +53,27 @@ class PaymentSerializer(serializers.ModelSerializer):
             return obj.processed_by.get_full_name() or obj.processed_by.username
         return None
 
+    table_number = serializers.SerializerMethodField()
 
+    def get_table_number(self, obj):
+        return obj.order.table.table_number if obj.order and obj.order.table else None
+
+    order_number = serializers.SerializerMethodField()
+
+    def get_order_number(self, obj):
+        return obj.order.order_number if obj.order else None
+
+
+# In PaymentCreateSerializer, change the order field:
 class PaymentCreateSerializer(serializers.Serializer):
-    order = serializers.PrimaryKeyRelatedField(
-        queryset=Order.objects.all(),
-        required=True
-    )
+    # CHANGED from PrimaryKeyRelatedField
+    order = serializers.IntegerField(required=True)
+    # OR use this if you want better validation:
+    # order = serializers.PrimaryKeyRelatedField(
+    #     queryset=Order.objects.all(),
+    #     required=True
+    # )
+
     payment_method = serializers.ChoiceField(
         choices=PaymentMethod.PAYMENT_METHODS,
         required=True
@@ -73,7 +89,16 @@ class PaymentCreateSerializer(serializers.Serializer):
     notes = serializers.CharField(required=False, allow_blank=True)
 
     def validate(self, data):
-        order = data['order']
+        # Get order ID from data
+        order_id = data['order']
+
+        try:
+            order = Order.objects.get(id=order_id)
+        except Order.DoesNotExist:
+            raise serializers.ValidationError('Order not found')
+
+        # Replace order_id with order object for validation
+        data['order_obj'] = order  # Add order object to validated data
 
         # Check if order is served
         if order.status != 'served':
@@ -139,3 +164,29 @@ class PaymentGatewaySerializer(serializers.ModelSerializer):
             'created_at'
         ]
         read_only_fields = ['created_at']
+
+# payments/serializers.py - ADD THIS
+
+
+class CashierPaymentSerializer(serializers.ModelSerializer):
+    """Simplified serializer for cashier dashboard"""
+    order_number = serializers.CharField(
+        source='order.order_number', read_only=True)
+    table_number = serializers.CharField(
+        source='order.table.table_number', read_only=True)
+    customer_name = serializers.CharField(
+        source='order.customer_name', read_only=True)
+
+    class Meta:
+        model = Payment
+        fields = [
+            'payment_id',
+            'order_number',
+            'table_number',
+            'customer_name',
+            'payment_method',
+            'amount',
+            'status',
+            'processed_at',
+            'created_at',
+        ]
