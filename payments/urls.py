@@ -1,8 +1,7 @@
-# payments/urls.py - FIXED VERSION
+# payments/urls.py - CORRECTED VERSION
 from django.urls import path, include
 from rest_framework.routers import DefaultRouter
 from . import views
-from .views import CashierPaymentAPI
 
 router = DefaultRouter()
 router.register(r'payments', views.PaymentViewSet, basename='payment')
@@ -11,25 +10,30 @@ urlpatterns = [
     # REST API routes from router
     path('', include(router.urls)),
 
-    # ✅ INDUSTRY STANDARD CASHIER ENDPOINTS
-    path('cashier/dashboard-data/', views.cashier_dashboard,
+    # ✅ CORRECTED CASHIER ENDPOINTS - USE THE RIGHT FUNCTION NAMES
+    path('cashier/dashboard-data/', views.cashier_dashboard_data,
          name='cashier-dashboard-data'),
     path('cashier/process-payment/', views.cashier_process_payment,
          name='cashier-process-payment'),
     path('cashier/pending-orders/', views.cashier_pending_orders,
          name='cashier-pending-orders'),
 
-    # ✅ Use ViewSet actions for payment operations (these exist in PaymentViewSet)
-    path('<uuid:payment_id>/process/',
-         views.PaymentViewSet.as_view({'post': 'process'}), name='payment-process'),
-    path('<uuid:payment_id>/verify/',
-         views.PaymentViewSet.as_view({'post': 'verify_payment'}), name='payment-verify'),
-    path('<uuid:payment_id>/refund/',
-         views.PaymentViewSet.as_view({'post': 'refund'}), name='payment-refund'),
-    path('<uuid:payment_id>/receipt/', views.PaymentViewSet.as_view(
-        {'post': 'generate_detailed_receipt'}), name='payment-receipt'),
+    # ✅ LEGACY COMPATIBILITY ENDPOINTS (if needed)
+    path('cashier-dashboard-data/', views.cashier_dashboard_data,
+         name='legacy-cashier-dashboard'),
 
-    # ✅ Legacy endpoint for receipt printing (uses existing print_receipt function)
+    # ✅ PAYMENT OPERATIONS (using ViewSet actions)
+    # Note: These should be handled by the router above, but keeping for compatibility
+    path('payments/<uuid:pk>/process/',
+         views.PaymentViewSet.as_view({'post': 'process'}), name='payment-process'),
+    path('payments/<uuid:pk>/verify/',
+         views.PaymentViewSet.as_view({'post': 'verify_payment'}), name='payment-verify'),
+    path('payments/<uuid:pk>/refund/',
+         views.PaymentViewSet.as_view({'post': 'refund'}), name='payment-refund'),
+    path('payments/<uuid:pk>/generate-receipt/',
+         views.PaymentViewSet.as_view({'post': 'generate_detailed_receipt'}), name='payment-generate-receipt'),
+
+    # ✅ RECEIPT PRINTING
     path('print-receipt/<uuid:payment_id>/',
          views.print_receipt, name='print-receipt'),
 ]
