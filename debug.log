@@ -30059,3 +30059,1690 @@ AttributeError: 'Order' object has no attribute 'orderitem_set'
 Internal Server Error: /api/payments/cashier/dashboard-data/
 C:\Users\USER\DAGIIIz\eco\res\res3\ROS\payments\views.py changed, reloading.
 Watching for file changes with StatReloader
+Cashier cash requesting dashboard data
+Found 2 unpaid orders in branch b001
+Cashier cash requesting dashboard data
+Found 2 unpaid orders in branch b001
+Cashier cash requesting dashboard data
+Found 2 unpaid orders in branch b001
+Cashier cash requesting dashboard data
+Found 2 unpaid orders in branch b001
+Cashier cash requesting dashboard data
+Found 2 unpaid orders in branch b001
+Cashier cash requesting dashboard data
+Found 2 unpaid orders in branch b001
+Cashier cash requesting dashboard data
+Found 2 unpaid orders in branch b001
+Cashier cash requesting dashboard data
+Found 2 unpaid orders in branch b001
+Cashier cash requesting dashboard data
+Found 2 unpaid orders in branch b001
+Cashier cash requesting dashboard data
+Found 2 unpaid orders in branch b001
+Cashier cash requesting dashboard data
+Found 2 unpaid orders in branch b001
+Cashier cash requesting dashboard data
+Found 2 unpaid orders in branch b001
+Not Found: /favicon.ico
+Cashier cash requesting dashboard data
+Found 2 unpaid orders in branch b001
+Cashier cash requesting dashboard data
+Found 2 unpaid orders in branch b001
+Not Found: /favicon.ico
+Cashier cash requesting dashboard data
+Found 2 unpaid orders in branch b001
+Order 2601230002 completed, updating profit calculations
+Calculating daily profit for 2026-01-27 - Restaurant: test001, Branch: b001
+Found 2 completed orders for 2026-01-27
+Total revenue: $5025.00
+Total ingredient cost: $5065.50
+Getting waste costs for 2026-01-27 - Restaurant: test001, Branch: b001
+Found 0 waste records for 2026-01-27
+Total waste cost for 2026-01-27: $0.00
+Waste cost from waste tracker: $0.00
+Waste records found: 0
+Net profit: $-40.50
+Profit margin: -0.81%
+Waste percentage: 0.00%
+Profit aggregation updated: 14
+Updating menu item performances for 2026-01-27
+Created performance record for fried chicken
+Updated performance record for firfir
+Order 2601230002 completed, updating profit calculations
+Calculating daily profit for 2026-01-27 - Restaurant: test001, Branch: b001
+Found 2 completed orders for 2026-01-27
+Total revenue: $5025.00
+Total ingredient cost: $5065.50
+Getting waste costs for 2026-01-27 - Restaurant: test001, Branch: b001
+Found 0 waste records for 2026-01-27
+Total waste cost for 2026-01-27: $0.00
+Waste cost from waste tracker: $0.00
+Waste records found: 0
+Net profit: $-40.50
+Profit margin: -0.81%
+Waste percentage: 0.00%
+Profit aggregation updated: 14
+Updating menu item performances for 2026-01-27
+Updated performance record for fried chicken
+Updated performance record for firfir
+Order 2601230002 completed, updating profit calculations
+Calculating daily profit for 2026-01-27 - Restaurant: test001, Branch: b001
+Found 2 completed orders for 2026-01-27
+Total revenue: $5025.00
+Total ingredient cost: $5065.50
+Getting waste costs for 2026-01-27 - Restaurant: test001, Branch: b001
+Found 0 waste records for 2026-01-27
+Total waste cost for 2026-01-27: $0.00
+Waste cost from waste tracker: $0.00
+Waste records found: 0
+Net profit: $-40.50
+Profit margin: -0.81%
+Waste percentage: 0.00%
+Profit aggregation updated: 14
+Updating menu item performances for 2026-01-27
+Updated performance record for fried chicken
+Updated performance record for firfir
+Payment f8ff5b99-5612-48e3-803d-8d0ba092f831 processed: $3025 via cash for Order 2601230002
+Cashier cash requesting dashboard data
+Found 1 unpaid orders in branch b001
+Cashier cash requesting dashboard data
+Found 1 unpaid orders in branch b001
+Cashier cash requesting dashboard data
+Found 0 unpaid orders in branch b001
+Error deducting inventory for order 28: get() returned more than one StockAlert -- it returned 2!
+Order 2601230001 completed, updating profit calculations
+Calculating daily profit for 2026-01-27 - Restaurant: test001, Branch: b001
+Found 3 completed orders for 2026-01-27
+Total revenue: $5900.00
+Total ingredient cost: $5400.80
+Getting waste costs for 2026-01-27 - Restaurant: test001, Branch: b001
+Found 0 waste records for 2026-01-27
+Total waste cost for 2026-01-27: $0.00
+Waste cost from waste tracker: $0.00
+Waste records found: 0
+Net profit: $499.20
+Profit margin: 8.46%
+Waste percentage: 0.00%
+Profit aggregation updated: 14
+Updating menu item performances for 2026-01-27
+Updated performance record for fried chicken
+Updated performance record for firfir
+Order 2601230001 completed, updating profit calculations
+Calculating daily profit for 2026-01-27 - Restaurant: test001, Branch: b001
+Found 3 completed orders for 2026-01-27
+Total revenue: $5900.00
+Total ingredient cost: $5400.80
+Getting waste costs for 2026-01-27 - Restaurant: test001, Branch: b001
+Found 0 waste records for 2026-01-27
+Total waste cost for 2026-01-27: $0.00
+Waste cost from waste tracker: $0.00
+Waste records found: 0
+Net profit: $499.20
+Profit margin: 8.46%
+Waste percentage: 0.00%
+Profit aggregation updated: 14
+Updating menu item performances for 2026-01-27
+Updated performance record for fried chicken
+Updated performance record for firfir
+Order 2601230001 completed, updating profit calculations
+Calculating daily profit for 2026-01-27 - Restaurant: test001, Branch: b001
+Found 3 completed orders for 2026-01-27
+Total revenue: $5900.00
+Total ingredient cost: $5400.80
+Getting waste costs for 2026-01-27 - Restaurant: test001, Branch: b001
+Found 0 waste records for 2026-01-27
+Total waste cost for 2026-01-27: $0.00
+Waste cost from waste tracker: $0.00
+Waste records found: 0
+Net profit: $499.20
+Profit margin: 8.46%
+Waste percentage: 0.00%
+Profit aggregation updated: 14
+Updating menu item performances for 2026-01-27
+Updated performance record for fried chicken
+Updated performance record for firfir
+Payment 2183c614-abe0-436a-b745-ab492b46e451 processed: $875 via cash for Order 2601230001
+Cashier cash requesting dashboard data
+Found 0 unpaid orders in branch b001
+Cashier cash requesting dashboard data
+Found 0 unpaid orders in branch b001
+Cashier cash requesting dashboard data
+Found 0 unpaid orders in branch b001
+Cashier cash requesting dashboard data
+Found 0 unpaid orders in branch b001
+Cashier cash requesting dashboard data
+Found 0 unpaid orders in branch b001
+Cashier cash requesting dashboard data
+Found 0 unpaid orders in branch b001
+Cashier cash requesting dashboard data
+Found 0 unpaid orders in branch b001
+Cashier cash requesting dashboard data
+Found 0 unpaid orders in branch b001
+Cashier cash requesting dashboard data
+Found 0 unpaid orders in branch b001
+Cashier cash requesting dashboard data
+Found 0 unpaid orders in branch b001
+Cashier cash requesting dashboard data
+Found 0 unpaid orders in branch b001
+Cashier cash requesting dashboard data
+Found 0 unpaid orders in branch b001
+Cashier cash requesting dashboard data
+Found 0 unpaid orders in branch b001
+Cashier cash requesting dashboard data
+Found 0 unpaid orders in branch b001
+Cashier cash requesting dashboard data
+Found 0 unpaid orders in branch b001
+Cashier cash requesting dashboard data
+Found 0 unpaid orders in branch b001
+Cashier cash requesting dashboard data
+Found 0 unpaid orders in branch b001
+Cashier cash requesting dashboard data
+Found 0 unpaid orders in branch b001
+Cashier cash requesting dashboard data
+Found 0 unpaid orders in branch b001
+Cashier cash requesting dashboard data
+Found 0 unpaid orders in branch b001
+Cashier cash requesting dashboard data
+Found 0 unpaid orders in branch b001
+Cashier cash requesting dashboard data
+Found 0 unpaid orders in branch b001
+Cashier cash requesting dashboard data
+Found 0 unpaid orders in branch b001
+Cashier cash requesting dashboard data
+Found 0 unpaid orders in branch b001
+Cashier cash requesting dashboard data
+Found 0 unpaid orders in branch b001
+Cashier cash requesting dashboard data
+Found 0 unpaid orders in branch b001
+Cashier cash requesting dashboard data
+Found 0 unpaid orders in branch b001
+Cashier cash requesting dashboard data
+Found 0 unpaid orders in branch b001
+Cashier cash requesting dashboard data
+Found 0 unpaid orders in branch b001
+Cashier cash requesting dashboard data
+Found 0 unpaid orders in branch b001
+Cashier cash requesting dashboard data
+Found 0 unpaid orders in branch b001
+Cashier cash requesting dashboard data
+Found 0 unpaid orders in branch b001
+Cashier cash requesting dashboard data
+Found 0 unpaid orders in branch b001
+Cashier cash requesting dashboard data
+Found 0 unpaid orders in branch b001
+Cashier cash requesting dashboard data
+Found 0 unpaid orders in branch b001
+Cashier cash requesting dashboard data
+Found 0 unpaid orders in branch b001
+Cashier cash requesting dashboard data
+Found 0 unpaid orders in branch b001
+Cashier cash requesting dashboard data
+Found 0 unpaid orders in branch b001
+Cashier cash requesting dashboard data
+Found 0 unpaid orders in branch b001
+Cashier cash requesting dashboard data
+Found 0 unpaid orders in branch b001
+Cashier cash requesting dashboard data
+Found 0 unpaid orders in branch b001
+Cashier cash requesting dashboard data
+Found 0 unpaid orders in branch b001
+Cashier cash requesting dashboard data
+Found 0 unpaid orders in branch b001
+Cashier cash requesting dashboard data
+Found 0 unpaid orders in branch b001
+Cashier cash requesting dashboard data
+Found 0 unpaid orders in branch b001
+Cashier cash requesting dashboard data
+Found 0 unpaid orders in branch b001
+Cashier cash requesting dashboard data
+Found 0 unpaid orders in branch b001
+Cashier cash requesting dashboard data
+Found 0 unpaid orders in branch b001
+Cashier cash requesting dashboard data
+Found 0 unpaid orders in branch b001
+Cashier cash requesting dashboard data
+Found 0 unpaid orders in branch b001
+Cashier cash requesting dashboard data
+Found 0 unpaid orders in branch b001
+Cashier cash requesting dashboard data
+Found 0 unpaid orders in branch b001
+Cashier cash requesting dashboard data
+Found 0 unpaid orders in branch b001
+Cashier cash requesting dashboard data
+Found 0 unpaid orders in branch b001
+Cashier cash requesting dashboard data
+Found 0 unpaid orders in branch b001
+Cashier cash requesting dashboard data
+Found 0 unpaid orders in branch b001
+Cashier cash requesting dashboard data
+Found 0 unpaid orders in branch b001
+Cashier cash requesting dashboard data
+Found 0 unpaid orders in branch b001
+Cashier cash requesting dashboard data
+Found 0 unpaid orders in branch b001
+Cashier cash requesting dashboard data
+Found 0 unpaid orders in branch b001
+Cashier cash requesting dashboard data
+Found 0 unpaid orders in branch b001
+Cashier cash requesting dashboard data
+Found 0 unpaid orders in branch b001
+Cashier cash requesting dashboard data
+Found 0 unpaid orders in branch b001
+Cashier cash requesting dashboard data
+Found 0 unpaid orders in branch b001
+Cashier cash requesting dashboard data
+Found 0 unpaid orders in branch b001
+Cashier cash requesting dashboard data
+Found 0 unpaid orders in branch b001
+Cashier cash requesting dashboard data
+Found 0 unpaid orders in branch b001
+Cashier cash requesting dashboard data
+Found 0 unpaid orders in branch b001
+Cashier cash requesting dashboard data
+Found 0 unpaid orders in branch b001
+Cashier cash requesting dashboard data
+Found 0 unpaid orders in branch b001
+Cashier cash requesting dashboard data
+Found 0 unpaid orders in branch b001
+Cashier cash requesting dashboard data
+Found 0 unpaid orders in branch b001
+Cashier cash requesting dashboard data
+Found 0 unpaid orders in branch b001
+Cashier cash requesting dashboard data
+Found 0 unpaid orders in branch b001
+Cashier cash requesting dashboard data
+Found 0 unpaid orders in branch b001
+Cashier cash requesting dashboard data
+Found 0 unpaid orders in branch b001
+Cashier cash requesting dashboard data
+Found 0 unpaid orders in branch b001
+Cashier cash requesting dashboard data
+Found 0 unpaid orders in branch b001
+Cashier cash requesting dashboard data
+Found 0 unpaid orders in branch b001
+Cashier cash requesting dashboard data
+Found 0 unpaid orders in branch b001
+Cashier cash requesting dashboard data
+Found 0 unpaid orders in branch b001
+Cashier cash requesting dashboard data
+Found 0 unpaid orders in branch b001
+Cashier cash requesting dashboard data
+Found 0 unpaid orders in branch b001
+Cashier cash requesting dashboard data
+Found 0 unpaid orders in branch b001
+Cashier cash requesting dashboard data
+Found 0 unpaid orders in branch b001
+Cashier cash requesting dashboard data
+Found 0 unpaid orders in branch b001
+Cashier cash requesting dashboard data
+Found 0 unpaid orders in branch b001
+Cashier cash requesting dashboard data
+Found 0 unpaid orders in branch b001
+Cashier cash requesting dashboard data
+Found 0 unpaid orders in branch b001
+Cashier cash requesting dashboard data
+Found 0 unpaid orders in branch b001
+Cashier cash requesting dashboard data
+Found 0 unpaid orders in branch b001
+Cashier cash requesting dashboard data
+Found 0 unpaid orders in branch b001
+Cashier cash requesting dashboard data
+Found 0 unpaid orders in branch b001
+Cashier cash requesting dashboard data
+Found 0 unpaid orders in branch b001
+Cashier cash requesting dashboard data
+Found 0 unpaid orders in branch b001
+Cashier cash requesting dashboard data
+Found 0 unpaid orders in branch b001
+Cashier cash requesting dashboard data
+Found 0 unpaid orders in branch b001
+Cashier cash requesting dashboard data
+Found 0 unpaid orders in branch b001
+Cashier cash requesting dashboard data
+Found 0 unpaid orders in branch b001
+Cashier cash requesting dashboard data
+Found 0 unpaid orders in branch b001
+Cashier cash requesting dashboard data
+Found 0 unpaid orders in branch b001
+Cashier cash requesting dashboard data
+Found 0 unpaid orders in branch b001
+Cashier cash requesting dashboard data
+Found 0 unpaid orders in branch b001
+Cashier cash requesting dashboard data
+Found 0 unpaid orders in branch b001
+Cashier cash requesting dashboard data
+Found 0 unpaid orders in branch b001
+Cashier cash requesting dashboard data
+Found 0 unpaid orders in branch b001
+Cashier cash requesting dashboard data
+Found 0 unpaid orders in branch b001
+Cashier cash requesting dashboard data
+Found 0 unpaid orders in branch b001
+Cashier cash requesting dashboard data
+Found 0 unpaid orders in branch b001
+Cashier cash requesting dashboard data
+Found 0 unpaid orders in branch b001
+Cashier cash requesting dashboard data
+Found 0 unpaid orders in branch b001
+Cashier cash requesting dashboard data
+Found 0 unpaid orders in branch b001
+Cashier cash requesting dashboard data
+Found 0 unpaid orders in branch b001
+Cashier cash requesting dashboard data
+Found 0 unpaid orders in branch b001
+Cashier cash requesting dashboard data
+Found 0 unpaid orders in branch b001
+Cashier cash requesting dashboard data
+Found 0 unpaid orders in branch b001
+Cashier cash requesting dashboard data
+Found 0 unpaid orders in branch b001
+Cashier cash requesting dashboard data
+Found 0 unpaid orders in branch b001
+Cashier cash requesting dashboard data
+Found 0 unpaid orders in branch b001
+Cashier cash requesting dashboard data
+Found 0 unpaid orders in branch b001
+Cashier cash requesting dashboard data
+Found 0 unpaid orders in branch b001
+Cashier cash requesting dashboard data
+Found 0 unpaid orders in branch b001
+Cashier cash requesting dashboard data
+Found 0 unpaid orders in branch b001
+Cashier cash requesting dashboard data
+Found 0 unpaid orders in branch b001
+Cashier cash requesting dashboard data
+Found 0 unpaid orders in branch b001
+Cashier cash requesting dashboard data
+Found 0 unpaid orders in branch b001
+Cashier cash requesting dashboard data
+Found 0 unpaid orders in branch b001
+Cashier cash requesting dashboard data
+Found 0 unpaid orders in branch b001
+Cashier cash requesting dashboard data
+Found 0 unpaid orders in branch b001
+Cashier cash requesting dashboard data
+Found 0 unpaid orders in branch b001
+Cashier cash requesting dashboard data
+Found 0 unpaid orders in branch b001
+Cashier cash requesting dashboard data
+Found 0 unpaid orders in branch b001
+Cashier cash requesting dashboard data
+Found 0 unpaid orders in branch b001
+Cashier cash requesting dashboard data
+Found 0 unpaid orders in branch b001
+Cashier cash requesting dashboard data
+Found 0 unpaid orders in branch b001
+Cashier cash requesting dashboard data
+Found 0 unpaid orders in branch b001
+Cashier cash requesting dashboard data
+Found 0 unpaid orders in branch b001
+Cashier cash requesting dashboard data
+Found 0 unpaid orders in branch b001
+Cashier cash requesting dashboard data
+Found 0 unpaid orders in branch b001
+Cashier cash requesting dashboard data
+Found 0 unpaid orders in branch b001
+Cashier cash requesting dashboard data
+Found 0 unpaid orders in branch b001
+Cashier cash requesting dashboard data
+Found 0 unpaid orders in branch b001
+Cashier cash requesting dashboard data
+Found 0 unpaid orders in branch b001
+Cashier cash requesting dashboard data
+Found 0 unpaid orders in branch b001
+Cashier cash requesting dashboard data
+Found 0 unpaid orders in branch b001
+Cashier cash requesting dashboard data
+Found 0 unpaid orders in branch b001
+Cashier cash requesting dashboard data
+Found 0 unpaid orders in branch b001
+Cashier cash requesting dashboard data
+Found 0 unpaid orders in branch b001
+Cashier cash requesting dashboard data
+Found 0 unpaid orders in branch b001
+Cashier cash requesting dashboard data
+Found 0 unpaid orders in branch b001
+Cashier cash requesting dashboard data
+Found 0 unpaid orders in branch b001
+Cashier cash requesting dashboard data
+Found 0 unpaid orders in branch b001
+Cashier cash requesting dashboard data
+Found 0 unpaid orders in branch b001
+Cashier cash requesting dashboard data
+Found 0 unpaid orders in branch b001
+Cashier cash requesting dashboard data
+Found 0 unpaid orders in branch b001
+Cashier cash requesting dashboard data
+Found 0 unpaid orders in branch b001
+Cashier cash requesting dashboard data
+Found 0 unpaid orders in branch b001
+Cashier cash requesting dashboard data
+Found 0 unpaid orders in branch b001
+Cashier cash requesting dashboard data
+Found 0 unpaid orders in branch b001
+Cashier cash requesting dashboard data
+Found 0 unpaid orders in branch b001
+Cashier cash requesting dashboard data
+Found 0 unpaid orders in branch b001
+Cashier cash requesting dashboard data
+Found 0 unpaid orders in branch b001
+Cashier cash requesting dashboard data
+Found 0 unpaid orders in branch b001
+Cashier cash requesting dashboard data
+Found 0 unpaid orders in branch b001
+Cashier cash requesting dashboard data
+Found 0 unpaid orders in branch b001
+Cashier cash requesting dashboard data
+Found 0 unpaid orders in branch b001
+Cashier cash requesting dashboard data
+Found 0 unpaid orders in branch b001
+Cashier cash requesting dashboard data
+Found 0 unpaid orders in branch b001
+Cashier cash requesting dashboard data
+Found 0 unpaid orders in branch b001
+Cashier cash requesting dashboard data
+Found 0 unpaid orders in branch b001
+Cashier cash requesting dashboard data
+Found 0 unpaid orders in branch b001
+Cashier cash requesting dashboard data
+Found 0 unpaid orders in branch b001
+Cashier cash requesting dashboard data
+Found 0 unpaid orders in branch b001
+Cashier cash requesting dashboard data
+Found 0 unpaid orders in branch b001
+Cashier cash requesting dashboard data
+Found 0 unpaid orders in branch b001
+Cashier cash requesting dashboard data
+Found 0 unpaid orders in branch b001
+Cashier cash requesting dashboard data
+Found 0 unpaid orders in branch b001
+Cashier cash requesting dashboard data
+Found 0 unpaid orders in branch b001
+Cashier cash requesting dashboard data
+Found 0 unpaid orders in branch b001
+Cashier cash requesting dashboard data
+Found 0 unpaid orders in branch b001
+Cashier cash requesting dashboard data
+Found 0 unpaid orders in branch b001
+Cashier cash requesting dashboard data
+Found 0 unpaid orders in branch b001
+Cashier cash requesting dashboard data
+Found 0 unpaid orders in branch b001
+Cashier cash requesting dashboard data
+Found 0 unpaid orders in branch b001
+Cashier cash requesting dashboard data
+Found 0 unpaid orders in branch b001
+Cashier cash requesting dashboard data
+Found 0 unpaid orders in branch b001
+Cashier cash requesting dashboard data
+Found 0 unpaid orders in branch b001
+Cashier cash requesting dashboard data
+Found 0 unpaid orders in branch b001
+Cashier cash requesting dashboard data
+Found 0 unpaid orders in branch b001
+Cashier cash requesting dashboard data
+Found 0 unpaid orders in branch b001
+Cashier cash requesting dashboard data
+Found 0 unpaid orders in branch b001
+Cashier cash requesting dashboard data
+Found 0 unpaid orders in branch b001
+Cashier cash requesting dashboard data
+Found 0 unpaid orders in branch b001
+Cashier cash requesting dashboard data
+Found 0 unpaid orders in branch b001
+Cashier cash requesting dashboard data
+Found 0 unpaid orders in branch b001
+Cashier cash requesting dashboard data
+Found 0 unpaid orders in branch b001
+Cashier cash requesting dashboard data
+Found 0 unpaid orders in branch b001
+Cashier cash requesting dashboard data
+Found 0 unpaid orders in branch b001
+Cashier cash requesting dashboard data
+Found 0 unpaid orders in branch b001
+Cashier cash requesting dashboard data
+Found 0 unpaid orders in branch b001
+Cashier cash requesting dashboard data
+Found 0 unpaid orders in branch b001
+Cashier cash requesting dashboard data
+Found 0 unpaid orders in branch b001
+Cashier cash requesting dashboard data
+Found 0 unpaid orders in branch b001
+Cashier cash requesting dashboard data
+Found 0 unpaid orders in branch b001
+Cashier cash requesting dashboard data
+Found 0 unpaid orders in branch b001
+Cashier cash requesting dashboard data
+Found 0 unpaid orders in branch b001
+Cashier cash requesting dashboard data
+Found 0 unpaid orders in branch b001
+Cashier cash requesting dashboard data
+Found 0 unpaid orders in branch b001
+Cashier cash requesting dashboard data
+Found 0 unpaid orders in branch b001
+Cashier cash requesting dashboard data
+Found 0 unpaid orders in branch b001
+Cashier cash requesting dashboard data
+Found 0 unpaid orders in branch b001
+Cashier cash requesting dashboard data
+Found 0 unpaid orders in branch b001
+Cashier cash requesting dashboard data
+Found 0 unpaid orders in branch b001
+Cashier cash requesting dashboard data
+Found 0 unpaid orders in branch b001
+Cashier cash requesting dashboard data
+Found 0 unpaid orders in branch b001
+Cashier cash requesting dashboard data
+Found 0 unpaid orders in branch b001
+Cashier cash requesting dashboard data
+Found 0 unpaid orders in branch b001
+Cashier cash requesting dashboard data
+Found 0 unpaid orders in branch b001
+Cashier cash requesting dashboard data
+Found 0 unpaid orders in branch b001
+Cashier cash requesting dashboard data
+Found 0 unpaid orders in branch b001
+Cashier cash requesting dashboard data
+Found 0 unpaid orders in branch b001
+Cashier cash requesting dashboard data
+Found 0 unpaid orders in branch b001
+Cashier cash requesting dashboard data
+Found 0 unpaid orders in branch b001
+Cashier cash requesting dashboard data
+Found 0 unpaid orders in branch b001
+Cashier cash requesting dashboard data
+Found 0 unpaid orders in branch b001
+Cashier cash requesting dashboard data
+Found 0 unpaid orders in branch b001
+Cashier cash requesting dashboard data
+Found 0 unpaid orders in branch b001
+Cashier cash requesting dashboard data
+Found 0 unpaid orders in branch b001
+Cashier cash requesting dashboard data
+Found 0 unpaid orders in branch b001
+Cashier cash requesting dashboard data
+Found 0 unpaid orders in branch b001
+Cashier cash requesting dashboard data
+Found 0 unpaid orders in branch b001
+Cashier cash requesting dashboard data
+Found 0 unpaid orders in branch b001
+Cashier cash requesting dashboard data
+Found 0 unpaid orders in branch b001
+Cashier cash requesting dashboard data
+Found 0 unpaid orders in branch b001
+Cashier cash requesting dashboard data
+Found 0 unpaid orders in branch b001
+Cashier cash requesting dashboard data
+Found 0 unpaid orders in branch b001
+Cashier cash requesting dashboard data
+Found 0 unpaid orders in branch b001
+Cashier cash requesting dashboard data
+Found 0 unpaid orders in branch b001
+Cashier cash requesting dashboard data
+Found 0 unpaid orders in branch b001
+Cashier cash requesting dashboard data
+Found 0 unpaid orders in branch b001
+Cashier cash requesting dashboard data
+Found 0 unpaid orders in branch b001
+Cashier cash requesting dashboard data
+Found 0 unpaid orders in branch b001
+Cashier cash requesting dashboard data
+Found 0 unpaid orders in branch b001
+Cashier cash requesting dashboard data
+Found 0 unpaid orders in branch b001
+Cashier cash requesting dashboard data
+Found 0 unpaid orders in branch b001
+Cashier cash requesting dashboard data
+Found 0 unpaid orders in branch b001
+Cashier cash requesting dashboard data
+Found 0 unpaid orders in branch b001
+Cashier cash requesting dashboard data
+Found 0 unpaid orders in branch b001
+Cashier cash requesting dashboard data
+Found 0 unpaid orders in branch b001
+Cashier cash requesting dashboard data
+Found 0 unpaid orders in branch b001
+Cashier cash requesting dashboard data
+Found 0 unpaid orders in branch b001
+Cashier cash requesting dashboard data
+Found 0 unpaid orders in branch b001
+Cashier cash requesting dashboard data
+Found 0 unpaid orders in branch b001
+Cashier cash requesting dashboard data
+Found 0 unpaid orders in branch b001
+Cashier cash requesting dashboard data
+Found 0 unpaid orders in branch b001
+Cashier cash requesting dashboard data
+Found 0 unpaid orders in branch b001
+Cashier cash requesting dashboard data
+Found 0 unpaid orders in branch b001
+Cashier cash requesting dashboard data
+Found 0 unpaid orders in branch b001
+Cashier cash requesting dashboard data
+Found 0 unpaid orders in branch b001
+Cashier cash requesting dashboard data
+Found 0 unpaid orders in branch b001
+Cashier cash requesting dashboard data
+Found 0 unpaid orders in branch b001
+Cashier cash requesting dashboard data
+Found 0 unpaid orders in branch b001
+Cashier cash requesting dashboard data
+Found 0 unpaid orders in branch b001
+Cashier cash requesting dashboard data
+Found 0 unpaid orders in branch b001
+Cashier cash requesting dashboard data
+Found 0 unpaid orders in branch b001
+Watching for file changes with StatReloader
+Not Found: /favicon.ico
+Forbidden: /api/auth/verify-token/
+Forbidden: /api/auth/verify-token/
+Waste recorded for Chicken, updating profit
+Calculating daily profit for 2026-06-23 15:02:27.450530+00:00 - Restaurant: Ethiopian Feast Restaurant, Branch: Main Dining Hall
+Found 0 completed orders for 2026-06-23 15:02:27.450530+00:00
+Total revenue: $0.00
+Total ingredient cost: $0.00
+Getting waste costs for 2026-06-23 15:02:27.450530+00:00 - Restaurant: Ethiopian Feast Restaurant, Branch: Main Dining Hall
+Found 0 waste records for 2026-06-23 15:02:27.450530+00:00
+Total waste cost for 2026-06-23 15:02:27.450530+00:00: $0.00
+Waste cost from waste tracker: $0.00
+Waste records found: 0
+Net profit: $0.00
+Profit margin: 0.00%
+Waste percentage: 0.00%
+Profit aggregation created: 15
+Updating menu item performances for 2026-06-23 15:02:27.450530+00:00
+Forbidden: /api/auth/verify-token/
+Order 2606230001 served, checking for payment...
+Error in auto_create_payment_on_order_update: 'Order' object has no attribute 'branch'
+Order 2606230001 bill_presented, checking for payment...
+Error in auto_create_payment_on_order_update: 'Order' object has no attribute 'branch'
+Forbidden: /api/auth/verify-token/
+Cashier cashier1 requesting dashboard data
+Found 9 unpaid orders in branch Main Dining Hall
+Cashier cashier1 requesting dashboard data
+Found 9 unpaid orders in branch Main Dining Hall
+Order 2606230001 completed, updating profit calculations
+Calculating daily profit for 2026-06-23 - Restaurant: Ethiopian Feast Restaurant, Branch: Main Dining Hall
+Found 1 completed orders for 2026-06-23
+Total revenue: $1325.00
+Total ingredient cost: $424.00
+Getting waste costs for 2026-06-23 - Restaurant: Ethiopian Feast Restaurant, Branch: Main Dining Hall
+Found 0 waste records for 2026-06-23
+Total waste cost for 2026-06-23: $0.00
+Waste cost from waste tracker: $0.00
+Waste records found: 0
+Net profit: $901.00
+Profit margin: 68.00%
+Waste percentage: 0.00%
+Profit aggregation updated: 15
+Updating menu item performances for 2026-06-23
+Created performance record for Samosa
+Created performance record for Spring Rolls
+Created performance record for Chicken Wings
+Order 2606230001 completed, updating profit calculations
+Calculating daily profit for 2026-06-23 - Restaurant: Ethiopian Feast Restaurant, Branch: Main Dining Hall
+Found 1 completed orders for 2026-06-23
+Total revenue: $1325.00
+Total ingredient cost: $424.00
+Getting waste costs for 2026-06-23 - Restaurant: Ethiopian Feast Restaurant, Branch: Main Dining Hall
+Found 0 waste records for 2026-06-23
+Total waste cost for 2026-06-23: $0.00
+Waste cost from waste tracker: $0.00
+Waste records found: 0
+Net profit: $901.00
+Profit margin: 68.00%
+Waste percentage: 0.00%
+Profit aggregation updated: 15
+Updating menu item performances for 2026-06-23
+Updated performance record for Samosa
+Updated performance record for Spring Rolls
+Updated performance record for Chicken Wings
+Payment 13a4371c-6242-476d-b84f-99ca8f9a7b5d processed: $1325 via cash for Order 2606230001
+Cashier cashier1 requesting dashboard data
+Found 8 unpaid orders in branch Main Dining Hall
+Bad Request: /api/payments/cashier/process-payment/
+Cashier cashier1 requesting dashboard data
+Order 2601190001 completed, updating profit calculations
+Found 7 unpaid orders in branch Main Dining Hall
+Calculating daily profit for 2026-06-23 - Restaurant: Ethiopian Feast Restaurant, Branch: Main Dining Hall
+Found 2 completed orders for 2026-06-23
+Total revenue: $2662.50
+Total ingredient cost: $852.00
+Getting waste costs for 2026-06-23 - Restaurant: Ethiopian Feast Restaurant, Branch: Main Dining Hall
+Found 0 waste records for 2026-06-23
+Total waste cost for 2026-06-23: $0.00
+Waste cost from waste tracker: $0.00
+Waste records found: 0
+Net profit: $1810.50
+Profit margin: 68.00%
+Waste percentage: 0.00%
+Profit aggregation updated: 15
+Updating menu item performances for 2026-06-23
+Updated performance record for Samosa
+Updated performance record for Spring Rolls
+Updated performance record for Chicken Wings
+Order 2601190001 completed, updating profit calculations
+Calculating daily profit for 2026-06-23 - Restaurant: Ethiopian Feast Restaurant, Branch: Main Dining Hall
+Found 2 completed orders for 2026-06-23
+Total revenue: $2662.50
+Total ingredient cost: $852.00
+Getting waste costs for 2026-06-23 - Restaurant: Ethiopian Feast Restaurant, Branch: Main Dining Hall
+Found 0 waste records for 2026-06-23
+Total waste cost for 2026-06-23: $0.00
+Waste cost from waste tracker: $0.00
+Waste records found: 0
+Net profit: $1810.50
+Profit margin: 68.00%
+Waste percentage: 0.00%
+Profit aggregation updated: 15
+Updating menu item performances for 2026-06-23
+Updated performance record for Samosa
+Updated performance record for Spring Rolls
+Updated performance record for Chicken Wings
+Payment 68e08233-07b8-4dfb-8ab7-9eeb0bc15a04 processed: $1337.5 via cash for Order 2601190001
+Cashier cashier1 requesting dashboard data
+Found 7 unpaid orders in branch Main Dining Hall
+Order 2601150001 completed, updating profit calculations
+Calculating daily profit for 2026-06-23 - Restaurant: Ethiopian Feast Restaurant, Branch: Main Dining Hall
+Found 3 completed orders for 2026-06-23
+Total revenue: $4362.50
+Total ingredient cost: $1396.00
+Getting waste costs for 2026-06-23 - Restaurant: Ethiopian Feast Restaurant, Branch: Main Dining Hall
+Found 0 waste records for 2026-06-23
+Total waste cost for 2026-06-23: $0.00
+Waste cost from waste tracker: $0.00
+Waste records found: 0
+Net profit: $2966.50
+Profit margin: 68.00%
+Waste percentage: 0.00%
+Profit aggregation updated: 15
+Updating menu item performances for 2026-06-23
+Updated performance record for Samosa
+Updated performance record for Spring Rolls
+Updated performance record for Chicken Wings
+Created performance record for Key Wot
+Order 2601150001 completed, updating profit calculations
+Calculating daily profit for 2026-06-23 - Restaurant: Ethiopian Feast Restaurant, Branch: Main Dining Hall
+Found 3 completed orders for 2026-06-23
+Total revenue: $4362.50
+Total ingredient cost: $1396.00
+Getting waste costs for 2026-06-23 - Restaurant: Ethiopian Feast Restaurant, Branch: Main Dining Hall
+Found 0 waste records for 2026-06-23
+Total waste cost for 2026-06-23: $0.00
+Waste cost from waste tracker: $0.00
+Waste records found: 0
+Net profit: $2966.50
+Profit margin: 68.00%
+Waste percentage: 0.00%
+Profit aggregation updated: 15
+Updating menu item performances for 2026-06-23
+Updated performance record for Samosa
+Updated performance record for Spring Rolls
+Updated performance record for Chicken Wings
+Updated performance record for Key Wot
+Payment f9cc7747-73c5-4547-bc7b-c6eb4d811507 processed: $1700 via cash for Order 2601150001
+Cashier cashier1 requesting dashboard data
+Found 6 unpaid orders in branch Main Dining Hall
+Order 2601140002 completed, updating profit calculations
+Calculating daily profit for 2026-06-23 - Restaurant: Ethiopian Feast Restaurant, Branch: Main Dining Hall
+Found 4 completed orders for 2026-06-23
+Total revenue: $7975.00
+Total ingredient cost: $2552.00
+Getting waste costs for 2026-06-23 - Restaurant: Ethiopian Feast Restaurant, Branch: Main Dining Hall
+Found 0 waste records for 2026-06-23
+Total waste cost for 2026-06-23: $0.00
+Waste cost from waste tracker: $0.00
+Waste records found: 0
+Net profit: $5423.00
+Profit margin: 68.00%
+Waste percentage: 0.00%
+Profit aggregation updated: 15
+Updating menu item performances for 2026-06-23
+Updated performance record for Samosa
+Updated performance record for Spring Rolls
+Updated performance record for Chicken Wings
+Updated performance record for Key Wot
+Created performance record for Tibs
+Order 2601140002 completed, updating profit calculations
+Calculating daily profit for 2026-06-23 - Restaurant: Ethiopian Feast Restaurant, Branch: Main Dining Hall
+Found 4 completed orders for 2026-06-23
+Total revenue: $7975.00
+Total ingredient cost: $2552.00
+Getting waste costs for 2026-06-23 - Restaurant: Ethiopian Feast Restaurant, Branch: Main Dining Hall
+Found 0 waste records for 2026-06-23
+Total waste cost for 2026-06-23: $0.00
+Waste cost from waste tracker: $0.00
+Waste records found: 0
+Net profit: $5423.00
+Profit margin: 68.00%
+Waste percentage: 0.00%
+Profit aggregation updated: 15
+Updating menu item performances for 2026-06-23
+Updated performance record for Samosa
+Updated performance record for Spring Rolls
+Updated performance record for Chicken Wings
+Updated performance record for Key Wot
+Updated performance record for Tibs
+Payment f71bcf03-8731-4852-9d4b-acf0bfa22e18 processed: $3612.5 via cash for Order 2601140002
+Cashier cashier1 requesting dashboard data
+Found 5 unpaid orders in branch Main Dining Hall
+Cashier cashier1 requesting dashboard data
+Found 5 unpaid orders in branch Main Dining Hall
+Order 2601140001 completed, updating profit calculations
+Calculating daily profit for 2026-06-23 - Restaurant: Ethiopian Feast Restaurant, Branch: Main Dining Hall
+Found 5 completed orders for 2026-06-23
+Total revenue: $9437.50
+Total ingredient cost: $3020.00
+Getting waste costs for 2026-06-23 - Restaurant: Ethiopian Feast Restaurant, Branch: Main Dining Hall
+Found 0 waste records for 2026-06-23
+Total waste cost for 2026-06-23: $0.00
+Waste cost from waste tracker: $0.00
+Waste records found: 0
+Net profit: $6417.50
+Profit margin: 68.00%
+Waste percentage: 0.00%
+Profit aggregation updated: 15
+Updating menu item performances for 2026-06-23
+Updated performance record for Samosa
+Updated performance record for Spring Rolls
+Updated performance record for Chicken Wings
+Updated performance record for Key Wot
+Updated performance record for Tibs
+Order 2601140001 completed, updating profit calculations
+Calculating daily profit for 2026-06-23 - Restaurant: Ethiopian Feast Restaurant, Branch: Main Dining Hall
+Found 5 completed orders for 2026-06-23
+Total revenue: $9437.50
+Total ingredient cost: $3020.00
+Getting waste costs for 2026-06-23 - Restaurant: Ethiopian Feast Restaurant, Branch: Main Dining Hall
+Found 0 waste records for 2026-06-23
+Total waste cost for 2026-06-23: $0.00
+Waste cost from waste tracker: $0.00
+Waste records found: 0
+Net profit: $6417.50
+Profit margin: 68.00%
+Waste percentage: 0.00%
+Profit aggregation updated: 15
+Updating menu item performances for 2026-06-23
+Updated performance record for Samosa
+Updated performance record for Spring Rolls
+Updated performance record for Chicken Wings
+Updated performance record for Key Wot
+Updated performance record for Tibs
+Payment a6db7386-607b-4a8b-a13b-d1a1bc28b930 processed: $1462.5 via cash for Order 2601140001
+Cashier cashier1 requesting dashboard data
+Found 4 unpaid orders in branch Main Dining Hall
+Order 2512300002 completed, updating profit calculations
+Calculating daily profit for 2026-06-23 - Restaurant: Ethiopian Feast Restaurant, Branch: Main Dining Hall
+Found 6 completed orders for 2026-06-23
+Total revenue: $9737.50
+Total ingredient cost: $3116.00
+Getting waste costs for 2026-06-23 - Restaurant: Ethiopian Feast Restaurant, Branch: Main Dining Hall
+Found 0 waste records for 2026-06-23
+Total waste cost for 2026-06-23: $0.00
+Waste cost from waste tracker: $0.00
+Waste records found: 0
+Net profit: $6621.50
+Profit margin: 68.00%
+Waste percentage: 0.00%
+Profit aggregation updated: 15
+Updating menu item performances for 2026-06-23
+Updated performance record for Samosa
+Updated performance record for Spring Rolls
+Updated performance record for Chicken Wings
+Updated performance record for Key Wot
+Updated performance record for Tibs
+Order 2512300002 completed, updating profit calculations
+Calculating daily profit for 2026-06-23 - Restaurant: Ethiopian Feast Restaurant, Branch: Main Dining Hall
+Found 6 completed orders for 2026-06-23
+Total revenue: $9737.50
+Total ingredient cost: $3116.00
+Getting waste costs for 2026-06-23 - Restaurant: Ethiopian Feast Restaurant, Branch: Main Dining Hall
+Found 0 waste records for 2026-06-23
+Total waste cost for 2026-06-23: $0.00
+Waste cost from waste tracker: $0.00
+Waste records found: 0
+Net profit: $6621.50
+Profit margin: 68.00%
+Waste percentage: 0.00%
+Profit aggregation updated: 15
+Updating menu item performances for 2026-06-23
+Updated performance record for Samosa
+Updated performance record for Spring Rolls
+Updated performance record for Chicken Wings
+Updated performance record for Key Wot
+Updated performance record for Tibs
+Payment 4c96670e-c4bc-4e75-b027-1dbfc03e864a processed: $300 via cash for Order 2512300002
+Cashier cashier1 requesting dashboard data
+Found 3 unpaid orders in branch Main Dining Hall
+Cashier cashier1 requesting dashboard data
+Bad Request: /api/payments/cashier/process-payment/
+Found 3 unpaid orders in branch Main Dining Hall
+Order 2512300001 completed, updating profit calculations
+Calculating daily profit for 2026-06-23 - Restaurant: Ethiopian Feast Restaurant, Branch: Main Dining Hall
+Found 7 completed orders for 2026-06-23
+Total revenue: $10312.50
+Total ingredient cost: $3300.00
+Getting waste costs for 2026-06-23 - Restaurant: Ethiopian Feast Restaurant, Branch: Main Dining Hall
+Found 0 waste records for 2026-06-23
+Total waste cost for 2026-06-23: $0.00
+Waste cost from waste tracker: $0.00
+Waste records found: 0
+Net profit: $7012.50
+Profit margin: 68.00%
+Waste percentage: 0.00%
+Profit aggregation updated: 15
+Updating menu item performances for 2026-06-23
+Updated performance record for Samosa
+Updated performance record for Spring Rolls
+Updated performance record for Chicken Wings
+Updated performance record for Key Wot
+Updated performance record for Tibs
+Order 2512300001 completed, updating profit calculations
+Calculating daily profit for 2026-06-23 - Restaurant: Ethiopian Feast Restaurant, Branch: Main Dining Hall
+Found 7 completed orders for 2026-06-23
+Total revenue: $10312.50
+Total ingredient cost: $3300.00
+Getting waste costs for 2026-06-23 - Restaurant: Ethiopian Feast Restaurant, Branch: Main Dining Hall
+Found 0 waste records for 2026-06-23
+Total waste cost for 2026-06-23: $0.00
+Waste cost from waste tracker: $0.00
+Waste records found: 0
+Net profit: $7012.50
+Profit margin: 68.00%
+Waste percentage: 0.00%
+Profit aggregation updated: 15
+Updating menu item performances for 2026-06-23
+Updated performance record for Samosa
+Updated performance record for Spring Rolls
+Updated performance record for Chicken Wings
+Updated performance record for Key Wot
+Updated performance record for Tibs
+Payment cc769c72-cc98-48d4-977e-d2ef1630b9fb processed: $575 via cash for Order 2512300001
+Cashier cashier1 requesting dashboard data
+Found 2 unpaid orders in branch Main Dining Hall
+Order 2512190002 completed, updating profit calculations
+Calculating daily profit for 2026-06-23 - Restaurant: Ethiopian Feast Restaurant, Branch: Main Dining Hall
+Found 8 completed orders for 2026-06-23
+Total revenue: $11050.00
+Total ingredient cost: $3536.00
+Getting waste costs for 2026-06-23 - Restaurant: Ethiopian Feast Restaurant, Branch: Main Dining Hall
+Found 0 waste records for 2026-06-23
+Total waste cost for 2026-06-23: $0.00
+Waste cost from waste tracker: $0.00
+Waste records found: 0
+Net profit: $7514.00
+Profit margin: 68.00%
+Waste percentage: 0.00%
+Profit aggregation updated: 15
+Updating menu item performances for 2026-06-23
+Updated performance record for Samosa
+Updated performance record for Spring Rolls
+Updated performance record for Chicken Wings
+Updated performance record for Key Wot
+Updated performance record for Tibs
+Created performance record for Coffee
+Created performance record for Tea
+Created performance record for Fresh Juice
+Order 2512190002 completed, updating profit calculations
+Calculating daily profit for 2026-06-23 - Restaurant: Ethiopian Feast Restaurant, Branch: Main Dining Hall
+Found 8 completed orders for 2026-06-23
+Total revenue: $11050.00
+Total ingredient cost: $3536.00
+Getting waste costs for 2026-06-23 - Restaurant: Ethiopian Feast Restaurant, Branch: Main Dining Hall
+Found 0 waste records for 2026-06-23
+Total waste cost for 2026-06-23: $0.00
+Waste cost from waste tracker: $0.00
+Waste records found: 0
+Net profit: $7514.00
+Profit margin: 68.00%
+Waste percentage: 0.00%
+Profit aggregation updated: 15
+Updating menu item performances for 2026-06-23
+Updated performance record for Samosa
+Updated performance record for Spring Rolls
+Updated performance record for Chicken Wings
+Updated performance record for Key Wot
+Updated performance record for Tibs
+Updated performance record for Coffee
+Updated performance record for Tea
+Updated performance record for Fresh Juice
+Payment eef73871-f205-4481-81b7-b22d1361e3a3 processed: $737.5 via cash for Order 2512190002
+Cashier cashier1 requesting dashboard data
+Found 1 unpaid orders in branch Main Dining Hall
+Cashier cashier1 requesting dashboard data
+Found 1 unpaid orders in branch Main Dining Hall
+Order 2512190001 completed, updating profit calculations
+Calculating daily profit for 2026-06-23 - Restaurant: Ethiopian Feast Restaurant, Branch: Main Dining Hall
+Found 9 completed orders for 2026-06-23
+Total revenue: $11787.50
+Total ingredient cost: $3772.00
+Getting waste costs for 2026-06-23 - Restaurant: Ethiopian Feast Restaurant, Branch: Main Dining Hall
+Found 0 waste records for 2026-06-23
+Total waste cost for 2026-06-23: $0.00
+Waste cost from waste tracker: $0.00
+Waste records found: 0
+Net profit: $8015.50
+Profit margin: 68.00%
+Waste percentage: 0.00%
+Profit aggregation updated: 15
+Updating menu item performances for 2026-06-23
+Updated performance record for Samosa
+Updated performance record for Spring Rolls
+Updated performance record for Chicken Wings
+Updated performance record for Key Wot
+Updated performance record for Tibs
+Updated performance record for Coffee
+Updated performance record for Tea
+Updated performance record for Fresh Juice
+Order 2512190001 completed, updating profit calculations
+Calculating daily profit for 2026-06-23 - Restaurant: Ethiopian Feast Restaurant, Branch: Main Dining Hall
+Found 9 completed orders for 2026-06-23
+Total revenue: $11787.50
+Total ingredient cost: $3772.00
+Getting waste costs for 2026-06-23 - Restaurant: Ethiopian Feast Restaurant, Branch: Main Dining Hall
+Found 0 waste records for 2026-06-23
+Total waste cost for 2026-06-23: $0.00
+Waste cost from waste tracker: $0.00
+Waste records found: 0
+Net profit: $8015.50
+Profit margin: 68.00%
+Waste percentage: 0.00%
+Profit aggregation updated: 15
+Updating menu item performances for 2026-06-23
+Updated performance record for Samosa
+Updated performance record for Spring Rolls
+Updated performance record for Chicken Wings
+Updated performance record for Key Wot
+Updated performance record for Tibs
+Updated performance record for Coffee
+Updated performance record for Tea
+Updated performance record for Fresh Juice
+Payment c0076bbb-9960-45ca-93ad-8983061860a5 processed: $737.5 via cash for Order 2512190001
+Cashier cashier1 requesting dashboard data
+Found 0 unpaid orders in branch Main Dining Hall
+Cashier cashier1 requesting dashboard data
+Found 0 unpaid orders in branch Main Dining Hall
+Cashier cashier1 requesting dashboard data
+Found 0 unpaid orders in branch Main Dining Hall
+Cashier cashier1 requesting dashboard data
+Found 0 unpaid orders in branch Main Dining Hall
+Unauthorized: /api/auth/verify-token/
+Getting dashboard data for user: manager1, view_level: restaurant
+Calculating daily profit for 2026-06-23 - Restaurant: Ethiopian Feast Restaurant, Branch: All
+Found 9 completed orders for 2026-06-23
+Total revenue: $11787.50
+Total ingredient cost: $3772.00
+Getting waste costs for 2026-06-23 - Restaurant: Ethiopian Feast Restaurant, Branch: All
+Found 0 waste records for 2026-06-23
+Total waste cost for 2026-06-23: $0.00
+Waste cost from waste tracker: $0.00
+Waste records found: 0
+Net profit: $8015.50
+Profit margin: 68.00%
+Waste percentage: 0.00%
+Profit aggregation created: 16
+Updating menu item performances for 2026-06-23
+Created performance record for Samosa
+Created performance record for Spring Rolls
+Created performance record for Chicken Wings
+Created performance record for Key Wot
+Created performance record for Tibs
+Created performance record for Coffee
+Created performance record for Tea
+Created performance record for Fresh Juice
+Calculating profit trend from 2026-05-25 to 2026-06-23 (30 days)
+Analyzing profit issues for Ethiopian Feast Restaurant
+Watching for file changes with StatReloader
+Watching for file changes with StatReloader
+Not Found: /favicon.ico
+Getting dashboard data for user: manager1, view_level: restaurant
+Calculating daily profit for 2026-06-24 - Restaurant: Ethiopian Feast Restaurant, Branch: All
+Found 0 completed orders for 2026-06-24
+Total revenue: $0.00
+Total ingredient cost: $0.00
+Getting waste costs for 2026-06-24 - Restaurant: Ethiopian Feast Restaurant, Branch: All
+Found 0 waste records for 2026-06-24
+Total waste cost for 2026-06-24: $0.00
+Waste cost from waste tracker: $0.00
+Waste records found: 0
+Net profit: $0.00
+Profit margin: 0.00%
+Waste percentage: 0.00%
+Profit aggregation created: 17
+Updating menu item performances for 2026-06-24
+Calculating profit trend from 2026-05-26 to 2026-06-24 (30 days)
+Analyzing profit issues for Ethiopian Feast Restaurant
+Internal Server Error: /admin/waste_tracker/wasterecord/
+Traceback (most recent call last):
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django\db\models\options.py", line 683, in get_field
+    return self.fields_map[field_name]
+KeyError: 'cost_display'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django\contrib\admin\utils.py", line 290, in lookup_field
+    f = _get_non_gfk_field(opts, name)
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django\contrib\admin\utils.py", line 330, in _get_non_gfk_field
+    field = opts.get_field(name)
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django\db\models\options.py", line 685, in get_field
+    raise FieldDoesNotExist(
+django.core.exceptions.FieldDoesNotExist: WasteRecord has no field named 'cost_display'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django\core\handlers\base.py", line 220, in _get_response
+    response = response.render()
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django\template\response.py", line 114, in render
+    self.content = self.rendered_content
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django\template\response.py", line 92, in rendered_content
+    return template.render(context, self._request)
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django\template\backends\django.py", line 107, in render
+    return self.template.render(context)
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django\template\base.py", line 171, in render
+    return self._render(context)
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django\template\base.py", line 163, in _render
+    return self.nodelist.render(context)
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django\template\base.py", line 1016, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django\template\base.py", line 1016, in <listcomp>
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django\template\base.py", line 977, in render_annotated
+    return self.render(context)
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django\template\loader_tags.py", line 159, in render
+    return compiled_parent._render(context)
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django\template\base.py", line 163, in _render
+    return self.nodelist.render(context)
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django\template\base.py", line 1016, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django\template\base.py", line 1016, in <listcomp>
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django\template\base.py", line 977, in render_annotated
+    return self.render(context)
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django\template\loader_tags.py", line 159, in render
+    return compiled_parent._render(context)
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django\template\base.py", line 163, in _render
+    return self.nodelist.render(context)
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django\template\base.py", line 1016, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django\template\base.py", line 1016, in <listcomp>
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django\template\base.py", line 977, in render_annotated
+    return self.render(context)
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django\template\loader_tags.py", line 65, in render
+    result = block.nodelist.render(context)
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django\template\base.py", line 1016, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django\template\base.py", line 1016, in <listcomp>
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django\template\base.py", line 977, in render_annotated
+    return self.render(context)
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django\template\loader_tags.py", line 65, in render
+    result = block.nodelist.render(context)
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django\template\base.py", line 1016, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django\template\base.py", line 1016, in <listcomp>
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django\template\base.py", line 977, in render_annotated
+    return self.render(context)
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django\contrib\admin\templatetags\base.py", line 45, in render
+    return super().render(context)
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django\template\library.py", line 359, in render
+    _dict = self.func(*resolved_args, **resolved_kwargs)
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django\contrib\admin\templatetags\admin_list.py", line 354, in result_list
+    "results": list(results(cl)),
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django\contrib\admin\templatetags\admin_list.py", line 330, in results
+    yield ResultList(None, items_for_result(cl, res, None))
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django\contrib\admin\templatetags\admin_list.py", line 321, in __init__
+    super().__init__(*items)
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django\contrib\admin\templatetags\admin_list.py", line 219, in items_for_result
+    f, attr, value = lookup_field(field_name, result, cl.model_admin)
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django\contrib\admin\utils.py", line 299, in lookup_field
+    value = attr(obj)
+  File "C:\Users\USER\DAGIIIz\eco\res\res3\ROS\waste_tracker\admin.py", line 302, in cost_display
+    return format_html(
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django\utils\html.py", line 145, in format_html
+    return mark_safe(format_string.format(*args_safe, **kwargs_safe))
+ValueError: Unknown format code 'f' for object of type 'SafeString'
+Internal Server Error: /admin/profit_intelligence/menuitemperformance/
+Traceback (most recent call last):
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django\db\models\options.py", line 683, in get_field
+    return self.fields_map[field_name]
+KeyError: 'profit_margin_display'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django\contrib\admin\utils.py", line 290, in lookup_field
+    f = _get_non_gfk_field(opts, name)
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django\contrib\admin\utils.py", line 330, in _get_non_gfk_field
+    field = opts.get_field(name)
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django\db\models\options.py", line 685, in get_field
+    raise FieldDoesNotExist(
+django.core.exceptions.FieldDoesNotExist: MenuItemPerformance has no field named 'profit_margin_display'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django\core\handlers\base.py", line 220, in _get_response
+    response = response.render()
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django\template\response.py", line 114, in render
+    self.content = self.rendered_content
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django\template\response.py", line 92, in rendered_content
+    return template.render(context, self._request)
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django\template\backends\django.py", line 107, in render
+    return self.template.render(context)
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django\template\base.py", line 171, in render
+    return self._render(context)
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django\template\base.py", line 163, in _render
+    return self.nodelist.render(context)
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django\template\base.py", line 1016, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django\template\base.py", line 1016, in <listcomp>
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django\template\base.py", line 977, in render_annotated
+    return self.render(context)
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django\template\loader_tags.py", line 159, in render
+    return compiled_parent._render(context)
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django\template\base.py", line 163, in _render
+    return self.nodelist.render(context)
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django\template\base.py", line 1016, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django\template\base.py", line 1016, in <listcomp>
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django\template\base.py", line 977, in render_annotated
+    return self.render(context)
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django\template\loader_tags.py", line 159, in render
+    return compiled_parent._render(context)
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django\template\base.py", line 163, in _render
+    return self.nodelist.render(context)
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django\template\base.py", line 1016, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django\template\base.py", line 1016, in <listcomp>
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django\template\base.py", line 977, in render_annotated
+    return self.render(context)
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django\template\loader_tags.py", line 65, in render
+    result = block.nodelist.render(context)
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django\template\base.py", line 1016, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django\template\base.py", line 1016, in <listcomp>
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django\template\base.py", line 977, in render_annotated
+    return self.render(context)
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django\template\loader_tags.py", line 65, in render
+    result = block.nodelist.render(context)
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django\template\base.py", line 1016, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django\template\base.py", line 1016, in <listcomp>
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django\template\base.py", line 977, in render_annotated
+    return self.render(context)
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django\contrib\admin\templatetags\base.py", line 45, in render
+    return super().render(context)
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django\template\library.py", line 359, in render
+    _dict = self.func(*resolved_args, **resolved_kwargs)
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django\contrib\admin\templatetags\admin_list.py", line 354, in result_list
+    "results": list(results(cl)),
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django\contrib\admin\templatetags\admin_list.py", line 330, in results
+    yield ResultList(None, items_for_result(cl, res, None))
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django\contrib\admin\templatetags\admin_list.py", line 321, in __init__
+    super().__init__(*items)
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django\contrib\admin\templatetags\admin_list.py", line 219, in items_for_result
+    f, attr, value = lookup_field(field_name, result, cl.model_admin)
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django\contrib\admin\utils.py", line 299, in lookup_field
+    value = attr(obj)
+  File "C:\Users\USER\DAGIIIz\eco\res\res3\ROS\profit_intelligence\admin.py", line 80, in profit_margin_display
+    return format_html(
+  File "C:\Users\USER\.virtualenvs\DAGIIIz-mM3Hxqbw\lib\site-packages\django\utils\html.py", line 145, in format_html
+    return mark_safe(format_string.format(*args_safe, **kwargs_safe))
+ValueError: Unknown format code 'f' for object of type 'SafeString'
+Bad Request: /profit-intelligence/api/dashboard/
+Forbidden: /api/auth/verify-token/
+Forbidden: /api/auth/verify-token/
+Waste recorded for Shiro Powder, updating profit
+Calculating daily profit for 2026-06-24 08:41:32.890242+00:00 - Restaurant: Ethiopian Feast Restaurant, Branch: Main Dining Hall
+Found 0 completed orders for 2026-06-24 08:41:32.890242+00:00
+Total revenue: $0.00
+Total ingredient cost: $0.00
+Getting waste costs for 2026-06-24 08:41:32.890242+00:00 - Restaurant: Ethiopian Feast Restaurant, Branch: Main Dining Hall
+Found 0 waste records for 2026-06-24 08:41:32.890242+00:00
+Total waste cost for 2026-06-24 08:41:32.890242+00:00: $0.00
+Waste cost from waste tracker: $0.00
+Waste records found: 0
+Net profit: $0.00
+Profit margin: 0.00%
+Waste percentage: 0.00%
+Profit aggregation created: 18
+Updating menu item performances for 2026-06-24 08:41:32.890242+00:00
+Forbidden: /api/auth/verify-token/
+Order 2606240001 served, checking for payment...
+Error in auto_create_payment_on_order_update: 'Order' object has no attribute 'branch'
+Forbidden: /api/auth/verify-token/
+Forbidden: /api/auth/verify-token/
+Order 2606240002 served, checking for payment...
+Error in auto_create_payment_on_order_update: 'Order' object has no attribute 'branch'
+Order 2606240001 bill_presented, checking for payment...
+Error in auto_create_payment_on_order_update: 'Order' object has no attribute 'branch'
+Order 2606240002 bill_presented, checking for payment...
+Error in auto_create_payment_on_order_update: 'Order' object has no attribute 'branch'
+Forbidden: /api/auth/verify-token/
+Cashier cashier1 requesting dashboard data
+Found 2 unpaid orders in branch Main Dining Hall
+Order 2606240002 completed, updating profit calculations
+Calculating daily profit for 2026-06-24 - Restaurant: Ethiopian Feast Restaurant, Branch: Main Dining Hall
+Found 1 completed orders for 2026-06-24
+Total revenue: $925.00
+Total ingredient cost: $296.00
+Getting waste costs for 2026-06-24 - Restaurant: Ethiopian Feast Restaurant, Branch: Main Dining Hall
+Found 0 waste records for 2026-06-24
+Total waste cost for 2026-06-24: $0.00
+Waste cost from waste tracker: $0.00
+Waste records found: 0
+Net profit: $629.00
+Profit margin: 68.00%
+Waste percentage: 0.00%
+Profit aggregation updated: 18
+Updating menu item performances for 2026-06-24
+Created performance record for Key Wot
+Created performance record for Fresh Juice
+Created performance record for Ice Cream
+Order 2606240002 completed, updating profit calculations
+Calculating daily profit for 2026-06-24 - Restaurant: Ethiopian Feast Restaurant, Branch: Main Dining Hall
+Found 1 completed orders for 2026-06-24
+Total revenue: $925.00
+Total ingredient cost: $296.00
+Getting waste costs for 2026-06-24 - Restaurant: Ethiopian Feast Restaurant, Branch: Main Dining Hall
+Found 0 waste records for 2026-06-24
+Total waste cost for 2026-06-24: $0.00
+Waste cost from waste tracker: $0.00
+Waste records found: 0
+Net profit: $629.00
+Profit margin: 68.00%
+Waste percentage: 0.00%
+Profit aggregation updated: 18
+Updating menu item performances for 2026-06-24
+Updated performance record for Key Wot
+Updated performance record for Fresh Juice
+Updated performance record for Ice Cream
+Payment e1423873-d8d9-45d6-9ac0-5166d8effcec processed: $925 via cash for Order 2606240002
+Cashier cashier1 requesting dashboard data
+Found 1 unpaid orders in branch Main Dining Hall
+Cashier cashier1 requesting dashboard data
+Found 1 unpaid orders in branch Main Dining Hall
+Order 2606240001 completed, updating profit calculations
+Calculating daily profit for 2026-06-24 - Restaurant: Ethiopian Feast Restaurant, Branch: Main Dining Hall
+Found 2 completed orders for 2026-06-24
+Total revenue: $1637.50
+Total ingredient cost: $524.00
+Getting waste costs for 2026-06-24 - Restaurant: Ethiopian Feast Restaurant, Branch: Main Dining Hall
+Found 0 waste records for 2026-06-24
+Total waste cost for 2026-06-24: $0.00
+Waste cost from waste tracker: $0.00
+Waste records found: 0
+Net profit: $1113.50
+Profit margin: 68.00%
+Waste percentage: 0.00%
+Profit aggregation updated: 18
+Updating menu item performances for 2026-06-24
+Created performance record for Samosa
+Created performance record for Spring Rolls
+Created performance record for Chicken Wings
+Updated performance record for Key Wot
+Updated performance record for Fresh Juice
+Updated performance record for Ice Cream
+Order 2606240001 completed, updating profit calculations
+Calculating daily profit for 2026-06-24 - Restaurant: Ethiopian Feast Restaurant, Branch: Main Dining Hall
+Found 2 completed orders for 2026-06-24
+Total revenue: $1637.50
+Total ingredient cost: $524.00
+Getting waste costs for 2026-06-24 - Restaurant: Ethiopian Feast Restaurant, Branch: Main Dining Hall
+Found 0 waste records for 2026-06-24
+Total waste cost for 2026-06-24: $0.00
+Waste cost from waste tracker: $0.00
+Waste records found: 0
+Net profit: $1113.50
+Profit margin: 68.00%
+Waste percentage: 0.00%
+Profit aggregation updated: 18
+Updating menu item performances for 2026-06-24
+Updated performance record for Samosa
+Updated performance record for Spring Rolls
+Updated performance record for Chicken Wings
+Updated performance record for Key Wot
+Updated performance record for Fresh Juice
+Updated performance record for Ice Cream
+Payment 1677411d-1d00-4bd2-9659-9101e1c220f0 processed: $712.5 via cash for Order 2606240001
+Cashier cashier1 requesting dashboard data
+Found 0 unpaid orders in branch Main Dining Hall
+Cashier cashier1 requesting dashboard data
+Found 0 unpaid orders in branch Main Dining Hall
+Cashier cashier1 requesting dashboard data
+Found 0 unpaid orders in branch Main Dining Hall
+Cashier cashier1 requesting dashboard data
+Found 0 unpaid orders in branch Main Dining Hall
+Cashier cashier1 requesting dashboard data
+Found 0 unpaid orders in branch Main Dining Hall
+Cashier Admin requesting dashboard data
+Bad Request: /api/payments/cashier/dashboard-data/
+Cashier Admin requesting dashboard data
+Bad Request: /api/payments/cashier/dashboard-data/
+Cashier Admin requesting dashboard data
+Bad Request: /api/payments/cashier/dashboard-data/
+Unauthorized: /api/auth/verify-token/
+Getting dashboard data for user: manager1, view_level: restaurant
+Calculating daily profit for 2026-06-24 - Restaurant: Ethiopian Feast Restaurant, Branch: All
+Found 2 completed orders for 2026-06-24
+Total revenue: $1637.50
+Total ingredient cost: $524.00
+Getting waste costs for 2026-06-24 - Restaurant: Ethiopian Feast Restaurant, Branch: All
+Found 0 waste records for 2026-06-24
+Total waste cost for 2026-06-24: $0.00
+Waste cost from waste tracker: $0.00
+Waste records found: 0
+Net profit: $1113.50
+Profit margin: 68.00%
+Waste percentage: 0.00%
+Profit aggregation updated: 17
+Updating menu item performances for 2026-06-24
+Created performance record for Samosa
+Created performance record for Spring Rolls
+Created performance record for Chicken Wings
+Created performance record for Key Wot
+Created performance record for Fresh Juice
+Created performance record for Ice Cream
+Calculating profit trend from 2026-05-26 to 2026-06-24 (30 days)
+Analyzing profit issues for Ethiopian Feast Restaurant
+Bad Request: /profit-intelligence/api/dashboard/
+Bad Request: /profit-intelligence/api/dashboard/
+Bad Request: /profit-intelligence/api/dashboard/
+Bad Request: /profit-intelligence/api/dashboard/
+Bad Request: /profit-intelligence/api/dashboard/
+Bad Request: /profit-intelligence/api/dashboard/
+Forbidden: /api/auth/verify-token/
+Not Found: /favicon.ico
+Not Found: /favicon.ico
+Not Found: /favicon.ico
+Bad Request: /api/menu/restaurant-menu/
+Not Found: /favicon.ico
+Watching for file changes with StatReloader
+Bad Request: /api/menu/restaurant-menu/
+Not Found: /favicon.ico
+Bad Request: /api/menu/restaurant-menu/
+Bad Request: /api/menu/restaurant-menu/
+Not Found: /favicon.ico
+Bad Request: /api/menu/restaurant-menu/
+Not Found: /favicon.ico
+Watching for file changes with StatReloader
+C:\Users\USER\DAGIIIz\eco\res\res3\ROS\menu\urls.py changed, reloading.
+Watching for file changes with StatReloader
+C:\Users\USER\DAGIIIz\eco\res\res3\ROS\menu\views.py changed, reloading.
+Watching for file changes with StatReloader
+Bad Request: /api/menu/restaurant-menu/
+Not Found: /favicon.ico
+Bad Request: /api/menu/restaurant-menu/
+Bad Request: /api/menu/restaurant-menu/
+Not Found: /favicon.ico
+Bad Request: /api/menu/restaurant-menu/
+Not Found: /favicon.ico
+Bad Request: /api/menu/restaurant-menu/
+Not Found: /favicon.ico
+Bad Request: /api/menu/restaurant-menu/
+Not Found: /favicon.ico
+Bad Request: /api/menu/restaurant-menu/
+C:\Users\USER\DAGIIIz\eco\res\res3\ROS\menu\views.py changed, reloading.
+Watching for file changes with StatReloader
+Bad Request: /api/menu/restaurant-menu/
+Not Found: /favicon.ico
+Not Found: /favicon.ico
+Forbidden: /api/auth/verify-token/
+Not Found: /favicon.ico
+Bad Request: /api/menu/restaurant-menu/
+Not Found: /favicon.ico
+Forbidden: /api/auth/verify-token/
+Not Found: /favicon.ico
+Forbidden: /api/tables/orders/create-with-items/
+Forbidden: /api/tables/orders/create-with-items/
+C:\Users\USER\DAGIIIz\eco\res\res3\ROS\menu\views.py changed, reloading.
+Watching for file changes with StatReloader
+Forbidden: /api/auth/verify-token/
+Forbidden: /api/auth/verify-token/
+Order 2606240003 served, checking for payment...
+Error in auto_create_payment_on_order_update: 'Order' object has no attribute 'branch'
+Order 2606240003 bill_presented, checking for payment...
+Error in auto_create_payment_on_order_update: 'Order' object has no attribute 'branch'
+Forbidden: /api/auth/verify-token/
+Cashier cashier1 requesting dashboard data
+Found 1 unpaid orders in branch Main Dining Hall
+Error deducting inventory for order 35: get() returned more than one StockAlert -- it returned 3!
+Order 2606240003 completed, updating profit calculations
+Calculating daily profit for 2026-06-24 - Restaurant: Ethiopian Feast Restaurant, Branch: Main Dining Hall
+Found 3 completed orders for 2026-06-24
+Total revenue: $4137.50
+Total ingredient cost: $2293.00
+Getting waste costs for 2026-06-24 - Restaurant: Ethiopian Feast Restaurant, Branch: Main Dining Hall
+Found 0 waste records for 2026-06-24
+Total waste cost for 2026-06-24: $0.00
+Waste cost from waste tracker: $0.00
+Waste records found: 0
+Net profit: $1844.50
+Profit margin: 44.58%
+Waste percentage: 0.00%
+Profit aggregation updated: 18
+Updating menu item performances for 2026-06-24
+Updated performance record for Samosa
+Updated performance record for Spring Rolls
+Updated performance record for Chicken Wings
+Updated performance record for Key Wot
+Updated performance record for Fresh Juice
+Updated performance record for Ice Cream
+Created performance record for burger
+Error deducting inventory for order 35: get() returned more than one StockAlert -- it returned 3!
+Order 2606240003 completed, updating profit calculations
+Calculating daily profit for 2026-06-24 - Restaurant: Ethiopian Feast Restaurant, Branch: Main Dining Hall
+Found 3 completed orders for 2026-06-24
+Total revenue: $4137.50
+Total ingredient cost: $2293.00
+Getting waste costs for 2026-06-24 - Restaurant: Ethiopian Feast Restaurant, Branch: Main Dining Hall
+Found 0 waste records for 2026-06-24
+Total waste cost for 2026-06-24: $0.00
+Waste cost from waste tracker: $0.00
+Waste records found: 0
+Net profit: $1844.50
+Profit margin: 44.58%
+Waste percentage: 0.00%
+Profit aggregation updated: 18
+Updating menu item performances for 2026-06-24
+Updated performance record for Samosa
+Updated performance record for Spring Rolls
+Updated performance record for Chicken Wings
+Updated performance record for Key Wot
+Updated performance record for Fresh Juice
+Updated performance record for Ice Cream
+Updated performance record for burger
+Payment 5ee01a84-39cb-4a75-9c66-8db63490bd90 processed: $2500 via cash for Order 2606240003
+Cashier cashier1 requesting dashboard data
+Found 0 unpaid orders in branch Main Dining Hall
+Unauthorized: /api/auth/verify-token/
+Not Found: /restaurant-admin/dashboard/menu_items/food-pizza-still-life-hd-wallpaper-preview_Cj6yzIs.jpg
+Getting dashboard data for user: manager1, view_level: restaurant
+Calculating daily profit for 2026-06-24 - Restaurant: Ethiopian Feast Restaurant, Branch: All
+Found 3 completed orders for 2026-06-24
+Total revenue: $4137.50
+Total ingredient cost: $2293.00
+Getting waste costs for 2026-06-24 - Restaurant: Ethiopian Feast Restaurant, Branch: All
+Found 0 waste records for 2026-06-24
+Total waste cost for 2026-06-24: $0.00
+Waste cost from waste tracker: $0.00
+Waste records found: 0
+Net profit: $1844.50
+Profit margin: 44.58%
+Waste percentage: 0.00%
+Profit aggregation updated: 17
+Updating menu item performances for 2026-06-24
+Updated performance record for Samosa
+Updated performance record for Spring Rolls
+Updated performance record for Chicken Wings
+Updated performance record for Key Wot
+Updated performance record for Fresh Juice
+Updated performance record for Ice Cream
+Created performance record for burger
+Calculating profit trend from 2026-05-26 to 2026-06-24 (30 days)
+Analyzing profit issues for Ethiopian Feast Restaurant
+Getting dashboard data for user: manager1, view_level: restaurant
+Calculating daily profit for 2026-06-24 - Restaurant: Ethiopian Feast Restaurant, Branch: All
+Found 3 completed orders for 2026-06-24
+Total revenue: $4137.50
+Total ingredient cost: $2293.00
+Getting waste costs for 2026-06-24 - Restaurant: Ethiopian Feast Restaurant, Branch: All
+Found 0 waste records for 2026-06-24
+Total waste cost for 2026-06-24: $0.00
+Waste cost from waste tracker: $0.00
+Waste records found: 0
+Net profit: $1844.50
+Profit margin: 44.58%
+Waste percentage: 0.00%
+Profit aggregation updated: 17
+Updating menu item performances for 2026-06-24
+Updated performance record for Samosa
+Updated performance record for Spring Rolls
+Updated performance record for Chicken Wings
+Updated performance record for Key Wot
+Updated performance record for Fresh Juice
+Updated performance record for Ice Cream
+Updated performance record for burger
+Calculating profit trend from 2026-05-26 to 2026-06-24 (30 days)
+Analyzing profit issues for Ethiopian Feast Restaurant
+Bad Request: /profit-intelligence/api/dashboard/
+Bad Request: /profit-intelligence/api/dashboard/
+Bad Request: /profit-intelligence/api/dashboard/
+Bad Request: /profit-intelligence/api/dashboard/
+Bad Request: /profit-intelligence/api/dashboard/
+Bad Request: /profit-intelligence/api/dashboard/
+Bad Request: /profit-intelligence/api/dashboard/
+Bad Request: /profit-intelligence/api/dashboard/
+Bad Request: /profit-intelligence/api/dashboard/
+Bad Request: /profit-intelligence/api/dashboard/
+Bad Request: /profit-intelligence/api/dashboard/
+Bad Request: /profit-intelligence/api/dashboard/
+Bad Request: /profit-intelligence/api/dashboard/
+Bad Request: /profit-intelligence/api/dashboard/
+Bad Request: /profit-intelligence/api/dashboard/
+Bad Request: /profit-intelligence/api/dashboard/
+Bad Request: /profit-intelligence/api/dashboard/
+Bad Request: /profit-intelligence/api/dashboard/
+Bad Request: /profit-intelligence/api/dashboard/
+Bad Request: /profit-intelligence/api/dashboard/
+Bad Request: /profit-intelligence/api/dashboard/
+Bad Request: /profit-intelligence/api/dashboard/
+Bad Request: /profit-intelligence/api/dashboard/
+Bad Request: /profit-intelligence/api/dashboard/
+Bad Request: /profit-intelligence/api/dashboard/
+Bad Request: /profit-intelligence/api/dashboard/
+Bad Request: /profit-intelligence/api/dashboard/
+Bad Request: /profit-intelligence/api/dashboard/

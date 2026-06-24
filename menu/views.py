@@ -246,6 +246,8 @@ class PublicMenuView(APIView):
 
 # In menu/views.py - Fix RestaurantMenuView
 
+# menu/views.py - REPLACE the RestaurantMenuView class
+
 class RestaurantMenuView(viewsets.GenericViewSet):
     """View for restaurant-specific menu operations"""
     permission_classes = [IsAuthenticated]
