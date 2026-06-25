@@ -411,6 +411,16 @@ class Order(models.Model):
 
         return self
 
+    # NEW: Chef field for tracking who prepared the order
+    chef = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name='chef_orders',
+        help_text="Chef who prepared this order"
+    )
+
 
 class OrderItem(models.Model):
     """Individual items in an order"""

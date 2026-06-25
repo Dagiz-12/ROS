@@ -37,4 +37,7 @@ urlpatterns = [
     path('api/menu/import/', views.api_menu_import, name='api-menu-import'),
     path('api/menu/bulk-update/', views.api_menu_bulk_update,
          name='api-menu-bulk-update'),
+
+    # Staff Analytics API endpoints
+    path('staff-analytics/', views.staff_analytics, name='staff-analytics'),
 ]

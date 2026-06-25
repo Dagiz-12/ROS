@@ -1,233 +1,301 @@
+<!-- templates/admin_panel/dashboard.html -->
 {% extends "admin_panel/admin_base.html" %}
 {% load static %}
 
-{% block title %}Admin Dashboard{% endblock %}
+{% block title %}Executive Dashboard - {{ restaurant.name }}{% endblock %}
 
 {% block chart_js %}
-<!-- Load Chart.js only for dashboard -->
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 {% endblock %}
 
-{% block page_title %}Restaurant Dashboard{% endblock %}
-{% block page_subtitle %}Real-time business intelligence and analytics{% endblock %}
+{% block page_title %}Executive Dashboard{% endblock %}
+{% block page_subtitle %}Real-time business intelligence & action center{% endblock %}
 
 {% block page_actions %}
-<button id="refresh-btn" class="btn btn-primary">
-    <i class="fas fa-sync-alt mr-2"></i>Refresh
-</button>
+<div class="flex items-center space-x-3">
+    <span class="text-sm text-gray-500" id="last-updated">
+        <i class="fas fa-clock mr-1"></i> Updating...
+    </span>
+    <button id="refresh-btn" class="btn-primary text-sm flex items-center">
+        <i class="fas fa-sync-alt mr-2"></i>Refresh
+    </button>
+</div>
 {% endblock %}
 
 {% block content %}
-<div class="admin-dashboard">
-    <!-- Quick Stats Row -->
-    <div class="stats-grid mb-6">
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-            <!-- Revenue Card -->
-            <div class="admin-stat-card p-4">
-                <div class="flex items-center">
-                    <div class="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center mr-4">
-                        <i class="fas fa-money-bill-wave text-blue-600 text-xl"></i>
-                    </div>
-                    <div>
-                        <div class="text-sm text-gray-500">Today's Revenue</div>
-                        <div class="text-2xl font-bold text-gray-900" id="revenue-amount">$0.00</div>
-                        <div class="text-sm" id="revenue-change">+0%</div>
-                    </div>
-                </div>
-            </div>
-            
-            <!-- Orders Card -->
-            <div class="admin-stat-card p-4">
-                <div class="flex items-center">
-                    <div class="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center mr-4">
-                        <i class="fas fa-clipboard-list text-green-600 text-xl"></i>
-                    </div>
-                    <div>
-                        <div class="text-sm text-gray-500">Today's Orders</div>
-                        <div class="text-2xl font-bold text-gray-900" id="orders-count">0</div>
-                        <div class="text-sm" id="orders-change">+0%</div>
+<div class="space-y-6">
+    
+    <!-- ROW 1: CORE KPIs WITH CONTEXT -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+        <!-- Revenue KPI -->
+        <div class="admin-stat-card p-5 cursor-pointer hover:shadow-lg transition-all" onclick="drillDown('revenue')">
+            <div class="flex items-start justify-between">
+                <div>
+                    <p class="text-sm font-medium text-gray-500">Today's Revenue</p>
+                    <h3 class="text-2xl font-bold text-gray-900 mt-1" id="kpi-revenue">$0.00</h3>
+                    <div class="flex items-center mt-1">
+                        <span class="text-xs font-medium" id="kpi-revenue-change">+0%</span>
+                        <span class="text-xs text-gray-400 ml-2">vs yesterday</span>
                     </div>
                 </div>
-            </div>
-            
-            <!-- Profit Card -->
-            <div class="admin-stat-card p-4">
-                <div class="flex items-center">
-                    <div class="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center mr-4">
-                        <i class="fas fa-chart-line text-purple-600 text-xl"></i>
-                    </div>
-                    <div>
-                        <div class="text-sm text-gray-500">Today's Profit</div>
-                        <div class="text-2xl font-bold text-gray-900" id="profit-amount">$0.00</div>
-                        <div class="text-sm" id="profit-margin">0% margin</div>
-                    </div>
+                <div class="w-12 h-12 bg-blue-100 rounded-xl flex items-center justify-center">
+                    <i class="fas fa-money-bill-wave text-blue-600 text-xl"></i>
                 </div>
             </div>
-            
-            <!-- Waste Cost Card -->
-            <div class="admin-stat-card p-4">
-                <div class="flex items-center">
-                    <div class="w-12 h-12 bg-red-100 rounded-lg flex items-center justify-center mr-4">
-                        <i class="fas fa-trash text-red-600 text-xl"></i>
+            <div class="mt-3 pt-3 border-t border-gray-100">
+                <div class="flex justify-between text-xs text-gray-500">
+                    <span>Orders: <strong id="kpi-orders">0</strong></span>
+                    <span>Avg: <strong id="kpi-avg-order">$0.00</strong></span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Profit KPI -->
+        <div class="admin-stat-card p-5 cursor-pointer hover:shadow-lg transition-all" onclick="drillDown('profit')">
+            <div class="flex items-start justify-between">
+                <div>
+                    <p class="text-sm font-medium text-gray-500">Today's Net Profit</p>
+                    <h3 class="text-2xl font-bold text-gray-900 mt-1" id="kpi-profit">$0.00</h3>
+                    <div class="flex items-center mt-1">
+                        <span class="text-xs font-medium" id="kpi-profit-margin">0% margin</span>
+                        <span class="text-xs text-gray-400 ml-2" id="kpi-profit-change">vs yesterday</span>
                     </div>
-                    <div>
-                        <div class="text-sm text-gray-500">Waste Cost</div>
-                        <div class="text-2xl font-bold text-gray-900" id="waste-cost">$0.00</div>
-                        <div class="text-sm text-gray-500" id="waste-period">Today</div>
+                </div>
+                <div class="w-12 h-12 bg-green-100 rounded-xl flex items-center justify-center">
+                    <i class="fas fa-chart-line text-green-600 text-xl"></i>
+                </div>
+            </div>
+            <div class="mt-3 pt-3 border-t border-gray-100">
+                <div class="w-full bg-gray-200 rounded-full h-1.5">
+                    <div class="bg-gradient-to-r from-green-400 to-green-600 h-1.5 rounded-full transition-all duration-500" id="profit-bar" style="width: 0%"></div>
+                </div>
+                <div class="flex justify-between text-xs text-gray-500 mt-1">
+                    <span>Healthy: <strong id="profit-health">--</strong></span>
+                    <span>Target: 30%</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Waste Cost KPI -->
+        <div class="admin-stat-card p-5 cursor-pointer hover:shadow-lg transition-all" onclick="drillDown('waste')">
+            <div class="flex items-start justify-between">
+                <div>
+                    <p class="text-sm font-medium text-gray-500">Waste Cost</p>
+                    <h3 class="text-2xl font-bold text-gray-900 mt-1" id="kpi-waste">$0.00</h3>
+                    <div class="flex items-center mt-1">
+                        <span class="text-xs font-medium" id="kpi-waste-change">+0%</span>
+                        <span class="text-xs text-gray-400 ml-2">vs yesterday</span>
                     </div>
+                </div>
+                <div class="w-12 h-12 bg-red-100 rounded-xl flex items-center justify-center">
+                    <i class="fas fa-trash-alt text-red-600 text-xl"></i>
+                </div>
+            </div>
+            <div class="mt-3 pt-3 border-t border-gray-100">
+                <div class="flex justify-between text-xs text-gray-500">
+                    <span>Waste %: <strong id="kpi-waste-percent">0%</strong></span>
+                    <span>of COGS</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Orders KPI -->
+        <div class="admin-stat-card p-5 cursor-pointer hover:shadow-lg transition-all" onclick="drillDown('orders')">
+            <div class="flex items-start justify-between">
+                <div>
+                    <p class="text-sm font-medium text-gray-500">Total Orders</p>
+                    <h3 class="text-2xl font-bold text-gray-900 mt-1" id="kpi-total-orders">0</h3>
+                    <div class="flex items-center mt-1">
+                        <span class="text-xs font-medium" id="kpi-orders-change">+0%</span>
+                        <span class="text-xs text-gray-400 ml-2">vs yesterday</span>
+                    </div>
+                </div>
+                <div class="w-12 h-12 bg-purple-100 rounded-xl flex items-center justify-center">
+                    <i class="fas fa-clipboard-list text-purple-600 text-xl"></i>
+                </div>
+            </div>
+            <div class="mt-3 pt-3 border-t border-gray-100">
+                <div class="flex justify-between text-xs text-gray-500">
+                    <span>Pending: <strong id="kpi-pending-orders">0</strong></span>
+                    <span>Completed: <strong id="kpi-completed-orders">0</strong></span>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- Charts and Alerts Row -->
-    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
-        <!-- Sales Chart -->
-        <div class="lg:col-span-2">
-            <div class="admin-stat-card p-4 h-full">
-                <div class="flex justify-between items-center mb-4">
-                    <h3 class="text-lg font-bold text-gray-900">Revenue Trend</h3>
-                    <div class="period-selector">
-                        <button data-period="today" class="period-btn active bg-red-600 text-white px-3 py-1 rounded-lg text-sm">Today</button>
-                        <button data-period="week" class="period-btn bg-gray-100 text-gray-700 px-3 py-1 rounded-lg text-sm ml-2">Week</button>
-                        <button data-period="month" class="period-btn bg-gray-100 text-gray-700 px-3 py-1 rounded-lg text-sm ml-2">Month</button>
+    <!-- ROW 2: ATTENTION REQUIRED ALERTS -->
+    <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+        <div class="p-4 border-b border-gray-200 bg-gradient-to-r from-red-50 to-orange-50">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center">
+                    <div class="w-8 h-8 bg-red-100 rounded-lg flex items-center justify-center mr-3">
+                        <i class="fas fa-exclamation-triangle text-red-600"></i>
+                    </div>
+                    <div>
+                        <h2 class="font-bold text-gray-900">Attention Required</h2>
+                        <p class="text-sm text-gray-600">Issues that need your immediate attention</p>
                     </div>
                 </div>
-                <div class="chart-container" style="height: 300px;">
-                    <canvas id="salesChart"></canvas>
-                </div>
+                <span id="alert-count-badge" class="px-3 py-1 bg-red-600 text-white text-sm font-bold rounded-full">0</span>
             </div>
         </div>
-        
-        <!-- Critical Alerts -->
-        <div class="lg:col-span-1">
-            <div class="admin-stat-card p-4 h-full">
-                <div class="flex justify-between items-center mb-4">
-                    <h3 class="text-lg font-bold text-gray-900">Critical Alerts</h3>
-                    <span class="badge badge-red" id="total-alerts">0</span>
-                </div>
-                
-                <div class="space-y-3" id="alerts-container">
-                    <!-- Alerts will be loaded here -->
-                    <div class="text-center py-8 text-gray-500">
-                        <i class="fas fa-check-circle text-2xl mb-3"></i>
-                        <p>No critical alerts</p>
-                    </div>
-                </div>
-                
-                <div class="mt-4 pt-4 border-t border-gray-200">
-                    <a href="/waste/alerts/" class="text-sm text-red-600 hover:text-red-700 flex items-center">
-                        <i class="fas fa-external-link-alt mr-2"></i>
-                        View all waste alerts
-                    </a>
-                    <a href="/inventory/alerts/" class="text-sm text-orange-600 hover:text-orange-700 flex items-center mt-2">
-                        <i class="fas fa-external-link-alt mr-2"></i>
-                        View all inventory alerts
-                    </a>
+        <div id="alerts-container" class="p-4 divide-y divide-gray-100">
+            <!-- Alerts will be loaded here -->
+            <div class="flex items-center justify-center py-8">
+                <div class="text-center">
+                    <i class="fas fa-spinner fa-spin text-2xl text-gray-400 mb-2"></i>
+                    <p class="text-gray-500">Loading alerts...</p>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- Profit Table and Popular Items -->
-    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
-        <!-- Profitability Table -->
-        <div>
-            <div class="admin-stat-card p-4">
-                <div class="flex justify-between items-center mb-4">
-                    <h3 class="text-lg font-bold text-gray-900">Item Profitability</h3>
-                    <div class="flex items-center space-x-2">
-                        <select id="profit-period-selector" class="text-sm border border-gray-300 rounded-lg px-2 py-1">
-                            <option value="today">Today</option>
-                            <option value="week">This Week</option>
-                            <option value="month">This Month</option>
-                        </select>
-                        <button id="export-profit" class="btn btn-sm btn-secondary">
-                            <i class="fas fa-download"></i>
-                        </button>
-                    </div>
+    <!-- ROW 3: CHARTS & INSIGHTS -->
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <!-- Revenue & Profit Trend Chart -->
+        <div class="lg:col-span-2 bg-white rounded-xl shadow-sm border border-gray-200 p-5">
+            <div class="flex items-center justify-between mb-4">
+                <div>
+                    <h3 class="font-bold text-gray-900">Revenue & Profit Trend</h3>
+                    <p class="text-sm text-gray-500">Last 7 days</p>
                 </div>
-                
-                <div class="overflow-x-auto">
-                    <table class="w-full">
-                        <thead>
-                            <tr class="border-b border-gray-200">
-                                <th class="text-left py-2 px-4 text-sm font-medium text-gray-700">Item</th>
-                                <th class="text-center py-2 px-4 text-sm font-medium text-gray-700">Sold</th>
-                                <th class="text-right py-2 px-4 text-sm font-medium text-gray-700">Revenue</th>
-                                <th class="text-right py-2 px-4 text-sm font-medium text-gray-700">Cost</th>
-                                <th class="text-right py-2 px-4 text-sm font-medium text-gray-700">Profit</th>
-                                <th class="text-center py-2 px-4 text-sm font-medium text-gray-700">Margin</th>
-                            </tr>
-                        </thead>
-                        <tbody id="profit-table-body">
-                            <!-- Profit table rows will be loaded here -->
-                        </tbody>
-                    </table>
+                <div class="flex space-x-2">
+                    <button onclick="window.dashboard?.loadTrend(7)" class="px-3 py-1 text-xs rounded-lg bg-red-600 text-white trend-btn" data-days="7">7D</button>
+                    <button onclick="window.dashboard?.loadTrend(30)" class="px-3 py-1 text-xs rounded-lg bg-gray-100 text-gray-700 hover:bg-gray-200 trend-btn" data-days="30">30D</button>
+                    <button onclick="window.dashboard?.loadTrend(90)" class="px-3 py-1 text-xs rounded-lg bg-gray-100 text-gray-700 hover:bg-gray-200 trend-btn" data-days="90">90D</button>
                 </div>
             </div>
+            <div class="h-64">
+                <canvas id="trendChart"></canvas>
+            </div>
         </div>
-        
-        <!-- Popular Items & Recent Activity -->
-        <div>
-            <div class="grid grid-cols-1 gap-6">
-                <!-- Popular Items -->
-                <div class="admin-stat-card p-4">
-                    <h3 class="text-lg font-bold text-gray-900 mb-4">Popular Items Today</h3>
-                    <div id="popular-items-container">
-                        <!-- Popular items will be loaded here -->
-                    </div>
+
+        <!-- Top Selling Items -->
+        <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-5">
+            <div class="flex items-center justify-between mb-4">
+                <div>
+                    <h3 class="font-bold text-gray-900">Top Selling Items</h3>
+                    <p class="text-sm text-gray-500">Today's best performers</p>
                 </div>
-                
-                <!-- Recent Activity -->
-                <div class="admin-stat-card p-4">
-                    <h3 class="text-lg font-bold text-gray-900 mb-4">Recent Activity</h3>
-                    <div id="activity-container">
-                        <!-- Recent activity will be loaded here -->
-                    </div>
-                </div>
+                <button onclick="window.location.href='{% url 'admin-menu' %}'" class="text-sm text-red-600 hover:text-red-700 font-medium">
+                    View All
+                </button>
+            </div>
+            <div id="top-items-container" class="space-y-3 max-h-64 overflow-y-auto">
+                <!-- Items will be loaded here -->
             </div>
         </div>
     </div>
 
-    <!-- Best Seller & Waste Analysis -->
-    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <!-- Best Seller -->
-        <div class="admin-stat-card p-4">
-            <h3 class="text-lg font-bold text-gray-900 mb-4">🥇 Best Seller</h3>
-            <div id="best-seller" class="flex items-center">
-                <div class="w-16 h-16 bg-gray-100 rounded-lg flex items-center justify-center mr-4">
-                    <i class="fas fa-crown text-yellow-500 text-2xl"></i>
+    <!-- ROW 4: QUICK ACTIONS & INSIGHTS -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <!-- Daily Insight Card -->
+        <div class="bg-gradient-to-br from-blue-50 to-blue-100 rounded-xl shadow-sm border border-blue-200 p-5">
+            <div class="flex items-start">
+                <div class="w-10 h-10 bg-blue-600 rounded-full flex items-center justify-center mr-4 flex-shrink-0">
+                    <i class="fas fa-brain text-white"></i>
                 </div>
                 <div>
-                    <div class="text-xl font-bold text-gray-900" id="best-seller-name">No sales today</div>
-                    <div class="text-sm text-gray-500" id="best-seller-stats">--</div>
+                    <h3 class="font-bold text-gray-900">AI Insight</h3>
+                    <p class="text-sm text-gray-700 mt-1" id="daily-insight">
+                        Loading daily insight...
+                    </p>
+                    <div class="mt-3 flex items-center">
+                        <span class="text-xs text-blue-600 font-medium">
+                            <i class="fas fa-clock mr-1"></i> Updated: <span id="insight-time">--</span>
+                        </span>
+                    </div>
                 </div>
             </div>
         </div>
-        
-        <!-- Waste Analysis -->
-        <div class="admin-stat-card p-4">
-            <h3 class="text-lg font-bold text-gray-900 mb-4">🗑️ Waste Analysis</h3>
-            <div id="waste-analysis">
-                <div class="text-center py-4 text-gray-500">
-                    <i class="fas fa-chart-pie text-2xl mb-3"></i>
-                    <p>No waste data available</p>
-                    <a href="/waste/dashboard/" class="text-sm text-red-600 hover:text-red-700 mt-2 inline-block">
-                        Go to Waste Dashboard
-                    </a>
+
+        <!-- Quick Actions Grid -->
+        <div class="grid grid-cols-2 gap-3">
+            <a href="{% url 'profit_intelligence:dashboard' %}" 
+               class="bg-white border border-gray-200 rounded-xl p-4 hover:shadow-md transition-all text-center group">
+                <div class="w-10 h-10 bg-green-100 rounded-lg flex items-center justify-center mx-auto mb-2 group-hover:bg-green-200 transition">
+                    <i class="fas fa-chart-line text-green-600"></i>
                 </div>
-            </div>
+                <h4 class="text-sm font-semibold text-gray-900">Profit Analysis</h4>
+                <p class="text-xs text-gray-500">View profitability</p>
+            </a>
+            <a href="{% url 'waste-dashboard' %}" 
+               class="bg-white border border-gray-200 rounded-xl p-4 hover:shadow-md transition-all text-center group">
+                <div class="w-10 h-10 bg-red-100 rounded-lg flex items-center justify-center mx-auto mb-2 group-hover:bg-red-200 transition">
+                    <i class="fas fa-trash-alt text-red-600"></i>
+                </div>
+                <h4 class="text-sm font-semibold text-gray-900">Waste Tracking</h4>
+                <p class="text-xs text-gray-500">Reduce waste costs</p>
+            </a>
+            <a href="{% url 'admin-menu' %}" 
+               class="bg-white border border-gray-200 rounded-xl p-4 hover:shadow-md transition-all text-center group">
+                <div class="w-10 h-10 bg-yellow-100 rounded-lg flex items-center justify-center mx-auto mb-2 group-hover:bg-yellow-200 transition">
+                    <i class="fas fa-utensils text-yellow-600"></i>
+                </div>
+                <h4 class="text-sm font-semibold text-gray-900">Update Menu</h4>
+                <p class="text-xs text-gray-500">Manage items & pricing</p>
+            </a>
+            <a href="{% url 'admin-staff' %}" 
+               class="bg-white border border-gray-200 rounded-xl p-4 hover:shadow-md transition-all text-center group">
+                <div class="w-10 h-10 bg-purple-100 rounded-lg flex items-center justify-center mx-auto mb-2 group-hover:bg-purple-200 transition">
+                    <i class="fas fa-users text-purple-600"></i>
+                </div>
+                <h4 class="text-sm font-semibold text-gray-900">Staff</h4>
+                <p class="text-xs text-gray-500">Manage your team</p>
+            </a>
         </div>
     </div>
+
 </div>
 
-<!-- Loading Spinner (hidden by default) -->
-<div id="loading-spinner" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden z-50">
-    <div class="loading-spinner w-12 h-12"></div>
+<!-- Loading Overlay -->
+<div id="loading-overlay" class="fixed inset-0 bg-black bg-opacity-30 hidden z-50 flex items-center justify-center">
+    <div class="bg-white rounded-xl p-6 shadow-2xl flex items-center space-x-4">
+        <div class="w-8 h-8 border-4 border-t-red-600 border-gray-200 rounded-full animate-spin"></div>
+        <span class="text-gray-700 font-medium">Loading dashboard data...</span>
+    </div>
 </div>
 {% endblock %}
 
 {% block extra_scripts %}
 <script src="{% static 'js/admin/dashboard.js' %}"></script>
+<script>
+    // Global drilldown function
+    function drillDown(section) {
+        console.log(`Drilling down to: ${section}`);
+        // In real implementation, this would navigate to the relevant section
+        // or open a modal with more details
+        showToast(`Navigating to ${section} details...`, 'info');
+    }
+
+    // Toast helper (if not already defined in admin_base)
+    function showToast(message, type = 'info') {
+        if (typeof Swal !== 'undefined') {
+            const Toast = Swal.mixin({
+                toast: true,
+                position: 'top-end',
+                showConfirmButton: false,
+                timer: 3000,
+                timerProgressBar: true,
+                didOpen: (toast) => {
+                    toast.addEventListener('mouseenter', Swal.stopTimer);
+                    toast.addEventListener('mouseleave', Swal.resumeTimer);
+                }
+            });
+            Toast.fire({ icon: type, title: message });
+        } else {
+            console.log(`[${type.toUpperCase()}] ${message}`);
+        }
+    }
+
+    // Initialize dashboard when DOM is ready
+    document.addEventListener('DOMContentLoaded', function() {
+        if (typeof RestaurantDashboard !== 'undefined') {
+            window.dashboard = new RestaurantDashboard();
+            console.log('Executive Dashboard initialized');
+        } else {
+            console.error('RestaurantDashboard class not found');
+        }
+    });
+</script>
 {% endblock %}

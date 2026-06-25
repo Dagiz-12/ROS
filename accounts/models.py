@@ -128,3 +128,66 @@ class CustomUser(AbstractUser):
             return 'branch'  # Non-managers always see branch-level data
 
         return self.manager_scope
+
+    # ========== NEW: PERFORMANCE TRACKING FIELDS ==========
+    # Performance Score (0-100)
+    performance_score = models.FloatField(
+        default=0.0,
+        help_text="Overall performance score (0-100)"
+    )
+
+    # For Waiters & Cashiers
+    orders_handled = models.IntegerField(
+        default=0,
+        help_text="Total orders handled (waiters/cashiers)"
+    )
+    sales_value = models.DecimalField(
+        max_digits=12,
+        decimal_places=2,
+        default=0,
+        help_text="Total sales value (waiters/cashiers)"
+    )
+
+    # For Chefs
+    orders_prepared = models.IntegerField(
+        default=0,
+        help_text="Total orders prepared (chefs)"
+    )
+    avg_prep_time = models.IntegerField(
+        default=0,
+        help_text="Average preparation time in minutes (chefs)"
+    )
+
+    # Performance History (JSON for trends)
+    performance_history = models.JSONField(
+        default=list,
+        blank=True,
+        help_text="Historical performance data for trends"
+    )
+
+    # Shift Tracking
+    current_shift = models.CharField(
+        max_length=20,
+        blank=True,
+        null=True,
+        choices=[
+            ('morning', 'Morning (6AM-12PM)'),
+            ('afternoon', 'Afternoon (12PM-6PM)'),
+            ('evening', 'Evening (6PM-12AM)'),
+            ('night', 'Night (12AM-6AM)'),
+        ],
+        help_text="Current shift assignment"
+    )
+    last_shift_start = models.DateTimeField(blank=True, null=True)
+    last_shift_end = models.DateTimeField(blank=True, null=True)
+
+    # Staff Rating (from manager reviews)
+    rating = models.DecimalField(
+        max_digits=3,
+        decimal_places=2,
+        default=0,
+        help_text="Manager rating (0-5)"
+    )
+    rating_notes = models.TextField(blank=True, help_text="Manager notes")
+
+    # ... rest of the model remains the same ...

@@ -2,6 +2,8 @@
 Admin Panel Views for Restaurant Owners/Managers
 """
 
+from accounts.decorators import role_required
+from django.shortcuts import render
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse
@@ -1129,3 +1131,17 @@ def api_inventory_alerts(request):
             'count': 0,
             'message': 'Inventory system not installed'
         })
+
+
+# staff_analytics_views.py
+
+
+@login_required
+@role_required(['admin', 'manager'])
+def staff_analytics(request):
+    """Staff performance analytics page"""
+    context = {
+        'restaurant': request.user.restaurant,
+        'user_role': request.user.role,
+    }
+    return render(request, 'admin_panel/staff_analytics.html', context)

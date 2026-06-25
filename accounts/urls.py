@@ -1,6 +1,7 @@
 # accounts/urls.py
 from django.urls import path
 from . import views
+from . import staff_analytics_views
 
 urlpatterns = [
     # Authentication API endpoints
@@ -30,4 +31,12 @@ urlpatterns = [
 
     # JWT Verification
     path('verify-token/', views.JWTAuthenticationView.as_view(), name='verify_token'),
+
+    path('staff/performance/', staff_analytics_views.staff_performance_dashboard,
+         name='staff-performance'),
+    path('staff/<int:staff_id>/performance/',
+         staff_analytics_views.staff_performance_detail, name='staff-performance-detail'),
+    path('staff/leaderboard/', staff_analytics_views.staff_leaderboard,
+         name='staff-leaderboard'),
+
 ]

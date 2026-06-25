@@ -1,0 +1,139 @@
+<!-- templates/admin_panel/staff_analytics.html -->
+{% extends "admin_panel/admin_base.html" %}
+{% load static %}
+
+{% block title %}Staff Analytics - Restaurant Admin{% endblock %}
+
+{% block chart_js %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+{% endblock %}
+
+{% block page_title %}Staff Performance Analytics{% endblock %}
+{% block page_subtitle %}Track team performance and identify top performers{% endblock %}
+
+{% block page_actions %}
+<div class="flex items-center space-x-3">
+    <select id="period-selector" class="border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-red-500">
+        <option value="today">Today</option>
+        <option value="week" selected>This Week</option>
+        <option value="month">This Month</option>
+    </select>
+    <select id="role-selector" class="border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-red-500">
+        <option value="all">All Roles</option>
+        <option value="waiter">Waiters</option>
+        <option value="chef">Chefs</option>
+        <option value="cashier">Cashiers</option>
+    </select>
+    <button id="refresh-btn" class="btn-primary text-sm flex items-center">
+        <i class="fas fa-sync-alt mr-2"></i>Refresh
+    </button>
+</div>
+{% endblock %}
+
+{% block content %}
+<div class="space-y-6">
+    
+    <!-- Performance Summary Cards -->
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-4" id="staff-summary">
+        <div class="admin-stat-card p-4">
+            <div class="flex items-center">
+                <div class="w-12 h-12 bg-blue-100 rounded-xl flex items-center justify-center mr-4">
+                    <i class="fas fa-users text-blue-600 text-xl"></i>
+                </div>
+                <div>
+                    <p class="text-sm text-gray-500">Total Staff</p>
+                    <h3 class="text-2xl font-bold text-gray-900" id="total-staff">0</h3>
+                </div>
+            </div>
+        </div>
+        <div class="admin-stat-card p-4">
+            <div class="flex items-center">
+                <div class="w-12 h-12 bg-green-100 rounded-xl flex items-center justify-center mr-4">
+                    <i class="fas fa-trophy text-green-600 text-xl"></i>
+                </div>
+                <div>
+                    <p class="text-sm text-gray-500">Avg Performance</p>
+                    <h3 class="text-2xl font-bold text-gray-900" id="avg-performance">0%</h3>
+                </div>
+            </div>
+        </div>
+        <div class="admin-stat-card p-4">
+            <div class="flex items-center">
+                <div class="w-12 h-12 bg-purple-100 rounded-xl flex items-center justify-center mr-4">
+                    <i class="fas fa-star text-purple-600 text-xl"></i>
+                </div>
+                <div>
+                    <p class="text-sm text-gray-500">Top Performer</p>
+                    <h3 class="text-xl font-bold text-gray-900 truncate" id="top-performer">--</h3>
+                </div>
+            </div>
+        </div>
+        <div class="admin-stat-card p-4">
+            <div class="flex items-center">
+                <div class="w-12 h-12 bg-orange-100 rounded-xl flex items-center justify-center mr-4">
+                    <i class="fas fa-clock text-orange-600 text-xl"></i>
+                </div>
+                <div>
+                    <p class="text-sm text-gray-500">Avg Prep Time</p>
+                    <h3 class="text-2xl font-bold text-gray-900" id="avg-prep-time">0m</h3>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Staff Leaderboard -->
+    <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+        <div class="p-4 border-b border-gray-200">
+            <div class="flex items-center justify-between">
+                <div>
+                    <h2 class="text-lg font-bold text-gray-900">🏆 Staff Leaderboard</h2>
+                    <p class="text-sm text-gray-500">Top performers by role</p>
+                </div>
+                <span class="text-xs text-gray-400" id="leaderboard-updated">Updated just now</span>
+            </div>
+        </div>
+        <div id="leaderboard-container" class="divide-y divide-gray-100">
+            <!-- Loaded by JavaScript -->
+            <div class="p-8 text-center">
+                <i class="fas fa-spinner fa-spin text-2xl text-gray-400 mb-2"></i>
+                <p class="text-gray-500">Loading leaderboard...</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Staff Performance Table -->
+    <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+        <div class="p-4 border-b border-gray-200">
+            <h2 class="text-lg font-bold text-gray-900">📊 Staff Performance</h2>
+        </div>
+        <div class="overflow-x-auto">
+            <table class="min-w-full divide-y divide-gray-200">
+                <thead class="bg-gray-50">
+                    <tr>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Staff</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Role</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Performance</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Orders</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Revenue</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Rating</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Shift</th>
+                    </tr>
+                </thead>
+                <tbody id="staff-table-body" class="bg-white divide-y divide-gray-200">
+                    <!-- Loaded by JavaScript -->
+                    <tr>
+                        <td colspan="7" class="px-6 py-8 text-center">
+                            <i class="fas fa-spinner fa-spin text-2xl text-gray-400 mb-2"></i>
+                            <p class="text-gray-500">Loading staff data...</p>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script src="{% static 'js/admin/staff-analytics.js' %}"></script>
+{% endblock %}

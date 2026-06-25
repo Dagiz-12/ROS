@@ -31746,3 +31746,622 @@ Bad Request: /profit-intelligence/api/dashboard/
 Bad Request: /profit-intelligence/api/dashboard/
 Bad Request: /profit-intelligence/api/dashboard/
 Bad Request: /profit-intelligence/api/dashboard/
+Bad Request: /profit-intelligence/api/dashboard/
+Bad Request: /profit-intelligence/api/dashboard/
+Forbidden: /api/auth/verify-token/
+Not Found: /restaurant-admin/dashboard/menu_items/food-pizza-still-life-hd-wallpaper-preview_Cj6yzIs.jpg
+Getting dashboard data for user: manager1, view_level: restaurant
+Calculating daily profit for 2026-06-24 - Restaurant: Ethiopian Feast Restaurant, Branch: All
+Found 3 completed orders for 2026-06-24
+Total revenue: $4137.50
+Total ingredient cost: $2293.00
+Getting waste costs for 2026-06-24 - Restaurant: Ethiopian Feast Restaurant, Branch: All
+Found 0 waste records for 2026-06-24
+Total waste cost for 2026-06-24: $0.00
+Waste cost from waste tracker: $0.00
+Waste records found: 0
+Net profit: $1844.50
+Profit margin: 44.58%
+Waste percentage: 0.00%
+Profit aggregation updated: 17
+Updating menu item performances for 2026-06-24
+Updated performance record for Samosa
+Updated performance record for Spring Rolls
+Updated performance record for Chicken Wings
+Updated performance record for Key Wot
+Updated performance record for Fresh Juice
+Updated performance record for Ice Cream
+Updated performance record for burger
+Calculating profit trend from 2026-05-26 to 2026-06-24 (30 days)
+Analyzing profit issues for Ethiopian Feast Restaurant
+Not Found: /restaurant-admin/dashboard/menu_items/food-pizza-still-life-hd-wallpaper-preview_Cj6yzIs.jpg
+Not Found: /profit-intelligence/api/daily-insight/
+Calculating profit trend from 2026-06-18 to 2026-06-24 (7 days)
+Not Found: /restaurant-admin/dashboard/menu_items/food-pizza-still-life-hd-wallpaper-preview_Cj6yzIs.jpg
+Not Found: /favicon.ico
+Not Found: /restaurant-admin/dashboard/menu_items/food-pizza-still-life-hd-wallpaper-preview_Cj6yzIs.jpg
+Calculating profit trend from 2026-05-26 to 2026-06-24 (30 days)
+Calculating profit trend from 2026-06-18 to 2026-06-24 (7 days)
+Calculating profit trend from 2026-05-26 to 2026-06-24 (30 days)
+Calculating profit trend from 2026-03-27 to 2026-06-24 (90 days)
+Calculating profit trend from 2026-06-18 to 2026-06-24 (7 days)
+Not Found: /restaurant-admin/dashboard/menu_items/food-pizza-still-life-hd-wallpaper-preview_Cj6yzIs.jpg
+Not Found: /profit-intelligence/api/daily-insight/
+Calculating profit trend from 2026-06-18 to 2026-06-24 (7 days)
+Not Found: /restaurant-admin/dashboard/menu_items/food-pizza-still-life-hd-wallpaper-preview_Cj6yzIs.jpg
+Calculating profit trend from 2026-06-18 to 2026-06-24 (7 days)
+Not Found: /profit-intelligence/api/daily-insight/
+Not Found: /favicon.ico
+Not Found: /restaurant-admin/dashboard/menu_items/food-pizza-still-life-hd-wallpaper-preview_Cj6yzIs.jpg
+Not Found: /restaurant-admin/dashboard/menu_items/food-pizza-still-life-hd-wallpaper-preview_Cj6yzIs.jpg
+Not Found: /restaurant-admin/dashboard/menu_items/food-pizza-still-life-hd-wallpaper-preview_Cj6yzIs.jpg
+Not Found: /restaurant-admin/dashboard/menu_items/food-pizza-still-life-hd-wallpaper-preview_Cj6yzIs.jpg
+Not Found: /restaurant-admin/dashboard/menu_items/food-pizza-still-life-hd-wallpaper-preview_Cj6yzIs.jpg
+Not Found: /restaurant-admin/dashboard/menu_items/food-pizza-still-life-hd-wallpaper-preview_Cj6yzIs.jpg
+Not Found: /restaurant-admin/dashboard/menu_items/food-pizza-still-life-hd-wallpaper-preview_Cj6yzIs.jpg
+Not Found: /restaurant-admin/dashboard/menu_items/food-pizza-still-life-hd-wallpaper-preview_Cj6yzIs.jpg
+Calculating profit trend from 2026-06-18 to 2026-06-24 (7 days)
+Not Found: /profit-intelligence/api/daily-insight/
+Not Found: /restaurant-admin/dashboard/menu_items/food-pizza-still-life-hd-wallpaper-preview_Cj6yzIs.jpg
+Not Found: /profit-intelligence/api/daily-insight/
+Calculating profit trend from 2026-06-18 to 2026-06-24 (7 days)
+Not Found: /restaurant-admin/dashboard/menu_items/food-pizza-still-life-hd-wallpaper-preview_Cj6yzIs.jpg
+Not Found: /favicon.ico
+Not Found: /restaurant-admin/dashboard/menu_items/food-pizza-still-life-hd-wallpaper-preview_Cj6yzIs.jpg
+Not Found: /favicon.ico
+Watching for file changes with StatReloader
+Not Found: /favicon.ico
+Calculating profit trend from 2026-06-19 to 2026-06-25 (7 days)
+Not Found: /profit-intelligence/api/daily-insight/
+Not Found: /restaurant-admin/dashboard/menu_items/food-pizza-still-life-hd-wallpaper-preview_Cj6yzIs.jpg
+Forbidden: /api/auth/verify-token/
+Not Found: /favicon.ico
+Forbidden: /api/auth/verify-token/
+Order 2606250001 served, checking for payment...
+Error in auto_create_payment_on_order_update: 'Order' object has no attribute 'branch'
+Order 2606250002 served, checking for payment...
+Error in auto_create_payment_on_order_update: 'Order' object has no attribute 'branch'
+Order 2606250003 served, checking for payment...
+Error in auto_create_payment_on_order_update: 'Order' object has no attribute 'branch'
+Order 2606250004 served, checking for payment...
+Error in auto_create_payment_on_order_update: 'Order' object has no attribute 'branch'
+Forbidden: /api/auth/verify-token/
+Cashier cashier1 requesting dashboard data
+Found 4 unpaid orders in branch Main Dining Hall
+Error deducting inventory for order 39: get() returned more than one StockAlert -- it returned 3!
+Order 2606250004 completed, updating profit calculations
+Calculating daily profit for 2026-06-25 - Restaurant: Ethiopian Feast Restaurant, Branch: Main Dining Hall
+Found 1 completed orders for 2026-06-25
+Total revenue: $3000.00
+Total ingredient cost: $2122.80
+Getting waste costs for 2026-06-25 - Restaurant: Ethiopian Feast Restaurant, Branch: Main Dining Hall
+Found 0 waste records for 2026-06-25
+Total waste cost for 2026-06-25: $0.00
+Waste cost from waste tracker: $0.00
+Waste records found: 0
+Net profit: $877.20
+Profit margin: 29.24%
+Waste percentage: 0.00%
+Cashier cashier1 requesting dashboard data
+Profit aggregation created: 19
+Found 3 unpaid orders in branch Main Dining Hall
+Updating menu item performances for 2026-06-25
+Created performance record for burger
+Error deducting inventory for order 39: get() returned more than one StockAlert -- it returned 3!
+Order 2606250004 completed, updating profit calculations
+Calculating daily profit for 2026-06-25 - Restaurant: Ethiopian Feast Restaurant, Branch: Main Dining Hall
+Found 1 completed orders for 2026-06-25
+Total revenue: $3000.00
+Total ingredient cost: $2122.80
+Getting waste costs for 2026-06-25 - Restaurant: Ethiopian Feast Restaurant, Branch: Main Dining Hall
+Found 0 waste records for 2026-06-25
+Total waste cost for 2026-06-25: $0.00
+Waste cost from waste tracker: $0.00
+Waste records found: 0
+Net profit: $877.20
+Profit margin: 29.24%
+Waste percentage: 0.00%
+Profit aggregation updated: 19
+Updating menu item performances for 2026-06-25
+Updated performance record for burger
+Payment 5c0723a3-c022-4f4a-85f1-041a6ea8d50b processed: $3000 via cash for Order 2606250004
+Cashier cashier1 requesting dashboard data
+Found 3 unpaid orders in branch Main Dining Hall
+Error deducting inventory for order 36: get() returned more than one StockAlert -- it returned 3!
+Order 2606250001 completed, updating profit calculations
+Calculating daily profit for 2026-06-25 - Restaurant: Ethiopian Feast Restaurant, Branch: Main Dining Hall
+Found 2 completed orders for 2026-06-25
+Total revenue: $5200.00
+Total ingredient cost: $3214.40
+Getting waste costs for 2026-06-25 - Restaurant: Ethiopian Feast Restaurant, Branch: Main Dining Hall
+Found 0 waste records for 2026-06-25
+Total waste cost for 2026-06-25: $0.00
+Waste cost from waste tracker: $0.00
+Waste records found: 0
+Net profit: $1985.60
+Profit margin: 38.18%
+Waste percentage: 0.00%
+Profit aggregation updated: 19
+Updating menu item performances for 2026-06-25
+Created performance record for Chicken Wings
+Updated performance record for burger
+Error deducting inventory for order 36: get() returned more than one StockAlert -- it returned 3!
+Order 2606250001 completed, updating profit calculations
+Calculating daily profit for 2026-06-25 - Restaurant: Ethiopian Feast Restaurant, Branch: Main Dining Hall
+Found 2 completed orders for 2026-06-25
+Total revenue: $5200.00
+Total ingredient cost: $3214.40
+Getting waste costs for 2026-06-25 - Restaurant: Ethiopian Feast Restaurant, Branch: Main Dining Hall
+Found 0 waste records for 2026-06-25
+Total waste cost for 2026-06-25: $0.00
+Waste cost from waste tracker: $0.00
+Waste records found: 0
+Net profit: $1985.60
+Profit margin: 38.18%
+Waste percentage: 0.00%
+Profit aggregation updated: 19
+Updating menu item performances for 2026-06-25
+Updated performance record for Chicken Wings
+Updated performance record for burger
+Payment 144ae07a-4ca8-4e6f-85bd-3ff4bdd1e74a processed: $2200 via cash for Order 2606250001
+Cashier cashier1 requesting dashboard data
+Found 2 unpaid orders in branch Main Dining Hall
+Cashier cashier1 requesting dashboard data
+Found 2 unpaid orders in branch Main Dining Hall
+Error deducting inventory for order 37: get() returned more than one StockAlert -- it returned 3!
+Order 2606250002 completed, updating profit calculations
+Calculating daily profit for 2026-06-25 - Restaurant: Ethiopian Feast Restaurant, Branch: Main Dining Hall
+Found 3 completed orders for 2026-06-25
+Total revenue: $8725.00
+Total ingredient cost: $4730.00
+Getting waste costs for 2026-06-25 - Restaurant: Ethiopian Feast Restaurant, Branch: Main Dining Hall
+Found 0 waste records for 2026-06-25
+Total waste cost for 2026-06-25: $0.00
+Waste cost from waste tracker: $0.00
+Waste records found: 0
+Net profit: $3995.00
+Profit margin: 45.79%
+Waste percentage: 0.00%
+Profit aggregation updated: 19
+Updating menu item performances for 2026-06-25
+Updated performance record for Chicken Wings
+Created performance record for Doro Wot
+Created performance record for Key Wot
+Created performance record for Tibs
+Updated performance record for burger
+Error deducting inventory for order 37: get() returned more than one StockAlert -- it returned 3!
+Order 2606250002 completed, updating profit calculations
+Calculating daily profit for 2026-06-25 - Restaurant: Ethiopian Feast Restaurant, Branch: Main Dining Hall
+Found 3 completed orders for 2026-06-25
+Total revenue: $8725.00
+Total ingredient cost: $4730.00
+Getting waste costs for 2026-06-25 - Restaurant: Ethiopian Feast Restaurant, Branch: Main Dining Hall
+Found 0 waste records for 2026-06-25
+Total waste cost for 2026-06-25: $0.00
+Waste cost from waste tracker: $0.00
+Waste records found: 0
+Net profit: $3995.00
+Profit margin: 45.79%
+Waste percentage: 0.00%
+Profit aggregation updated: 19
+Updating menu item performances for 2026-06-25
+Updated performance record for Chicken Wings
+Updated performance record for Doro Wot
+Updated performance record for Key Wot
+Updated performance record for Tibs
+Updated performance record for burger
+Payment ccf29bbd-5c78-4538-8e74-0109158ac95d processed: $3525 via cash for Order 2606250002
+Cashier cashier1 requesting dashboard data
+Found 1 unpaid orders in branch Main Dining Hall
+Order 2606250003 completed, updating profit calculations
+Calculating daily profit for 2026-06-25 - Restaurant: Ethiopian Feast Restaurant, Branch: Main Dining Hall
+Found 4 completed orders for 2026-06-25
+Total revenue: $9025.00
+Total ingredient cost: $4826.00
+Getting waste costs for 2026-06-25 - Restaurant: Ethiopian Feast Restaurant, Branch: Main Dining Hall
+Found 0 waste records for 2026-06-25
+Total waste cost for 2026-06-25: $0.00
+Waste cost from waste tracker: $0.00
+Waste records found: 0
+Net profit: $4199.00
+Profit margin: 46.53%
+Waste percentage: 0.00%
+Profit aggregation updated: 19
+Updating menu item performances for 2026-06-25
+Updated performance record for Chicken Wings
+Updated performance record for Doro Wot
+Updated performance record for Key Wot
+Updated performance record for Tibs
+Updated performance record for burger
+Order 2606250003 completed, updating profit calculations
+Calculating daily profit for 2026-06-25 - Restaurant: Ethiopian Feast Restaurant, Branch: Main Dining Hall
+Found 4 completed orders for 2026-06-25
+Total revenue: $9025.00
+Total ingredient cost: $4826.00
+Getting waste costs for 2026-06-25 - Restaurant: Ethiopian Feast Restaurant, Branch: Main Dining Hall
+Found 0 waste records for 2026-06-25
+Total waste cost for 2026-06-25: $0.00
+Waste cost from waste tracker: $0.00
+Waste records found: 0
+Net profit: $4199.00
+Profit margin: 46.53%
+Waste percentage: 0.00%
+Profit aggregation updated: 19
+Updating menu item performances for 2026-06-25
+Updated performance record for Chicken Wings
+Updated performance record for Doro Wot
+Updated performance record for Key Wot
+Updated performance record for Tibs
+Updated performance record for burger
+Payment c4259be5-9234-43ea-be9c-6021d74c744b processed: $300 via cash for Order 2606250003
+Cashier cashier1 requesting dashboard data
+Found 0 unpaid orders in branch Main Dining Hall
+Cashier cashier1 requesting dashboard data
+Found 0 unpaid orders in branch Main Dining Hall
+Unauthorized: /api/auth/verify-token/
+Calculating profit trend from 2026-06-19 to 2026-06-25 (7 days)
+Not Found: /profit-intelligence/api/daily-insight/
+Not Found: /restaurant-admin/dashboard/menu_items/food-pizza-still-life-hd-wallpaper-preview_Cj6yzIs.jpg
+Not Found: /restaurant-admin/dashboard/menu_items/food-pizza-still-life-hd-wallpaper-preview_Cj6yzIs.jpg
+Getting dashboard data for user: manager1, view_level: restaurant
+Calculating daily profit for 2026-06-25 - Restaurant: Ethiopian Feast Restaurant, Branch: All
+Found 4 completed orders for 2026-06-25
+Total revenue: $9025.00
+Total ingredient cost: $4826.00
+Getting waste costs for 2026-06-25 - Restaurant: Ethiopian Feast Restaurant, Branch: All
+Found 0 waste records for 2026-06-25
+Total waste cost for 2026-06-25: $0.00
+Waste cost from waste tracker: $0.00
+Waste records found: 0
+Net profit: $4199.00
+Profit margin: 46.53%
+Waste percentage: 0.00%
+Profit aggregation created: 20
+Updating menu item performances for 2026-06-25
+Created performance record for Chicken Wings
+Created performance record for Doro Wot
+Created performance record for Key Wot
+Created performance record for Tibs
+Created performance record for burger
+Calculating profit trend from 2026-05-27 to 2026-06-25 (30 days)
+Analyzing profit issues for Ethiopian Feast Restaurant
+Getting dashboard data for user: manager1, view_level: branch
+Calculating daily profit for 2026-06-25 - Restaurant: Ethiopian Feast Restaurant, Branch: All
+Found 4 completed orders for 2026-06-25
+Total revenue: $9025.00
+Total ingredient cost: $4826.00
+Getting waste costs for 2026-06-25 - Restaurant: Ethiopian Feast Restaurant, Branch: All
+Found 0 waste records for 2026-06-25
+Total waste cost for 2026-06-25: $0.00
+Waste cost from waste tracker: $0.00
+Waste records found: 0
+Net profit: $4199.00
+Profit margin: 46.53%
+Waste percentage: 0.00%
+Profit aggregation updated: 20
+Updating menu item performances for 2026-06-25
+Updated performance record for Chicken Wings
+Updated performance record for Doro Wot
+Updated performance record for Key Wot
+Updated performance record for Tibs
+Updated performance record for burger
+Calculating profit trend from 2026-05-27 to 2026-06-25 (30 days)
+Analyzing profit issues for Ethiopian Feast Restaurant
+Calculating profit trend from 2026-06-19 to 2026-06-25 (7 days)
+Calculating profit trend from 2026-05-27 to 2026-06-25 (30 days)
+Calculating profit trend from 2026-06-19 to 2026-06-25 (7 days)
+Calculating profit trend from 2026-03-28 to 2026-06-25 (90 days)
+Getting dashboard data for user: manager1, view_level: branch
+Calculating daily profit for 2026-06-25 - Restaurant: Ethiopian Feast Restaurant, Branch: All
+Found 4 completed orders for 2026-06-25
+Total revenue: $9025.00
+Total ingredient cost: $4826.00
+Getting waste costs for 2026-06-25 - Restaurant: Ethiopian Feast Restaurant, Branch: All
+Found 0 waste records for 2026-06-25
+Total waste cost for 2026-06-25: $0.00
+Waste cost from waste tracker: $0.00
+Waste records found: 0
+Net profit: $4199.00
+Profit margin: 46.53%
+Waste percentage: 0.00%
+Profit aggregation updated: 20
+Updating menu item performances for 2026-06-25
+Updated performance record for Chicken Wings
+Updated performance record for Doro Wot
+Updated performance record for Key Wot
+Updated performance record for Tibs
+Updated performance record for burger
+Calculating profit trend from 2026-05-27 to 2026-06-25 (30 days)
+Analyzing profit issues for Ethiopian Feast Restaurant
+Forbidden: /api/auth/verify-token/
+Forbidden: /api/auth/verify-token/
+Forbidden: /api/auth/verify-token/
+Not Found: /profit-intelligence/api/daily-insight/
+Calculating profit trend from 2026-06-19 to 2026-06-25 (7 days)
+Not Found: /restaurant-admin/dashboard/menu_items/food-pizza-still-life-hd-wallpaper-preview_Cj6yzIs.jpg
+Not Found: /profit-intelligence/api/daily-insight/
+Calculating profit trend from 2026-06-19 to 2026-06-25 (7 days)
+Not Found: /restaurant-admin/dashboard/menu_items/food-pizza-still-life-hd-wallpaper-preview_Cj6yzIs.jpg
+Getting dashboard data for user: manager1, view_level: restaurant
+Calculating daily profit for 2026-06-25 - Restaurant: Ethiopian Feast Restaurant, Branch: All
+Found 4 completed orders for 2026-06-25
+Total revenue: $9025.00
+Total ingredient cost: $4826.00
+Getting waste costs for 2026-06-25 - Restaurant: Ethiopian Feast Restaurant, Branch: All
+Found 0 waste records for 2026-06-25
+Total waste cost for 2026-06-25: $0.00
+Waste cost from waste tracker: $0.00
+Waste records found: 0
+Net profit: $4199.00
+Profit margin: 46.53%
+Waste percentage: 0.00%
+Profit aggregation updated: 20
+Updating menu item performances for 2026-06-25
+Updated performance record for Chicken Wings
+Updated performance record for Doro Wot
+Updated performance record for Key Wot
+Updated performance record for Tibs
+Updated performance record for burger
+Calculating profit trend from 2026-05-27 to 2026-06-25 (30 days)
+Analyzing profit issues for Ethiopian Feast Restaurant
+Forbidden: /api/auth/verify-token/
+Order 2606250006 served, checking for payment...
+Error in auto_create_payment_on_order_update: 'Order' object has no attribute 'branch'
+Order 2606250005 served, checking for payment...
+Error in auto_create_payment_on_order_update: 'Order' object has no attribute 'branch'
+Forbidden: /api/auth/verify-token/
+Cashier cashier1 requesting dashboard data
+Found 2 unpaid orders in branch Main Dining Hall
+Order 2606250006 completed, updating profit calculations
+Calculating daily profit for 2026-06-25 - Restaurant: Ethiopian Feast Restaurant, Branch: Main Dining Hall
+Found 5 completed orders for 2026-06-25
+Total revenue: $9775.00
+Total ingredient cost: $5066.00
+Getting waste costs for 2026-06-25 - Restaurant: Ethiopian Feast Restaurant, Branch: Main Dining Hall
+Found 0 waste records for 2026-06-25
+Total waste cost for 2026-06-25: $0.00
+Waste cost from waste tracker: $0.00
+Waste records found: 0
+Net profit: $4709.00
+Profit margin: 48.17%
+Waste percentage: 0.00%
+Profit aggregation updated: 19
+Updating menu item performances for 2026-06-25
+Updated performance record for Chicken Wings
+Updated performance record for Doro Wot
+Updated performance record for Key Wot
+Updated performance record for Tibs
+Updated performance record for burger
+Order 2606250006 completed, updating profit calculations
+Calculating daily profit for 2026-06-25 - Restaurant: Ethiopian Feast Restaurant, Branch: Main Dining Hall
+Found 5 completed orders for 2026-06-25
+Total revenue: $9775.00
+Total ingredient cost: $5066.00
+Getting waste costs for 2026-06-25 - Restaurant: Ethiopian Feast Restaurant, Branch: Main Dining Hall
+Found 0 waste records for 2026-06-25
+Total waste cost for 2026-06-25: $0.00
+Waste cost from waste tracker: $0.00
+Waste records found: 0
+Net profit: $4709.00
+Profit margin: 48.17%
+Waste percentage: 0.00%
+Profit aggregation updated: 19
+Updating menu item performances for 2026-06-25
+Updated performance record for Chicken Wings
+Updated performance record for Doro Wot
+Updated performance record for Key Wot
+Updated performance record for Tibs
+Updated performance record for burger
+Payment c1d9677b-e7cb-446e-a672-4717e965951d processed: $750 via cash for Order 2606250006
+Cashier cashier1 requesting dashboard data
+Found 1 unpaid orders in branch Main Dining Hall
+Cashier cashier1 requesting dashboard data
+Found 1 unpaid orders in branch Main Dining Hall
+Error deducting inventory for order 40: get() returned more than one StockAlert -- it returned 3!
+Order 2606250005 completed, updating profit calculations
+Calculating daily profit for 2026-06-25 - Restaurant: Ethiopian Feast Restaurant, Branch: Main Dining Hall
+Found 6 completed orders for 2026-06-25
+Total revenue: $11725.00
+Total ingredient cost: $6271.40
+Getting waste costs for 2026-06-25 - Restaurant: Ethiopian Feast Restaurant, Branch: Main Dining Hall
+Found 0 waste records for 2026-06-25
+Total waste cost for 2026-06-25: $0.00
+Waste cost from waste tracker: $0.00
+Waste records found: 0
+Net profit: $5453.60
+Profit margin: 46.51%
+Waste percentage: 0.00%
+Profit aggregation updated: 19
+Updating menu item performances for 2026-06-25
+Updated performance record for Chicken Wings
+Updated performance record for Doro Wot
+Updated performance record for Key Wot
+Updated performance record for Tibs
+Updated performance record for burger
+Error deducting inventory for order 40: get() returned more than one StockAlert -- it returned 3!
+Order 2606250005 completed, updating profit calculations
+Calculating daily profit for 2026-06-25 - Restaurant: Ethiopian Feast Restaurant, Branch: Main Dining Hall
+Found 6 completed orders for 2026-06-25
+Total revenue: $11725.00
+Total ingredient cost: $6271.40
+Getting waste costs for 2026-06-25 - Restaurant: Ethiopian Feast Restaurant, Branch: Main Dining Hall
+Found 0 waste records for 2026-06-25
+Total waste cost for 2026-06-25: $0.00
+Waste cost from waste tracker: $0.00
+Waste records found: 0
+Net profit: $5453.60
+Profit margin: 46.51%
+Waste percentage: 0.00%
+Profit aggregation updated: 19
+Updating menu item performances for 2026-06-25
+Updated performance record for Chicken Wings
+Updated performance record for Doro Wot
+Updated performance record for Key Wot
+Updated performance record for Tibs
+Updated performance record for burger
+Payment c094fcd0-f60e-4597-ba13-b9f07b64fa8f processed: $1950 via cash for Order 2606250005
+Cashier cashier1 requesting dashboard data
+Found 0 unpaid orders in branch Main Dining Hall
+Unauthorized: /api/auth/verify-token/
+Calculating profit trend from 2026-06-19 to 2026-06-25 (7 days)
+Not Found: /profit-intelligence/api/daily-insight/
+Not Found: /restaurant-admin/dashboard/menu_items/food-pizza-still-life-hd-wallpaper-preview_Cj6yzIs.jpg
+Not Found: /restaurant-admin/dashboard/menu_items/food-pizza-still-life-hd-wallpaper-preview_Cj6yzIs.jpg
+Getting dashboard data for user: manager1, view_level: restaurant
+Calculating daily profit for 2026-06-25 - Restaurant: Ethiopian Feast Restaurant, Branch: All
+Found 6 completed orders for 2026-06-25
+Total revenue: $11725.00
+Total ingredient cost: $6271.40
+Getting waste costs for 2026-06-25 - Restaurant: Ethiopian Feast Restaurant, Branch: All
+Found 0 waste records for 2026-06-25
+Total waste cost for 2026-06-25: $0.00
+Waste cost from waste tracker: $0.00
+Waste records found: 0
+Net profit: $5453.60
+Profit margin: 46.51%
+Waste percentage: 0.00%
+Profit aggregation updated: 20
+Updating menu item performances for 2026-06-25
+Updated performance record for Chicken Wings
+Updated performance record for Doro Wot
+Updated performance record for Key Wot
+Updated performance record for Tibs
+Updated performance record for burger
+Calculating profit trend from 2026-05-27 to 2026-06-25 (30 days)
+Analyzing profit issues for Ethiopian Feast Restaurant
+Getting dashboard data for user: manager1, view_level: restaurant
+Calculating daily profit for 2026-06-25 - Restaurant: Ethiopian Feast Restaurant, Branch: All
+Found 6 completed orders for 2026-06-25
+Total revenue: $11725.00
+Total ingredient cost: $6271.40
+Getting waste costs for 2026-06-25 - Restaurant: Ethiopian Feast Restaurant, Branch: All
+Found 0 waste records for 2026-06-25
+Total waste cost for 2026-06-25: $0.00
+Waste cost from waste tracker: $0.00
+Waste records found: 0
+Net profit: $5453.60
+Profit margin: 46.51%
+Waste percentage: 0.00%
+Profit aggregation updated: 20
+Updating menu item performances for 2026-06-25
+Updated performance record for Chicken Wings
+Updated performance record for Doro Wot
+Updated performance record for Key Wot
+Updated performance record for Tibs
+Updated performance record for burger
+Calculating profit trend from 2026-05-27 to 2026-06-25 (30 days)
+Analyzing profit issues for Ethiopian Feast Restaurant
+Getting dashboard data for user: manager1, view_level: branch
+Calculating daily profit for 2026-06-25 - Restaurant: Ethiopian Feast Restaurant, Branch: All
+Found 6 completed orders for 2026-06-25
+Total revenue: $11725.00
+Total ingredient cost: $6271.40
+Getting waste costs for 2026-06-25 - Restaurant: Ethiopian Feast Restaurant, Branch: All
+Found 0 waste records for 2026-06-25
+Total waste cost for 2026-06-25: $0.00
+Waste cost from waste tracker: $0.00
+Waste records found: 0
+Net profit: $5453.60
+Profit margin: 46.51%
+Waste percentage: 0.00%
+Profit aggregation updated: 20
+Updating menu item performances for 2026-06-25
+Updated performance record for Chicken Wings
+Updated performance record for Doro Wot
+Updated performance record for Key Wot
+Updated performance record for Tibs
+Updated performance record for burger
+Calculating profit trend from 2026-05-27 to 2026-06-25 (30 days)
+Analyzing profit issues for Ethiopian Feast Restaurant
+Getting dashboard data for user: manager1, view_level: branch
+Calculating daily profit for 2026-06-25 - Restaurant: Ethiopian Feast Restaurant, Branch: All
+Found 6 completed orders for 2026-06-25
+Total revenue: $11725.00
+Total ingredient cost: $6271.40
+Getting waste costs for 2026-06-25 - Restaurant: Ethiopian Feast Restaurant, Branch: All
+Found 0 waste records for 2026-06-25
+Total waste cost for 2026-06-25: $0.00
+Waste cost from waste tracker: $0.00
+Waste records found: 0
+Net profit: $5453.60
+Profit margin: 46.51%
+Waste percentage: 0.00%
+Profit aggregation updated: 20
+Updating menu item performances for 2026-06-25
+Updated performance record for Chicken Wings
+Updated performance record for Doro Wot
+Updated performance record for Key Wot
+Updated performance record for Tibs
+Updated performance record for burger
+Calculating profit trend from 2026-05-27 to 2026-06-25 (30 days)
+Analyzing profit issues for Ethiopian Feast Restaurant
+Getting dashboard data for user: manager1, view_level: branch
+Calculating daily profit for 2026-06-25 - Restaurant: Ethiopian Feast Restaurant, Branch: All
+Found 6 completed orders for 2026-06-25
+Total revenue: $11725.00
+Total ingredient cost: $6271.40
+Getting waste costs for 2026-06-25 - Restaurant: Ethiopian Feast Restaurant, Branch: All
+Found 0 waste records for 2026-06-25
+Total waste cost for 2026-06-25: $0.00
+Waste cost from waste tracker: $0.00
+Waste records found: 0
+Net profit: $5453.60
+Profit margin: 46.51%
+Waste percentage: 0.00%
+Profit aggregation updated: 20
+Updating menu item performances for 2026-06-25
+Updated performance record for Chicken Wings
+Updated performance record for Doro Wot
+Updated performance record for Key Wot
+Updated performance record for Tibs
+Updated performance record for burger
+Calculating profit trend from 2026-05-27 to 2026-06-25 (30 days)
+Analyzing profit issues for Ethiopian Feast Restaurant
+Getting dashboard data for user: manager1, view_level: branch
+Calculating daily profit for 2026-06-25 - Restaurant: Ethiopian Feast Restaurant, Branch: All
+Found 6 completed orders for 2026-06-25
+Total revenue: $11725.00
+Total ingredient cost: $6271.40
+Getting waste costs for 2026-06-25 - Restaurant: Ethiopian Feast Restaurant, Branch: All
+Found 0 waste records for 2026-06-25
+Total waste cost for 2026-06-25: $0.00
+Waste cost from waste tracker: $0.00
+Waste records found: 0
+Net profit: $5453.60
+Profit margin: 46.51%
+Waste percentage: 0.00%
+Profit aggregation updated: 20
+Updating menu item performances for 2026-06-25
+Updated performance record for Chicken Wings
+Updated performance record for Doro Wot
+Updated performance record for Key Wot
+Updated performance record for Tibs
+Updated performance record for burger
+Calculating profit trend from 2026-05-27 to 2026-06-25 (30 days)
+Analyzing profit issues for Ethiopian Feast Restaurant
+Getting dashboard data for user: manager1, view_level: restaurant
+Calculating daily profit for 2026-06-25 - Restaurant: Ethiopian Feast Restaurant, Branch: All
+Found 6 completed orders for 2026-06-25
+Total revenue: $11725.00
+Total ingredient cost: $6271.40
+Getting waste costs for 2026-06-25 - Restaurant: Ethiopian Feast Restaurant, Branch: All
+Found 0 waste records for 2026-06-25
+Total waste cost for 2026-06-25: $0.00
+Waste cost from waste tracker: $0.00
+Waste records found: 0
+Net profit: $5453.60
+Profit margin: 46.51%
+Waste percentage: 0.00%
+Profit aggregation updated: 20
+Updating menu item performances for 2026-06-25
+Updated performance record for Chicken Wings
+Updated performance record for Doro Wot
+Updated performance record for Key Wot
+Updated performance record for Tibs
+Updated performance record for burger
+Calculating profit trend from 2026-05-27 to 2026-06-25 (30 days)
+Analyzing profit issues for Ethiopian Feast Restaurant
+C:\Users\USER\DAGIIIz\eco\res\res3\ROS\accounts\signals.py changed, reloading.
+Watching for file changes with StatReloader
+C:\Users\USER\DAGIIIz\eco\res\res3\ROS\accounts\signals.py changed, reloading.
+Watching for file changes with StatReloader
